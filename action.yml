@@ -1,4 +1,4 @@
-name: 'Conventional Changelog'
+name: 'Conventional Changelog Action'
 description: 'Bump version, tag commit and generates changelog with conventional commits.'
 author: 'Tycho Bokdam'
 runs:
@@ -6,6 +6,7 @@ runs:
   main: 'src/index.js'
 branding:
   icon: 'edit'
+  color: 'red'
 inputs:
   - git-message: 'chore: Release {version}'
     required: false
