@@ -1,0 +1,24 @@
+{
+  "name": "conventional-changelog-action",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/TriPSs/conventional-changelog-action.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/TriPSs/conventional-changelog-action/issues"
+  },
+  "homepage": "https://github.com/TriPSs/conventional-changelog-action#readme",
+  "dependencies": {
+    "@actions/core": "^1.1.3",
+    "@actions/github": "^1.1.0"
+  }
+}
