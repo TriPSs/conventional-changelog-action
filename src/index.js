@@ -8,14 +8,16 @@ async function run() {
     const octokit = new github.GitHub(githubToken);
 
     // Make the Github token secret
-    core.setSecret(githubToken)
+    // core.setSecret(githubToken)
 
-    console.log(octokit.context.repo)
+    // console.log()
+
+    core.debug(`Current version: ${JSON.stringify(octokit.context.repo)}`)
 
     // Get the current version
-    const currentVersion = require('./package.json').version
+    // const currentVersion = require('./package.json').version
 
-    core.debug(`Current version: ${currentVersion}`);
+    // core.debug(`Current version: ${currentVersion}`);
 
   } catch (error) {
     core.setFailed(error.message)
