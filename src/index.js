@@ -1,18 +1,25 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 
-try {
-  // `who-to-greet` input defined in action metadata file
-  const nameToGreet = core.getInput('who-to-greet')
-  console.log(`Hello ${nameToGreet}!`)
+async function run() {
+  try {
+    const githubToken = core.getInput('github-token', { required: true })
+    const commitMessage = core.getInput('git-message')
+    const octokit = new github.GitHub(githubToken);
 
-  const time = (new Date()).toTimeString()
-  core.setOutput('time', time)
+    // Make the Github token secret
+    core.setSecret(githubToken)
 
-  // Get the JSON webhook payload for the event that triggered the workflow
-  const payload = JSON.stringify(github.context.payload, undefined, 2)
-  console.log(`The event payload: ${payload}`)
+    console.log(octokit.context.repo)
 
-} catch (error) {
-  core.setFailed(error.message)
+    // Get the current version
+    const currentVersion = require('./package.json').version
+
+    core.debug(`Current version: ${currentVersion}`);
+
+  } catch (error) {
+    core.setFailed(error.message)
+  }
 }
+
+run()

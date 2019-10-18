@@ -8,5 +8,8 @@ branding:
   icon: 'edit'
   color: 'red'
 inputs:
+  - github-token:
+    required: true
+
   - git-message: 'chore: Release {version}'
     required: false

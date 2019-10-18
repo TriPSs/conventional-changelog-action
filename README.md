@@ -1,6 +1,6 @@
 # Conventional Changelog action
 
-This action will generate a conventional changelog, tag the commit and push all the changes.
+This action will bump version, tag commit and generates changelog with conventional commits.
 
 ## Inputs
 
@@ -18,4 +18,6 @@ The time we greeted you.
 
 uses: actions/hello-world-javascript-action@v1
 with:
-  git-: 'Mona the Octocat'
+  git-message: 'chore: Release {version}'
+  github-token: ${{ secrets.github_token }}
+
