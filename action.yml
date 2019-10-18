@@ -4,9 +4,31 @@ author: 'Tycho Bokdam'
 runs:
   using: 'node12'
   main: 'src/index.js'
+
 branding:
   icon: 'edit'
   color: 'red'
+
 inputs:
-  - git-message: 'chore: Release {version}'
+  github-token:
+    required: true
+
+  git-message:
+    description: 'Commit message to use'
+    default: 'chore(release): {version}'
+    required: false
+
+  preset:
+    description: 'The preset from Conventional Changelog to use'
+    default: 'angular'
+    required: false
+
+  tag-prefix:
+    description: 'Prefix that is used for the git tag'
+    default: 'v'
+    required: false
+
+  output-file:
+    description: 'File to output the changelog to'
+    default: 'CHANGELOG.md'
     required: false
