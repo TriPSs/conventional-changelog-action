@@ -25,18 +25,18 @@ module.exports = {
 
     switch (releaseType) {
       case 'major':
-        major = major + 1
+        major = parseInt(major, 10) + 1
         minor = 0
         patch = 0
         break
 
       case 'minor':
-        minor = minor + 1
+        minor = parseInt(minor, 10) + 1
         patch = 0
         break
 
       default:
-        patch = patch + 1
+        patch = parseInt(patch, 10) + 1
     }
 
     // Update the package.json with the new version

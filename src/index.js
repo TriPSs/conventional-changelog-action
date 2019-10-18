@@ -2,6 +2,7 @@ const core = require('@actions/core')
 const github = require('@actions/github')
 const conventionalChangelog = require('conventional-changelog')
 const conventionalRecommendedBump = require('conventional-recommended-bump')
+const fs = require('fs')
 
 const git = require('./helpers/git')
 const packageJson = require('./helpers/packageJson')
@@ -10,6 +11,7 @@ async function run() {
   try {
     const githubToken = core.getInput('github-token', { required: true })
     const commitMessage = core.getInput('git-message')
+    const tagPrefix = core.getInput('tag-prefix')
     const preset = core.getInput('preset')
 
     // Make the Github token secret
@@ -17,21 +19,37 @@ async function run() {
 
     core.info(`Using "${preset}" preset`)
 
-    // conventionalChangelog({
-    //   preset: 'angular',
-    // }).pipe(process.stdout)
-
     conventionalRecommendedBump({ preset }, (error, recommendation) => {
       if (error) {
         core.setFailed(error.message)
 
       } else {
-        const package = packageJson.bump(
+        core.info(`Recommended release type: ${recommendation.releaseType}`)
+
+        const jsonPackage = packageJson.bump(
           packageJson.get(),
           recommendation.releaseType,
         )
 
-        core.info(`New version: ${package.version}`)
+        core.info(`New version: ${jsonPackage.version}`)
+
+        const changelogStream = conventionalChangelog({
+            preset,
+            releaseCount: 5,
+          },
+          {
+            version: jsonPackage.version,
+            currentTag: `${tagPrefix}${jsonPackage.version}`,
+            tagPrefix
+          },
+        )
+
+        changelogStream
+          .pipe(fs.createWriteStream('CHANGELOG.md'))
+          .on('finish', () => {
+
+          })
+
       }
     })
 

@@ -20,3 +20,8 @@ inputs:
     description: 'The preset from Conventional Changelog to use'
     default: 'angular'
     required: false
+
+  tag-prefix:
+    description: 'Prefix that is used for the git tag'
+    default: 'v'
+    required: false
