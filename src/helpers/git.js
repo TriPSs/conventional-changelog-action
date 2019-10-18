@@ -17,8 +17,7 @@ const git = command => new Promise(async(resolve, reject) => {
   }
 
   try {
-    core.info(`Exec: git ${command}`)
-    await exec.exec(`git ${command}`, options)
+    await exec.exec(`git ${command}`, null, options)
 
     resolve(myOutput)
 
