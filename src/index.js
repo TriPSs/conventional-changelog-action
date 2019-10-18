@@ -23,7 +23,7 @@ async function run() {
     conventionalRecommendedBump({ preset }, (error, recommendation) => {
       if (error) {
         core.setFailed(error.message)
-        
+
       } else {
         const packageJson = packageJson.bump(
           packageJson.get(),
