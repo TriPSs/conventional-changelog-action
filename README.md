@@ -4,28 +4,15 @@ This action will bump version, tag commit and generate a changelog with conventi
 
 ## Inputs
 
-### `github-token`
-
-**Required** Github token.
-
-### `git-message`
-
-**Optional** Commit message that is used when committing the changelog.
-
-### `preset`
-
-**Optional** Preset that is used from conventional commits. Default `angular`.
-
-### `tag-prefix`
-
-**Optional** Prefix for the git tags. Default `v`.
-
-### `output-file`
-
-**Optional** File to output the changelog to. Default `CHANGELOG.md`.
+-**Required** `github-token`: Github token.
+-**Optional** `git-message`: Commit message that is used when committing the changelog.
+-**Optional** `preset`: Preset that is used from conventional commits. Default `angular`.
+-**Optional** `tag-prefix`: Prefix for the git tags. Default `v`.
+-**Optional** `output-file`: File to output the changelog to. Default `CHANGELOG.md`.
 
 ## Example usage
 
+```yaml
 - name: Conventional Changelog Action
   uses: TriPSs/conventional-changelog-action@v0.0.1
   with:
@@ -34,3 +21,5 @@ This action will bump version, tag commit and generate a changelog with conventi
     preset: 'angular'
     tag-prefix: 'v'
     output-file: 'CHANGELOG.md'
+
+```
