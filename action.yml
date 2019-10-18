@@ -15,3 +15,8 @@ inputs:
     description: 'Commit message to use'
     default: 'chore(release): {version} :tada:'
     required: false
+
+  preset:
+    description: 'The preset from Conventional Changelog to use'
+    default: 'preset'
+    required: false
