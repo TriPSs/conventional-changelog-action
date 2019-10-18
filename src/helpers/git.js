@@ -3,6 +3,8 @@ const exec = require('@actions/exec')
 
 const { GITHUB_REPOSITORY, GITHUB_REF } = process.env
 
+const branch = GITHUB_REF.replace('refs/heads/', '')
+
 module.exports = new (class Git {
 
   constructor() {
@@ -11,10 +13,15 @@ module.exports = new (class Git {
     // Make the Github token secret
     core.setSecret(githubToken)
 
+    // Set config
     this.config('user.name', 'Conventional Changelog Action')
     this.config('user.email', 'conventional.changelog.action@github.com')
 
+    // Update the origin
     this.updateOrigin(`https://${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
+
+    // Checkout the branch
+    this.checkout()
   }
 
   exec = command => new Promise(async(resolve, reject) => {
@@ -77,7 +84,16 @@ module.exports = new (class Git {
    * @returns {*}
    */
   push = () => (
-    this.exec(`push ${GITHUB_REF}`)
+    this.exec(`push origin ${branch}`)
+  )
+
+  /**
+   * Checkout branch
+   *
+   * @returns {*}
+   */
+  checkout = () => (
+    this.exec(`checkout ${branch}`)
   )
 
   /**
