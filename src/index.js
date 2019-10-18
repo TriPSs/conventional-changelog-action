@@ -3,13 +3,14 @@ const conventionalRecommendedBump = require('conventional-recommended-bump')
 
 const git = require('./helpers/git')
 const packageJson = require('./helpers/packageJson')
-const generateChangelog = require('./helpers/changelog')
+const generateChangelog = require('./helpers/generateChangelog')
 
 async function run() {
   try {
     const commitMessage = core.getInput('git-message')
     const tagPrefix = core.getInput('tag-prefix')
     const preset = core.getInput('preset')
+    const outputFile = core.getInput('output-file')
 
     core.info(`Using "${preset}" preset`)
 
@@ -32,7 +33,7 @@ async function run() {
         core.info(`New version: ${jsonPackage.version}`)
 
         // Generate the changelog
-        await generateChangelog(tagPrefix, preset, jsonPackage)
+        await generateChangelog(tagPrefix, preset, jsonPackage, outputFile)
 
         core.info('Push all changes')
 
@@ -43,7 +44,7 @@ async function run() {
         await git.push()
       }
     })
-    
+
   } catch (error) {
     core.setFailed(error.message)
   }

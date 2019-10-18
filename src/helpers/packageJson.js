@@ -1,6 +1,8 @@
 const path = require('path')
 const fs = require('fs')
 
+const packageJsonLoc = path.resolve('./', 'package.json')
+
 module.exports = {
 
   /**
@@ -8,8 +10,6 @@ module.exports = {
    * @return {any}
    */
   get: () => {
-    const packageJsonLoc = path.resolve('./', 'package.json')
-
     return JSON.parse(fs.readFileSync(packageJsonLoc))
   },
 

@@ -1,23 +1,25 @@
 # Conventional Changelog action
 
-This action will bump version, tag commit and generates changelog with conventional commits.
+This action will bump version, tag commit and generate a changelog with conventional commits.
 
 ## Inputs
 
-### `who-to-greet`
-
-**Required** The name of the person to greet. Default `"World"`.
-
-## Outputs
-
-### `time`
-
-The time we greeted you.
+- **Required** `github-token`: Github token.
+- **Optional** `git-message`: Commit message that is used when committing the changelog.
+- **Optional** `preset`: Preset that is used from conventional commits. Default `angular`.
+- **Optional** `tag-prefix`: Prefix for the git tags. Default `v`.
+- **Optional** `output-file`: File to output the changelog to. Default `CHANGELOG.md`.
 
 ## Example usage
 
-uses: actions/hello-world-javascript-action@v1
-with:
-  git-message: 'chore: Release {version}'
-  github-token: ${{ secrets.github_token }}
+```yaml
+- name: Conventional Changelog Action
+  uses: TriPSs/conventional-changelog-action@v0.0.1
+  with:
+    github-token: ${{ secrets.github_token }}
+    git-message: 'chore(release): {version}'
+    preset: 'angular'
+    tag-prefix: 'v'
+    output-file: 'CHANGELOG.md'
 
+```
