@@ -40,14 +40,18 @@ async function run() {
           {
             version: jsonPackage.version,
             currentTag: `${tagPrefix}${jsonPackage.version}`,
-            tagPrefix
+            tagPrefix,
           },
         )
 
         changelogStream
           .pipe(fs.createWriteStream('CHANGELOG.md'))
           .on('finish', () => {
-
+            // Add changed files to git
+            git.add('.')
+            git.commit(commitMessage.replace('{version}', jsonPackage.version))
+            git.push()
+            
           })
 
       }
