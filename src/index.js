@@ -12,7 +12,7 @@ async function run() {
 
     // console.log()
 
-    core.debug(`Current version: ${JSON.stringify(octokit.context.repo)}`)
+    core.info(`Current version: ${JSON.stringify(octokit.context.repo)}`)
 
     // Get the current version
     // const currentVersion = require('./package.json').version

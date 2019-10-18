@@ -12,6 +12,7 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - run: yarn
       - uses: ./
         with:
           github-token: ${{ secrets.github_token }}
