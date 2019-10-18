@@ -10,6 +10,9 @@ jobs:
     steps:
       - uses: actions/checkout@v1
 
+      - run: yarn --production
+      - run: git add node_modules -f
+
       - uses: ./
         with:
           github-token: ${{ secrets.github_token }}
