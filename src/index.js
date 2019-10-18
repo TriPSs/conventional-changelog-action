@@ -1,22 +1,19 @@
 const core = require('@actions/core')
-const github = require('@actions/github')
-const conventionalChangelog = require('conventional-changelog')
 const conventionalRecommendedBump = require('conventional-recommended-bump')
-const fs = require('fs')
 
 const git = require('./helpers/git')
 const packageJson = require('./helpers/packageJson')
+const generateChangelog = require('./helpers/changelog')
 
 async function run() {
   try {
-    const githubToken = core.getInput('github-token', { required: true })
     const commitMessage = core.getInput('git-message')
     const tagPrefix = core.getInput('tag-prefix')
     const preset = core.getInput('preset')
 
     core.info(`Using "${preset}" preset`)
 
-    conventionalRecommendedBump({ preset }, (error, recommendation) => {
+    conventionalRecommendedBump({ preset }, async(error, recommendation) => {
       if (error) {
         core.setFailed(error.message)
 
@@ -34,34 +31,19 @@ async function run() {
 
         core.info(`New version: ${jsonPackage.version}`)
 
-        const changelogStream = conventionalChangelog({
-            preset,
-            releaseCount: 5,
-          },
-          {
-            version: jsonPackage.version,
-            currentTag: `${tagPrefix}${jsonPackage.version}`,
-            tagPrefix,
-          },
-        )
+        // Generate the changelog
+        await generateChangelog(tagPrefix, preset, jsonPackage)
 
-        changelogStream
-          .pipe(fs.createWriteStream('CHANGELOG.md'))
-          .on('finish', async() => {
-            core.info('Push all changes')
-            // Add changed files to git
-            await git.add('.')
-            await git.commit(commitMessage.replace('{version}', jsonPackage.version))
-            await git.push()
-          })
+        core.info('Push all changes')
+
+        // Add changed files to git
+        await git.add('.')
+        await git.commit(commitMessage.replace('{version}', `${tagPrefix}${jsonPackage.version}`))
+        await git.createTag(`${tagPrefix}${jsonPackage.version}`)
+        await git.push()
       }
     })
-
-    // Get the current version
-    // const currentVersion = require('./package.json').version
-
-    // core.debug(`Current version: ${currentVersion}`);
-
+    
   } catch (error) {
     core.setFailed(error.message)
   }
