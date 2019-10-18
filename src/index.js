@@ -46,12 +46,12 @@ async function run() {
 
         changelogStream
           .pipe(fs.createWriteStream('CHANGELOG.md'))
-          .on('finish', () => {
+          .on('finish',async () => {
             // Add changed files to git
-            git.add('.')
-            git.commit(commitMessage.replace('{version}', jsonPackage.version))
-            git.push()
-            
+            await git.add('.')
+            await git.commit(commitMessage.replace('{version}', jsonPackage.version))
+            await git.push()
+
           })
 
       }
