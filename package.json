@@ -19,6 +19,7 @@
   "homepage": "https://github.com/TriPSs/conventional-changelog-action#readme",
   "dependencies": {
     "@actions/core": "^1.1.3",
+    "@actions/exec": "^1.0.1",
     "@actions/github": "^1.1.0"
   }
 }

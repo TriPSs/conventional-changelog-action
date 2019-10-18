@@ -1,18 +1,17 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
 
+const git = require('./helpers/git')
+
 async function run() {
   try {
     const githubToken = core.getInput('github-token', { required: true })
     const commitMessage = core.getInput('git-message')
-    const octokit = new github.GitHub(githubToken);
 
     // Make the Github token secret
-    // core.setSecret(githubToken)
+    core.setSecret(githubToken)
 
-    // console.log()
-
-    core.info(`Current version: ${JSON.stringify(github.context)}`)
+    core.info(`The previous tag was: ${git.tag.latest()} `)
 
     // Get the current version
     // const currentVersion = require('./package.json').version
