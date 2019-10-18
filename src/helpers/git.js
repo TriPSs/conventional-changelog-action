@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
 
-const { GITHUB_REPOSITORY } = process.env
+const { GITHUB_REPOSITORY, GITHUB_REF } = process.env
 
 module.exports = new (class Git {
 
@@ -74,14 +74,10 @@ module.exports = new (class Git {
   /**
    * Push all changes
    *
-   * @param branch
-   * @param origin
-   * @param args
-   *
    * @returns {*}
    */
-  push = (branch, origin, args = []) => (
-    this.exec(`push ${args.join(' ')} ${origin} ${branch}`)
+  push = () => (
+    this.exec(`push ${GITHUB_REF}`)
   )
 
   /**
