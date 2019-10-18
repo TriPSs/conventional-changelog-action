@@ -8,8 +8,10 @@ branding:
   icon: 'edit'
   color: 'red'
 inputs:
-  - github-token:
+  github-token:
     required: true
 
-  - git-message: 'chore: Release {version}'
+  git-message:
+    description: 'Commit message to use'
+    default: 'chore: Release {version}'
     required: false
