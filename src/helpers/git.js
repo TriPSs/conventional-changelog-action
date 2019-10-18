@@ -1,3 +1,4 @@
+const core = require('@actions/core')
 const exec = require('@actions/exec')
 
 const git = command => new Promise(async(resolve, reject) => {
@@ -16,6 +17,7 @@ const git = command => new Promise(async(resolve, reject) => {
   }
 
   try {
+    core.info(`Exec: git ${command}`)
     await exec.exec(`git ${command}`, options)
 
     resolve(myOutput)
