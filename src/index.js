@@ -17,7 +17,6 @@ async function run() {
     //   preset: 'angular',
     // }).pipe(process.stdout)
 
-
     conventionalRecommendedBump({
       preset: `angular`,
     }, (error, recommendation) => {
