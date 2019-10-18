@@ -13,5 +13,5 @@ inputs:
 
   git-message:
     description: 'Commit message to use'
-    default: 'chore: Release {version}'
+    default: 'chore(release): {version} :tada:'
     required: false

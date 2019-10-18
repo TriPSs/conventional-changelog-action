@@ -1,5 +1,7 @@
 const core = require('@actions/core')
 const github = require('@actions/github')
+const conventionalChangelog = require('conventional-changelog')
+const conventionalRecommendedBump = require('conventional-recommended-bump')
 
 const git = require('./helpers/git')
 
@@ -11,7 +13,18 @@ async function run() {
     // Make the Github token secret
     core.setSecret(githubToken)
 
-    core.info(`The previous tag was: ${await git.tag.latest()} `)
+    // conventionalChangelog({
+    //   preset: 'angular',
+    // }).pipe(process.stdout)
+
+
+    conventionalRecommendedBump({
+      preset: `angular`,
+    }, (error, recommendation) => {
+      console.log(recommendation.releaseType) // 'major'
+
+      core.info(`[recommendation.releaseType]: ${recommendation.releaseType}`)
+    })
 
     // Get the current version
     // const currentVersion = require('./package.json').version

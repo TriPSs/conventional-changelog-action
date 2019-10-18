@@ -19,7 +19,7 @@ const git = command => new Promise(async(resolve, reject) => {
     await exec.exec(`git ${command}`, options)
 
     resolve(myOutput)
-    
+
   } catch (e) {
     reject(e)
   }
