@@ -15,6 +15,7 @@ async function run() {
     // Make the Github token secret
     core.setSecret(githubToken)
 
+    core.info(`Using "${preset}" preset`)
 
     // conventionalChangelog({
     //   preset: 'angular',

@@ -18,5 +18,5 @@ inputs:
 
   preset:
     description: 'The preset from Conventional Changelog to use'
-    default: 'preset'
+    default: 'angular'
     required: false
