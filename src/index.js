@@ -14,9 +14,6 @@ async function run() {
     const tagPrefix = core.getInput('tag-prefix')
     const preset = core.getInput('preset')
 
-    // Make the Github token secret
-    core.setSecret(githubToken)
-
     core.info(`Using "${preset}" preset`)
 
     conventionalRecommendedBump({ preset }, (error, recommendation) => {

@@ -1,32 +1,55 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
 
-const git = command => new Promise(async(resolve, reject) => {
-  let myOutput = ''
-  let myError = ''
+const { GITHUB_REPOSITORY } = process.env
 
-  const options = {
-    listeners: {
-      stdout: (data) => {
-        myOutput += data.toString()
-      },
-      stderr: (data) => {
-        myError += data.toString()
-      },
-    },
+module.exports = new (class Git {
+
+  constructor() {
+    const githubToken = core.getInput('github-token', { required: true })
+
+    // Make the Github token secret
+    core.setSecret(githubToken)
+
+    this.config('user.name', 'Conventional Changelog Action')
+    this.config('user.email', 'conventional.changelog.action@github.com')
+
+    this.updateOrigin(`https://${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
   }
 
-  try {
-    await exec.exec(`git ${command}`, null, options)
+  exec = command => new Promise(async(resolve, reject) => {
+    let myOutput = ''
+    let myError = ''
 
-    resolve(myOutput)
+    const options = {
+      listeners: {
+        stdout: (data) => {
+          myOutput += data.toString()
+        },
+        stderr: (data) => {
+          myError += data.toString()
+        },
+      },
+    }
 
-  } catch (e) {
-    reject(e)
-  }
-})
+    try {
+      await exec.exec(`git ${command}`, null, options)
 
-module.exports = {
+      resolve(myOutput)
+
+    } catch (e) {
+      reject(e)
+    }
+  })
+
+  /**
+   * Set a git config prop
+   *
+   * @param prop
+   * @param value
+   * @returns {*}
+   */
+  config = (prop, value) => this.exec(`config ${prop} "${value}"`)
 
   /**
    * Add a file to commit
@@ -34,20 +57,19 @@ module.exports = {
    * @param file
    * @returns {*}
    */
-  add: file => git(`add ${file}`),
+  add = file => this.exec(`add ${file}`)
 
   /**
    * Commit all changes
    *
    * @param message
-   * @param skipBuild
    * @param args
    *
    * @returns {*}
    */
-  commit: (message, skipBuild = true, args = []) => (
-    git(`commit -m "${message} ${skipBuild ? '[skip ci]' : ''}" ${args.join(' ')}`)
-  ),
+  commit = (message, args = []) => (
+    this.exec(`commit -m "${message}" ${args.join(' ')}`)
+  )
 
   /**
    * Push all changes
@@ -58,21 +80,35 @@ module.exports = {
    *
    * @returns {*}
    */
-  push: (branch, origin, args = []) => (
-    git(`push ${args.join(' ')} ${origin} ${branch}`, { silent: true })
-  ),
+  push = (branch, origin, args = []) => (
+    this.exec(`push ${args.join(' ')} ${origin} ${branch}`)
+  )
 
-  tag: {
+  /**
+   * Updates the origin remote
+   *
+   * @param repo
+   * @returns {*}
+   */
+  updateOrigin = (repo) => this.exec(`remote set-url origin ${repo}`)
 
-    getCurrent: () => git('describe --tags --abbrev=0').toString().trim(),
-
-    getSha: (tag) => git(`rev-list -n 1 ${tag}`).toString().trim(),
-
-    latest: () => git('describe --tags $(git rev-list --tags --max-count=1)').toString().trim(),
-
-    create: (tag) => git(`tag -a ${tag} -m "${tag}"`),
-
-    update: (tag) => git(`tag -fa ${tag} -m "${tag}"`),
-
-  },
-}
+})()
+//
+// module.exports = {
+//
+//
+//
+//   tag: {
+//
+//     getCurrent: () => git('describe --tags --abbrev=0').toString().trim(),
+//
+//     getSha: (tag) => git(`rev-list -n 1 ${tag}`).toString().trim(),
+//
+//     latest: () => git('describe --tags $(git rev-list --tags --max-count=1)').toString().trim(),
+//
+//     create: (tag) => git(`tag -a ${tag} -m "${tag}"`),
+//
+//     update: (tag) => git(`tag -fa ${tag} -m "${tag}"`),
+//
+//   },
+// }
