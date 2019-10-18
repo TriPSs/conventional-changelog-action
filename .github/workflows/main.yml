@@ -1,9 +1,7 @@
-name: 'test-local'
+name: 'release'
 on:
-  pull_request:
   push:
     branches:
-      - master
       - 'releases/*'
 
 jobs:
