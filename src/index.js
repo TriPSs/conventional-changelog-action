@@ -11,7 +11,7 @@ async function run() {
     // Make the Github token secret
     core.setSecret(githubToken)
 
-    core.info(`The previous tag was: ${git.tag.latest()} `)
+    core.info(`The previous tag was: ${await git.tag.latest()} `)
 
     // Get the current version
     // const currentVersion = require('./package.json').version

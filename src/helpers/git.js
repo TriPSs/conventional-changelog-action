@@ -1,6 +1,6 @@
 const exec = require('@actions/exec')
 
-const git = (command) => exec.exec(`git ${command}`)
+const git = command => exec.exec(`git ${command}`)
 
 module.exports = {
 
@@ -40,11 +40,11 @@ module.exports = {
 
   tag: {
 
-    getCurrent: () => git('describe --tags --abbrev=0', { silent: true }).toString().trim(),
+    getCurrent: () => git('describe --tags --abbrev=0').toString().trim(),
 
-    getSha: (tag) => git(`rev-list -n 1 ${tag}`, { silent: true }).toString().trim(),
+    getSha: (tag) => git(`rev-list -n 1 ${tag}`).toString().trim(),
 
-    latest: () => git('describe --tags $(git rev-list --tags --max-count=1)', { silent: true }).toString().trim(),
+    latest: () => git('describe --tags $(git rev-list --tags --max-count=1)').toString().trim(),
 
     create: (tag) => git(`tag -a ${tag} -m "${tag}"`),
 
