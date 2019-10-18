@@ -26,12 +26,12 @@ async function run() {
         core.setFailed(error.message)
 
       } else {
-        const packageJson = packageJson.bump(
+        const package = packageJson.bump(
           packageJson.get(),
           recommendation.releaseType,
         )
 
-        core.info(`New version: ${packageJson.version}`)
+        core.info(`New version: ${package.version}`)
       }
     })
 
