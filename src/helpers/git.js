@@ -1,6 +1,29 @@
 const exec = require('@actions/exec')
 
-const git = command => exec.exec(`git ${command}`)
+const git = command => new Promise(async(resolve, reject) => {
+  let myOutput = ''
+  let myError = ''
+
+  const options = {
+    listeners: {
+      stdout: (data) => {
+        myOutput += data.toString()
+      },
+      stderr: (data) => {
+        myError += data.toString()
+      },
+    },
+  }
+
+  try {
+    await exec.exec(`git ${command}`, options)
+
+    resolve(myOutput)
+    
+  } catch (e) {
+    reject(e)
+  }
+})
 
 module.exports = {
 
