@@ -24,6 +24,12 @@ module.exports = new (class Git {
     this.checkout()
   }
 
+  /**
+   * Executes the git command
+   *
+   * @param command
+   * @return {Promise<>}
+   */
   exec = command => new Promise(async(resolve, reject) => {
     let myOutput = ''
     let myError = ''
@@ -54,7 +60,7 @@ module.exports = new (class Git {
    *
    * @param prop
    * @param value
-   * @returns {*}
+   * @return {Promise<>}
    */
   config = (prop, value) => this.exec(`config ${prop} "${value}"`)
 
@@ -72,7 +78,7 @@ module.exports = new (class Git {
    * @param message
    * @param args
    *
-   * @returns {*}
+   * @return {Promise<>}
    */
   commit = (message, args = []) => (
     this.exec(`commit -m "${message}" ${args.join(' ')}`)
@@ -81,16 +87,16 @@ module.exports = new (class Git {
   /**
    * Push all changes
    *
-   * @returns {*}
+   * @return {Promise<>}
    */
   push = () => (
-    this.exec(`push origin ${branch}`)
+    this.exec(`push origin ${branch} --follow-tags`)
   )
 
   /**
    * Checkout branch
    *
-   * @returns {*}
+   * @return {Promise<>}
    */
   checkout = () => (
     this.exec(`checkout ${branch}`)
@@ -100,27 +106,16 @@ module.exports = new (class Git {
    * Updates the origin remote
    *
    * @param repo
-   * @returns {*}
+   * @return {Promise<>}
    */
-  updateOrigin = (repo) => this.exec(`remote set-url origin ${repo}`)
+  updateOrigin = repo => this.exec(`remote set-url origin ${repo}`)
+
+  /**
+   * Creates git tag
+   *
+   * @param tag
+   * @return {Promise<>}
+   */
+  createTag = tag => this.exec(`tag -a ${tag} -m "${tag}"`)
 
 })()
-//
-// module.exports = {
-//
-//
-//
-//   tag: {
-//
-//     getCurrent: () => git('describe --tags --abbrev=0').toString().trim(),
-//
-//     getSha: (tag) => git(`rev-list -n 1 ${tag}`).toString().trim(),
-//
-//     latest: () => git('describe --tags $(git rev-list --tags --max-count=1)').toString().trim(),
-//
-//     create: (tag) => git(`tag -a ${tag} -m "${tag}"`),
-//
-//     update: (tag) => git(`tag -fa ${tag} -m "${tag}"`),
-//
-//   },
-// }
