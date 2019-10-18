@@ -14,12 +14,11 @@ This action will bump version, tag commit and generate a changelog with conventi
 
 ```yaml
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v0.0.1
+  uses: TriPSs/conventional-changelog-action@v1.2.0
   with:
     github-token: ${{ secrets.github_token }}
     git-message: 'chore(release): {version}'
     preset: 'angular'
     tag-prefix: 'v'
     output-file: 'CHANGELOG.md'
-
 ```
