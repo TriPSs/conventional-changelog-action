@@ -1,3 +1,4 @@
+const fs = require('fs')
 const conventionalChangelog = require('conventional-changelog')
 
 module.exports = (tagPrefix, preset, jsonPackage, fileName) => new Promise((resolve) => {
