@@ -55,6 +55,8 @@ module.exports = new (class Git {
     }
   })
 
+  init = () => this.exec('init')
+
   /**
    * Set a git config prop
    *
