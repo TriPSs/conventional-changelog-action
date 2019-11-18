@@ -11,7 +11,7 @@ module.exports = new (class Git {
   constructor() {
     const githubToken = core.getInput('github-token', { required: true })
 
-    console.log(github.context);
+    core.info(JSON.stringify(github.context));
 
     // Make the Github token secret
     core.setSecret(githubToken)
