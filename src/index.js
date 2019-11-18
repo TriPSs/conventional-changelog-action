@@ -16,8 +16,8 @@ async function run() {
     core.info(`Using "${preset}" preset`)
 
     conventionalRecommendedBump({ preset }, async(error, recommendation) => {
-      core.info(github.context.action);
-      if (github.context.action === "aceableconventional-changelog-action") {
+      core.info(github.context.payload.head_commit);
+      if (github.context.payload.head_commit.author.email === "conventional.changelog.action@github.com") {
         core.setFailed("Cannot bump self, reject")
         return false
       }
