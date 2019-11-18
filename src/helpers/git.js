@@ -1,6 +1,5 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
-const github = require('@actions/github')
 
 const { GITHUB_REPOSITORY, GITHUB_REF } = process.env
 
@@ -10,8 +9,6 @@ module.exports = new (class Git {
 
   constructor() {
     const githubToken = core.getInput('github-token', { required: true })
-
-    core.info(JSON.stringify(github.context));
 
     // Make the Github token secret
     core.setSecret(githubToken)

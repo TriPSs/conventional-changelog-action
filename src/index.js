@@ -1,4 +1,5 @@
 const core = require('@actions/core')
+const github = require('@actions/github')
 const conventionalRecommendedBump = require('conventional-recommended-bump')
 
 const git = require('./helpers/git')
@@ -15,6 +16,12 @@ async function run() {
     core.info(`Using "${preset}" preset`)
 
     conventionalRecommendedBump({ preset }, async(error, recommendation) => {
+      core.info(github.context.action);
+      if (github.context.action === "aceableconventional-changelog-action") {
+        core.setFailed("Cannot bump self, reject")
+        return false
+      }
+
       if (error) {
         core.setFailed(error.message)
 
