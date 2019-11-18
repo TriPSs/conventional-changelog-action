@@ -1,5 +1,4 @@
 const core = require('@actions/core')
-const github = require('@actions/github')
 const conventionalRecommendedBump = require('conventional-recommended-bump')
 
 const git = require('./helpers/git')
@@ -16,12 +15,6 @@ async function run() {
     core.info(`Using "${preset}" preset`)
 
     conventionalRecommendedBump({ preset }, async(error, recommendation) => {
-      core.info(github.context.payload.head_commit);
-      if (github.context.payload.head_commit.author.email === "conventional.changelog.action@github.com") {
-        core.setFailed("Cannot bump self, reject")
-        return false
-      }
-
       if (error) {
         core.setFailed(error.message)
 
@@ -47,7 +40,7 @@ async function run() {
         // Add changed files to git
         await git.add('.')
         await git.commit(commitMessage.replace('{version}', `${tagPrefix}${jsonPackage.version}`))
-        await git.createTag(`${tagPrefix}${jsonPackage.version}`)
+        // await git.createTag(`${tagPrefix}${jsonPackage.version}`)
         await git.push()
       }
     })
