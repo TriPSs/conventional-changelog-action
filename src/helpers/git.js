@@ -17,6 +17,8 @@ module.exports = new (class Git {
     this.config('user.name', 'Conventional Changelog Action')
     this.config('user.email', 'conventional.changelog.action@github.com')
 
+    this.init()
+
     // Update the origin
     this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
 
