@@ -4,7 +4,6 @@
 # Editors
 .vscode
 .idea
-node_modules
 
 # Logs
 logs
