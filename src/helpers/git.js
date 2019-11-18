@@ -1,5 +1,6 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
+const github = require('@actions/github')
 
 const { GITHUB_REPOSITORY, GITHUB_REF } = process.env
 
@@ -10,14 +11,14 @@ module.exports = new (class Git {
   constructor() {
     const githubToken = core.getInput('github-token', { required: true })
 
+    console.log(github.context);
+
     // Make the Github token secret
     core.setSecret(githubToken)
 
     // Set config
     this.config('user.name', 'Conventional Changelog Action')
     this.config('user.email', 'conventional.changelog.action@github.com')
-
-    this.init()
 
     // Update the origin
     this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
