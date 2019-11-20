@@ -40,7 +40,7 @@ async function run() {
         // Add changed files to git
         await git.add('.')
         await git.commit(commitMessage.replace('{version}', `${tagPrefix}${jsonPackage.version}`))
-        // await git.createTag(`${tagPrefix}${jsonPackage.version}`)
+        await git.createTag(`${tagPrefix}${jsonPackage.version}`)
         await git.push()
       }
     })
