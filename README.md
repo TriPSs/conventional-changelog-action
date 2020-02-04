@@ -9,17 +9,18 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `preset`: Preset that is used from conventional commits. Default `angular`.
 - **Optional** `tag-prefix`: Prefix for the git tags. Default `v`.
 - **Optional** `output-file`: File to output the changelog to. Default `CHANGELOG.md`.
+- **Optional** `changelog-release-count`: Number of releases to preserve in changelog. Default `5`, use `0` to regenerate all.
 
 ## Example usage
 
 ```yaml
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v0.0.1
+  uses: TriPSs/conventional-changelog-action@v1.2.0
   with:
     github-token: ${{ secrets.github_token }}
     git-message: 'chore(release): {version}'
     preset: 'angular'
     tag-prefix: 'v'
     output-file: 'CHANGELOG.md'
-
+    changelog-release-count: 5
 ```
