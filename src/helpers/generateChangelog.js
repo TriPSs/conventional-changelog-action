@@ -1,10 +1,10 @@
 const fs = require('fs')
 const conventionalChangelog = require('conventional-changelog')
 
-module.exports = (tagPrefix, preset, jsonPackage, fileName) => new Promise((resolve) => {
+module.exports = (tagPrefix, preset, jsonPackage, fileName, releaseCount) => new Promise((resolve) => {
   const changelogStream = conventionalChangelog({
       preset,
-      releaseCount: 5,
+      releaseCount,
     },
     {
       version: jsonPackage.version,
