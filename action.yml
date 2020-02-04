@@ -32,3 +32,8 @@ inputs:
     description: 'File to output the changelog to'
     default: 'CHANGELOG.md'
     required: false
+
+  changelog-release-count:
+    description: 'Number of releases to preserve in changelog'
+    default: 5
+    required: false

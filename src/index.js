@@ -11,6 +11,7 @@ async function run() {
     const tagPrefix = core.getInput('tag-prefix')
     const preset = core.getInput('preset')
     const outputFile = core.getInput('output-file')
+    const releaseCount = core.getInput('changelog-release-count')
 
     core.info(`Using "${preset}" preset`)
 
@@ -33,7 +34,7 @@ async function run() {
         core.info(`New version: ${jsonPackage.version}`)
 
         // Generate the changelog
-        await generateChangelog(tagPrefix, preset, jsonPackage, outputFile)
+        await generateChangelog(tagPrefix, preset, jsonPackage, outputFile, releaseCount)
 
         core.info('Push all changes')
 
