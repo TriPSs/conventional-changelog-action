@@ -1,3 +1,12 @@
+# [1.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v1.2.0...v1.3.0) (2020-02-04)
+
+
+### Features
+
+* Make the releaseCount configurable ([da75f59](https://github.com/TriPSs/conventional-changelog-action/commit/da75f5939add67131c5c804a1e2973ba6667957b))
+
+
+
 # [1.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v0.0.1...v1.2.0) (2019-10-18)
 
 
