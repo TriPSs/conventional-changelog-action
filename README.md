@@ -22,5 +22,5 @@ This action will bump version, tag commit and generate a changelog with conventi
     preset: 'angular'
     tag-prefix: 'v'
     output-file: 'CHANGELOG.md'
-    changelog-release-count: 5
+    release-count: '5'
 ```
