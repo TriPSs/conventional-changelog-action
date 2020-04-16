@@ -11,7 +11,7 @@ async function run() {
     const tagPrefix = core.getInput('tag-prefix')
     const preset = core.getInput('preset')
     const outputFile = core.getInput('output-file')
-    const releaseCount = core.getInput('changelog-release-count')
+    const releaseCount = core.getInput('release-count')
 
     core.info(`Using "${preset}" preset`)
 
