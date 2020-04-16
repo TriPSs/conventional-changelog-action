@@ -1,3 +1,17 @@
+# [2.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v1.3.0...v2.0.0) (2020-04-16)
+
+
+### Code Refactoring
+
+* Changed int 5 to string 5 as default value ([b7d2808](https://github.com/TriPSs/conventional-changelog-action/commit/b7d28084e6d04b3b171793bfb8b28e47efb23025))
+
+
+### BREAKING CHANGES
+
+* Changed changelog-release-count to release-count
+
+
+
 # [1.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v1.2.0...v1.3.0) (2020-02-04)
 
 
