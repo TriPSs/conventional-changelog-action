@@ -11,6 +11,7 @@ branding:
 
 inputs:
   github-token:
+    description: 'Github token'
     required: true
 
   git-message:
@@ -33,7 +34,7 @@ inputs:
     default: 'CHANGELOG.md'
     required: false
 
-  changelog-release-count:
+  release-count:
     description: 'Number of releases to preserve in changelog'
-    default: 5
+    default: '5'
     required: false

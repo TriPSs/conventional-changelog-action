@@ -4,7 +4,7 @@ const conventionalChangelog = require('conventional-changelog')
 module.exports = (tagPrefix, preset, jsonPackage, fileName, releaseCount) => new Promise((resolve) => {
   const changelogStream = conventionalChangelog({
       preset,
-      releaseCount,
+      releaseCount: parseInt(releaseCount, 10)
     },
     {
       version: jsonPackage.version,
