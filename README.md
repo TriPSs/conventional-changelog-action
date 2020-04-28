@@ -9,13 +9,23 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `preset`: Preset that is used from conventional commits. Default `angular`.
 - **Optional** `tag-prefix`: Prefix for the git tags. Default `v`.
 - **Optional** `output-file`: File to output the changelog to. Default `CHANGELOG.md`.
-- **Optional** `changelog-release-count`: Number of releases to preserve in changelog. Default `5`, use `0` to regenerate all.
+- **Optional** `release-count`: Number of releases to preserve in changelog. Default `5`, use `0` to regenerate all.
+- **Optional** `package-json`: The path to the package.json to use. Default `./package.json`.
 
-## Example usage
+## Example usages
 
+Uses all the defaults
 ```yaml
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v1.2.0
+  uses: TriPSs/conventional-changelog-action@v2.1.0
+  with:
+    github-token: ${{ secrets.github_token }}
+```
+
+Overwrite everything
+```yaml
+- name: Conventional Changelog Action
+  uses: TriPSs/conventional-changelog-action@v2.1.0
   with:
     github-token: ${{ secrets.github_token }}
     git-message: 'chore(release): {version}'
@@ -23,4 +33,5 @@ This action will bump version, tag commit and generate a changelog with conventi
     tag-prefix: 'v'
     output-file: 'CHANGELOG.md'
     release-count: '5'
+    package-json: './package.json'
 ```

@@ -38,3 +38,8 @@ inputs:
     description: 'Number of releases to preserve in changelog'
     default: '5'
     required: false
+
+  package-json:
+    description: 'The path to the package.json to use'
+    default: './package.json'
+    required: false
