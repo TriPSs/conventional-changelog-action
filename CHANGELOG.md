@@ -1,3 +1,12 @@
+# [2.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.0.1...v2.1.0) (2020-04-28)
+
+
+### Features
+
+* Added the option to provide the location of the packge.json ([c18a89e](https://github.com/TriPSs/conventional-changelog-action/commit/c18a89eed164e4414b30da38013938f498abef11))
+
+
+
 ## [2.0.1](https://github.com/TriPSs/conventional-changelog-action/compare/v2.0.0...v2.0.1) (2020-04-16)
 
 
@@ -52,15 +61,6 @@
 * Test release ([c471392](https://github.com/TriPSs/conventional-changelog-action/commit/c47139231d3289a08ee39c0b1978b9e935d456a5))
 * Test release ([d71558c](https://github.com/TriPSs/conventional-changelog-action/commit/d71558cec69d773fb6846734b57ff55a6d7b3648))
 * Test release ([5945aae](https://github.com/TriPSs/conventional-changelog-action/commit/5945aaed8f5e59d227742dd35670381cf444aa93))
-
-
-
-## [0.0.1](https://github.com/TriPSs/conventional-changelog-action/compare/70ed437cb42d5ad01303d98797a7988fe1266f6b...v0.0.1) (2019-10-17)
-
-
-### Bug Fixes
-
-* Fixed name action.yml ([70ed437](https://github.com/TriPSs/conventional-changelog-action/commit/70ed437cb42d5ad01303d98797a7988fe1266f6b))
 
 
 
