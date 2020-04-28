@@ -12,8 +12,14 @@ async function run() {
     const preset = core.getInput('preset')
     const outputFile = core.getInput('output-file')
     const releaseCount = core.getInput('release-count')
+    const packageJsonToUse = core.getInput('package-json')
 
     core.info(`Using "${preset}" preset`)
+    core.info(`Using "${commitMessage}" as commit message`)
+    core.info(`Using "${releaseCount}" release count`)
+    core.info(`Using "${packageJsonToUse}"`)
+    core.info(`Using "${tagPrefix}" as tag prefix`)
+    core.info(`Using "${outputFile}" as output file`)
 
     conventionalRecommendedBump({ preset }, async(error, recommendation) => {
       if (error) {
