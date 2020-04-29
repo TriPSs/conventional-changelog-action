@@ -90,7 +90,7 @@ module.exports = new (class Git {
    * @return {Promise<>}
    */
   pull = () => (
-    this.exec(`git pull --unshallow`)
+    this.exec(`pull --unshallow`)
   )
 
   /**
