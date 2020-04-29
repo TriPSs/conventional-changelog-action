@@ -85,6 +85,15 @@ module.exports = new (class Git {
   )
 
   /**
+   * Pull the full history
+   *
+   * @return {Promise<>}
+   */
+  pull = () => (
+    this.exec(`git pull --unshallow`)
+  )
+
+  /**
    * Push all changes
    *
    * @return {Promise<>}
