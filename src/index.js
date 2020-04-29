@@ -21,7 +21,10 @@ async function run() {
     core.info(`Using "${tagPrefix}" as tag prefix`)
     core.info(`Using "${outputFile}" as output file`)
 
-    conventionalRecommendedBump({ preset }, async(error, recommendation) => {
+    core.info('Pull to make sure we have the full git history')
+    await git.pull()
+
+    conventionalRecommendedBump({ preset, tagPrefix }, async(error, recommendation) => {
       if (error) {
         core.setFailed(error.message)
 
