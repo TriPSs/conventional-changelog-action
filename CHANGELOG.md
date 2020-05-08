@@ -1,3 +1,12 @@
+# [2.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.2.0...v2.3.0) (2020-05-08)
+
+
+### Features
+
+* Added clean_changelog option ([7684c0e](https://github.com/TriPSs/conventional-changelog-action/commit/7684c0e755c006004c61d6a6c12e748fee34179d))
+
+
+
 # [2.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.1.1...v2.2.0) (2020-05-08)
 
 
@@ -29,20 +38,6 @@
 
 
 ## [2.0.1](https://github.com/TriPSs/conventional-changelog-action/compare/v2.0.0...v2.0.1) (2020-04-16)
-
-
-
-# [2.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v1.3.0...v2.0.0) (2020-04-16)
-
-
-### Code Refactoring
-
-* Changed int 5 to string 5 as default value ([b7d2808](https://github.com/TriPSs/conventional-changelog-action/commit/b7d28084e6d04b3b171793bfb8b28e47efb23025))
-
-
-### BREAKING CHANGES
-
-* Changed changelog-release-count to release-count
 
 
 
