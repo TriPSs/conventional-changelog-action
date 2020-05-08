@@ -1,3 +1,12 @@
+# [2.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.1.1...v2.2.0) (2020-05-08)
+
+
+### Features
+
+* Added outputs ([770b36d](https://github.com/TriPSs/conventional-changelog-action/commit/770b36d584ef48fe4e0ef7d808d18e5cb0031462))
+
+
+
 ## [2.1.1](https://github.com/TriPSs/conventional-changelog-action/compare/v2.1.0...v2.1.1) (2020-04-29)
 
 
@@ -34,15 +43,6 @@
 ### BREAKING CHANGES
 
 * Changed changelog-release-count to release-count
-
-
-
-# [1.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v1.2.0...v1.3.0) (2020-02-04)
-
-
-### Features
-
-* Make the releaseCount configurable ([da75f59](https://github.com/TriPSs/conventional-changelog-action/commit/da75f5939add67131c5c804a1e2973ba6667957b))
 
 
 
