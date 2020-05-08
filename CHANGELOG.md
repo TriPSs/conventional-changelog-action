@@ -1,3 +1,12 @@
+## [2.3.2](https://github.com/TriPSs/conventional-changelog-action/compare/v2.3.1...v2.3.2) (2020-05-08)
+
+
+### Bug Fixes
+
+* Fixes for CI ([093fc9c](https://github.com/TriPSs/conventional-changelog-action/commit/093fc9c7c21c99f362e43df6c572f02b0bf6fc8e))
+
+
+
 ## [2.3.1](https://github.com/TriPSs/conventional-changelog-action/compare/v2.3.0...v2.3.1) (2020-05-08)
 
 
@@ -29,15 +38,6 @@
 * Fixed tagPrefix being provided as context instead of option ([e66c42b](https://github.com/TriPSs/conventional-changelog-action/commit/e66c42b7603eadc663e120f1355b7da328301ece))
 * Fixed tagPrefix not being provided to bumper ([5b65653](https://github.com/TriPSs/conventional-changelog-action/commit/5b65653fe8cedf1219e523bf44ee0a7453dcc8d2))
 * Pull full history so it works with checkout@v2 ([50ab4fa](https://github.com/TriPSs/conventional-changelog-action/commit/50ab4fa80a641d1a198fb5fe17536a5db6a39a3a))
-
-
-
-# [2.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.0.1...v2.1.0) (2020-04-28)
-
-
-### Features
-
-* Added the option to provide the location of the packge.json ([c18a89e](https://github.com/TriPSs/conventional-changelog-action/commit/c18a89eed164e4414b30da38013938f498abef11))
 
 
 
