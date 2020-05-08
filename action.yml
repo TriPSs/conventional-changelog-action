@@ -47,6 +47,8 @@ inputs:
 outputs:
   changelog:
     description: 'The generated changelog for the new version'
+  clean_changelog:
+    description: 'The generated changelog for the new version without the version name in it'
   version:
     description: 'The new version'
   tag:
