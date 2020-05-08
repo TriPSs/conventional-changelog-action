@@ -3,7 +3,7 @@ const conventionalRecommendedBump = require('conventional-recommended-bump')
 
 const git = require('./helpers/git')
 const packageJson = require('./helpers/packageJson')
-const generateChangelog = require('./helpers/generateChangelog')
+const changelog = require('./helpers/generateChangelog')
 
 async function run() {
   try {
@@ -42,8 +42,15 @@ async function run() {
 
         core.info(`New version: ${jsonPackage.version}`)
 
-        // Generate the changelog
-        await generateChangelog(tagPrefix, preset, jsonPackage, outputFile, releaseCount)
+        // If output file === 'false' we don't write it to file
+        if (outputFile !== 'false') {
+          // Generate the changelog
+          await changelog.generateFileChangelog(tagPrefix, preset, jsonPackage, outputFile, releaseCount)
+        }
+
+        const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, jsonPackage, 1)
+        core.info('Changelog generated')
+        core.info(stringChangelog)
 
         core.info('Push all changes')
 
@@ -52,6 +59,11 @@ async function run() {
         await git.commit(commitMessage.replace('{version}', `${tagPrefix}${jsonPackage.version}`))
         await git.createTag(`${tagPrefix}${jsonPackage.version}`)
         await git.push()
+
+        // Set outputs so other actions (for example actions/create-release) can use it
+        core.setOutput('changelog', stringChangelog)
+        core.setOutput('version', jsonPackage.version)
+        core.setOutput('tag', `${tagPrefix}${jsonPackage.version}`)
       }
     })
 

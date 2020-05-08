@@ -43,3 +43,11 @@ inputs:
     description: 'The path to the package.json to use'
     default: './package.json'
     required: false
+
+outputs:
+  changelog:
+    description: 'The generated changelog for the new version'
+  version:
+    description: 'The new version'
+  tag:
+    description: 'The name of the generated tag'
