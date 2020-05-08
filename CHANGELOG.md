@@ -1,3 +1,7 @@
+## [2.3.1](https://github.com/TriPSs/conventional-changelog-action/compare/v2.3.0...v2.3.1) (2020-05-08)
+
+
+
 # [2.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.2.0...v2.3.0) (2020-05-08)
 
 
@@ -34,10 +38,6 @@
 ### Features
 
 * Added the option to provide the location of the packge.json ([c18a89e](https://github.com/TriPSs/conventional-changelog-action/commit/c18a89eed164e4414b30da38013938f498abef11))
-
-
-
-## [2.0.1](https://github.com/TriPSs/conventional-changelog-action/compare/v2.0.0...v2.0.1) (2020-04-16)
 
 
 
