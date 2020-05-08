@@ -11,6 +11,6 @@ jobs:
     runs-on: windows-latest
     steps:
       - uses: actions/checkout@v2
-      - uses: ./
+      - uses: Actions-R-Us/actions-tagger@latest
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
