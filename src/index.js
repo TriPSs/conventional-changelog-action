@@ -62,6 +62,8 @@ async function run() {
 
         // Set outputs so other actions (for example actions/create-release) can use it
         core.setOutput('changelog', stringChangelog)
+        // Removes the version number from the changelog
+        core.setOutput('clean_changelog', stringChangelog.split('\n').slice(3).join('\n'))
         core.setOutput('version', jsonPackage.version)
         core.setOutput('tag', `${tagPrefix}${jsonPackage.version}`)
       }
