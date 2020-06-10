@@ -1,3 +1,12 @@
+# [2.4.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.3.3...v2.4.0) (2020-06-10)
+
+
+### Features
+
+* add skip-on-empty feature ([153f866](https://github.com/TriPSs/conventional-changelog-action/commit/153f866251ba4d7c33881dbf082bb1e17974e2a1))
+
+
+
 ## [2.3.3](https://github.com/TriPSs/conventional-changelog-action/compare/v2.3.2...v2.3.3) (2020-05-08)
 
 
@@ -26,15 +35,6 @@
 ### Features
 
 * Added clean_changelog option ([7684c0e](https://github.com/TriPSs/conventional-changelog-action/commit/7684c0e755c006004c61d6a6c12e748fee34179d))
-
-
-
-# [2.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.1.1...v2.2.0) (2020-05-08)
-
-
-### Features
-
-* Added outputs ([770b36d](https://github.com/TriPSs/conventional-changelog-action/commit/770b36d584ef48fe4e0ef7d808d18e5cb0031462))
 
 
 
