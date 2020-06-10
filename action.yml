@@ -44,6 +44,11 @@ inputs:
     default: './package.json'
     required: false
 
+  skip-on-empty:
+    description: 'Do nothing when the changelog from the latest release is empty'
+    default: 'false'
+    required: false
+
 outputs:
   changelog:
     description: 'The generated changelog for the new version'
@@ -53,3 +58,5 @@ outputs:
     description: 'The new version'
   tag:
     description: 'The name of the generated tag'
+  skipped:
+    description: 'boolean to check if this step have been skipped'
