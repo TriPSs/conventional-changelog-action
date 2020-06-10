@@ -45,6 +45,7 @@ Overwrite everything
     output-file: 'CHANGELOG.md'
     release-count: '5'
     package-json: './package.json'
+    skip-on-empty: 'false'
 ```
 
 No file changelog
