@@ -13,6 +13,7 @@ async function run() {
     const outputFile = core.getInput('output-file')
     const releaseCount = core.getInput('release-count')
     const packageJsonToUse = core.getInput('package-json')
+    const skipOnEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${commitMessage}" as commit message`)
@@ -24,49 +25,59 @@ async function run() {
     core.info('Pull to make sure we have the full git history')
     await git.pull()
 
-    conventionalRecommendedBump({ preset, tagPrefix }, async(error, recommendation) => {
+    conventionalRecommendedBump({ preset, tagPrefix }, async (error, recommendation) => {
       if (error) {
         core.setFailed(error.message)
-
-      } else {
-        core.info(`Recommended release type: ${recommendation.releaseType}`)
-
-        // Bump the version in the package.json
-        const jsonPackage = packageJson.bump(
-          packageJson.get(),
-          recommendation.releaseType,
-        )
-
-        // Update the package.json file
-        packageJson.update(jsonPackage)
-
-        core.info(`New version: ${jsonPackage.version}`)
-
-        // If output file === 'false' we don't write it to file
-        if (outputFile !== 'false') {
-          // Generate the changelog
-          await changelog.generateFileChangelog(tagPrefix, preset, jsonPackage, outputFile, releaseCount)
-        }
-
-        const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, jsonPackage, 1)
-        core.info('Changelog generated')
-        core.info(stringChangelog)
-
-        core.info('Push all changes')
-
-        // Add changed files to git
-        await git.add('.')
-        await git.commit(commitMessage.replace('{version}', `${tagPrefix}${jsonPackage.version}`))
-        await git.createTag(`${tagPrefix}${jsonPackage.version}`)
-        await git.push()
-
-        // Set outputs so other actions (for example actions/create-release) can use it
-        core.setOutput('changelog', stringChangelog)
-        // Removes the version number from the changelog
-        core.setOutput('clean_changelog', stringChangelog.split('\n').slice(3).join('\n'))
-        core.setOutput('version', jsonPackage.version)
-        core.setOutput('tag', `${tagPrefix}${jsonPackage.version}`)
+        return
       }
+
+      core.info(`Recommended release type: ${recommendation.releaseType}`)
+      recommendation.reason && core.info(`because: ${recommendation.reason}`)
+
+      // Bump the version in the package.json
+      const jsonPackage = packageJson.bump(
+        packageJson.get(),
+        recommendation.releaseType,
+      )
+
+      const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, jsonPackage, 1)
+      core.info('Changelog generated')
+      core.info(stringChangelog)
+
+      const cleanChangelog = stringChangelog.split('\n').slice(3).join('\n').trim()
+
+      if (skipOnEmptyRelease && cleanChangelog === '') {
+        core.info('Generated changelog is empty and skip-on-empty has been activated so we skip this step')
+        core.setOutput('skipped', 'true')
+        return
+      }
+
+      // Update the package.json file
+      packageJson.update(jsonPackage)
+
+      core.info(`New version: ${jsonPackage.version}`)
+
+      // If output file === 'false' we don't write it to file
+      if (outputFile !== 'false') {
+        // Generate the changelog
+        await changelog.generateFileChangelog(tagPrefix, preset, jsonPackage, outputFile, releaseCount)
+      }
+
+      core.info('Push all changes')
+
+      // Add changed files to git
+      await git.add('.')
+      await git.commit(commitMessage.replace('{version}', `${tagPrefix}${jsonPackage.version}`))
+      await git.createTag(`${tagPrefix}${jsonPackage.version}`)
+      await git.push()
+
+      // Set outputs so other actions (for example actions/create-release) can use it
+      core.setOutput('changelog', stringChangelog)
+      // Removes the version number from the changelog
+      core.setOutput('clean_changelog', cleanChangelog)
+      core.setOutput('version', jsonPackage.version)
+      core.setOutput('tag', `${tagPrefix}${jsonPackage.version}`)
+      core.setOutput('skipped', 'false')
     })
 
   } catch (error) {
