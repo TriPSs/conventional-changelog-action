@@ -47,7 +47,7 @@ async function run() {
       const cleanChangelog = stringChangelog.split('\n').slice(3).join('\n').trim()
 
       if (skipOnEmptyRelease && cleanChangelog === '') {
-        core.info('Generated changelog is empty so we skip this step')
+        core.info('Generated changelog is empty and skip-on-empty has been activated so we skip this step')
         core.setOutput('skipped', 'true')
         return
       }
