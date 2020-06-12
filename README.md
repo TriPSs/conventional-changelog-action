@@ -71,7 +71,7 @@ Github releases
 
 - name: Create Release
   uses: actions/create-release@v1
-  if: ${{ !steps.changelog.outputs.skipped  }}
+  if: ${{ steps.changelog.outputs.skipped == 'false' }}
   env:
    GITHUB_TOKEN: ${{ secrets.github_token }}
   with:
