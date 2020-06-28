@@ -19,6 +19,21 @@ inputs:
     default: 'chore(release): {version}'
     required: false
 
+  git-user-name:
+    description: 'The git user.name to use for the commit'
+    default: 'Conventional Changelog Action'
+    required: false
+
+  git-user-email:
+    description: 'The git user.email to use for the commit'
+    default: 'conventional.changelog.action@github.com'
+    required: false
+
+  git-pull-method:
+    description: 'The git pull method used when pulling all changes from remote'
+    default: '--ff-only'
+    required: false
+
   preset:
     description: 'The preset from Conventional Changelog to use'
     default: 'angular'

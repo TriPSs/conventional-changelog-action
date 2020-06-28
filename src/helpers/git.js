@@ -13,9 +13,12 @@ module.exports = new (class Git {
     // Make the Github token secret
     core.setSecret(githubToken)
 
+    const gitUserName = core.getInput('git-user-name')
+    const gitUserEmail = core.getInput('git-user-email')
+
     // Set config
-    this.config('user.name', 'Conventional Changelog Action')
-    this.config('user.email', 'conventional.changelog.action@github.com')
+    this.config('user.name', gitUserName)
+    this.config('user.email', gitUserEmail)
 
     // Update the origin
     this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
@@ -90,7 +93,7 @@ module.exports = new (class Git {
    * @return {Promise<>}
    */
   pull = () => (
-    this.exec(`pull --unshallow`)
+    this.exec(`pull --unshallow ${core.getInput('git-pull-method')}`)
   )
 
   /**
