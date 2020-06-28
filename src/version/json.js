@@ -30,10 +30,12 @@ module.exports = new (class JSON {
    */
   bump = (releaseType) => {
     // Read the JSON file
-    const packageJson = this.read()
+    const jsonFile = this.read()
 
-    let [major, minor, patch] = packageJson.version.split('.')
+    // TODO:: Test and make sure we can use path.to.version
+    let [major, minor, patch] = jsonFile[this.versionPath].split('.')
 
+    // TODO:: Move this to a helper
     switch (releaseType) {
       case 'major':
         major = parseInt(major, 10) + 1
@@ -50,12 +52,12 @@ module.exports = new (class JSON {
         patch = parseInt(patch, 10) + 1
     }
 
-    // Update the package.json with the new version
+    // Update the json file with the new version
     // TODO:: Test and make sure we can use path.to.version
-    packageJson[this.versionPath] = this.newVersion = `${major}.${minor}.${patch}`
+    jsonFile[this.versionPath] = this.newVersion = `${major}.${minor}.${patch}`
 
     // Update the JSON file
-    this.update(packageJson)
+    this.update(jsonFile)
   }
 
   /**
