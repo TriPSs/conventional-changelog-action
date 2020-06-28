@@ -63,20 +63,34 @@ async function run() {
         await changelog.generateFileChangelog(tagPrefix, preset, jsonPackage, outputFile, releaseCount)
       }
 
-      core.info('Push all changes')
+      const gitTag = `${tagPrefix}${versioning.newVersion}`
 
-      // Add changed files to git
-      await git.add('.')
-      await git.commit(commitMessage.replace('{version}', `${tagPrefix}${jsonPackage.version}`))
-      await git.createTag(`${tagPrefix}${jsonPackage.version}`)
-      await git.push()
+      if (!skipCommit) {
+        // Add changed files to git
+        await git.add('.')
+        await git.commit(gitCommitMessage.replace('{version}', gitTag))
+      }
+
+      if (!skipTag) {
+        // Only create the tag if skip tag is false
+        await git.createTag(gitTag)
+      }
+
+      if (!skipCommit || !skipTag) {
+        core.info('Push all changes')
+        await git.push()
+      }
 
       // Set outputs so other actions (for example actions/create-release) can use it
       core.setOutput('changelog', stringChangelog)
-      // Removes the version number from the changelog
       core.setOutput('clean_changelog', cleanChangelog)
-      core.setOutput('version', jsonPackage.version)
-      core.setOutput('tag', `${tagPrefix}${jsonPackage.version}`)
+      core.setOutput('version', versioning.newVersion)
+
+      // Only add the output tag if we did not skip it
+      if (!skipTag) {
+        core.setOutput('tag', gitTag)
+      }
+
       core.setOutput('skipped', 'false')
     })
 
