@@ -54,13 +54,25 @@ inputs:
     default: '5'
     required: false
 
-  package-json:
-    description: 'The path to the package.json to use'
+  version-file:
+    description: 'The path to the file that contains the version to bump'
     default: './package.json'
+    required: false
+
+  version-path:
+    description: 'The place inside the version file to bump'
+    default: 'version'
     required: false
 
   skip-on-empty:
     description: 'Do nothing when the changelog from the latest release is empty'
+    default: 'true'
+    required: false
+
+  skip-version-file:
+    description: 'Do not update the version file'
+    default: 'false'
+    required: false
 
   skip-commit:
     description: 'Do create a release commit'
