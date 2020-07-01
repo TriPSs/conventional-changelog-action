@@ -18,3 +18,21 @@ jobs:
           ENV: 'test'
         with:
           github-token: ${{ secrets.github_token }}
+
+
+  test-git:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'test'
+        with:
+          github-token: ${{ secrets.github_token }}
+          skip-commit: 'true'

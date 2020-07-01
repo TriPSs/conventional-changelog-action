@@ -17,9 +17,9 @@ module.exports = new (class Git {
     const gitUserEmail = core.getInput('git-user-email')
 
     if (ENV === 'test') {
-      const noop = () => {console.log('skipping because of test env')}
-
-      this.exec = noop
+      this.exec = (command) => {
+        console.log(`Skipping "git ${command}" because of test env`)
+      }
     }
 
     // Set config

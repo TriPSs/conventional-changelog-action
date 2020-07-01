@@ -67,7 +67,7 @@ async function run() {
       versioning.init(path.resolve(versionFile), versionPath)
 
       // Bump the version in the package.json
-      versioning.bump(
+      await versioning.bump(
         recommendation.releaseType,
       )
 

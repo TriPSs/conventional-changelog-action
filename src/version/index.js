@@ -1,4 +1,5 @@
 const JSON = require('./json')
+const Git = require('./git')
 
 module.exports = (fileExtension) => {
   switch (fileExtension.toLowerCase()) {
@@ -12,8 +13,8 @@ module.exports = (fileExtension) => {
     // case 'toml':
     //   return Toml
     //
-    // case 'git':
-    //   return Git
+    case 'git':
+      return Git
 
     default:
       return null

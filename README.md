@@ -79,6 +79,16 @@ Tag only
     skip-commit: 'true'
 ```
 
+Use a custom file for versioning
+
+```yaml
+- name: Conventional Changelog Action
+  uses: TriPSs/conventional-changelog-action@v3
+  with:
+    github-token: ${{ secrets.github_token }}
+    version-file: 'my-custom-file.yaml'
+```
+
 Github releases
 
 ```yaml
@@ -103,7 +113,7 @@ Github releases
 
 ## Development
 If you'd like to contribute to this project, all you need to do is clone and install [act](https://github.com/nektos/act) this project and run:
-
+> Make sure that `main: 'src/index.js'` is updated to `main: '../src/index.js'` inside the `action.yml`
 ```shell
 $ yarn install
 

@@ -1,6 +1,8 @@
 const fs = require('fs')
 const objectPath = require('object-path')
 
+const bumpVersion = require('../helpers/bumpVersion')
+
 module.exports = new (class JSON {
 
   fileLocation = null
@@ -33,26 +35,11 @@ module.exports = new (class JSON {
     // Read the JSON file
     const jsonFile = this.read()
 
-    let [major, minor, patch] = objectPath.get(jsonFile, this.versionPath).split('.')
-
-    // TODO:: Move this to a helper
-    switch (releaseType) {
-      case 'major':
-        major = parseInt(major, 10) + 1
-        minor = 0
-        patch = 0
-        break
-
-      case 'minor':
-        minor = parseInt(minor, 10) + 1
-        patch = 0
-        break
-
-      default:
-        patch = parseInt(patch, 10) + 1
-    }
-
-    this.newVersion = `${major}.${minor}.${patch}`
+    // Get the new version
+    this.newVersion = bumpVersion(
+      releaseType,
+      objectPath.get(jsonFile, this.versionPath),
+    )
 
     // Update the json file with the new version
     objectPath.set(jsonFile, this.versionPath, this.newVersion)
