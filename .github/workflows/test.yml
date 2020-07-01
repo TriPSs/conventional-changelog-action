@@ -1,0 +1,20 @@
+name: 'Action to test the action locally with act'
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./conventional-changelog-action"
+
+      - run: cd conventional-changelog-action && yarn --production
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'test'
+        with:
+          github-token: ${{ secrets.github_token }}
