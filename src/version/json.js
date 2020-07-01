@@ -1,4 +1,5 @@
 const fs = require('fs')
+const objectPath = require('object-path')
 
 module.exports = new (class JSON {
 
@@ -32,8 +33,7 @@ module.exports = new (class JSON {
     // Read the JSON file
     const jsonFile = this.read()
 
-    // TODO:: Test and make sure we can use path.to.version
-    let [major, minor, patch] = jsonFile[this.versionPath].split('.')
+    let [major, minor, patch] = objectPath.get(jsonFile, this.versionPath).split('.')
 
     // TODO:: Move this to a helper
     switch (releaseType) {
@@ -52,9 +52,10 @@ module.exports = new (class JSON {
         patch = parseInt(patch, 10) + 1
     }
 
+    this.newVersion = `${major}.${minor}.${patch}`
+
     // Update the json file with the new version
-    // TODO:: Test and make sure we can use path.to.version
-    jsonFile[this.versionPath] = this.newVersion = `${major}.${minor}.${patch}`
+    objectPath.set(jsonFile, this.versionPath, this.newVersion)
 
     // Update the JSON file
     this.update(jsonFile)

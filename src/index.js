@@ -18,7 +18,6 @@ async function run() {
     const versionFile = core.getInput('version-file')
     const versionPath = core.getInput('version-path')
     const skipVersionFile = core.getInput('skip-version-file').toLowerCase() === 'true'
-    const skipTag = core.getInput('skip-tag').toLowerCase() === 'true'
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
 
@@ -34,7 +33,6 @@ async function run() {
 
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
     core.info(`Skipping the update of the version file is "${skipVersionFile ? 'enabled' : 'disabled'}"`)
-    core.info(`Skipping the creation of the GIT tag is "${skipTag ? 'enabled' : 'disabled'}"`)
 
     core.info('Pull to make sure we have the full git history')
     await git.pull()
@@ -52,8 +50,10 @@ async function run() {
         core.info(`Because: ${recommendation.reason}`)
       }
 
-      // If skipVersionFile is true we use GIT to determine the new version
-      const fileExtension = skipVersionFile
+      // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
+      // skipVersionFile can mean there is no version file and skipCommit can mean that the user
+      // is only interested in tags
+      const fileExtension = skipVersionFile || skipCommit
         ? 'git'
         : versionFile.split('.').pop()
 
@@ -101,26 +101,17 @@ async function run() {
         await git.commit(gitCommitMessage.replace('{version}', gitTag))
       }
 
-      if (!skipTag) {
-        // Only create the tag if skip tag is false
-        await git.createTag(gitTag)
-      }
+      // Create the new tag
+      await git.createTag(gitTag)
 
-      if (!skipCommit || !skipTag) {
-        core.info('Push all changes')
-        await git.push()
-      }
+      core.info('Push all changes')
+      await git.push()
 
       // Set outputs so other actions (for example actions/create-release) can use it
       core.setOutput('changelog', stringChangelog)
       core.setOutput('clean_changelog', cleanChangelog)
       core.setOutput('version', versioning.newVersion)
-
-      // Only add the output tag if we did not skip it
-      if (!skipTag) {
-        core.setOutput('tag', gitTag)
-      }
-
+      core.setOutput('tag', gitTag)
       core.setOutput('skipped', 'false')
     })
 

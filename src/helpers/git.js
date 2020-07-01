@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
 
-const { GITHUB_REPOSITORY, GITHUB_REF } = process.env
+const { GITHUB_REPOSITORY, GITHUB_REF, ENV } = process.env
 
 const branch = GITHUB_REF.replace('refs/heads/', '')
 
@@ -16,15 +16,18 @@ module.exports = new (class Git {
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
 
+    if (ENV === 'test') {
+      const noop = () => {console.log('skipping because of test env')}
+
+      this.exec = noop
+    }
+
     // Set config
     this.config('user.name', gitUserName)
     this.config('user.email', gitUserEmail)
 
     // Update the origin
     this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
-
-    // Checkout the branch
-    this.checkout()
   }
 
   /**
@@ -103,15 +106,6 @@ module.exports = new (class Git {
    */
   push = () => (
     this.exec(`push origin ${branch} --follow-tags`)
-  )
-
-  /**
-   * Checkout branch
-   *
-   * @return {Promise<>}
-   */
-  checkout = () => (
-    this.exec(`checkout ${branch}`)
   )
 
   /**

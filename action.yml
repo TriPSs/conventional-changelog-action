@@ -79,10 +79,6 @@ inputs:
     default: 'false'
     required: false
 
-  skip-tag:
-    description: 'Do not create an new tag'
-    default: 'false'
-    required: false
 
 outputs:
   changelog:
@@ -93,7 +89,5 @@ outputs:
     description: 'The new version'
   tag:
     description: 'The name of the generated tag'
-  skipped:
-    description: 'boolean to check if this step have been skipped'
   skipped:
     description: 'boolean to check if this step have been skipped'
