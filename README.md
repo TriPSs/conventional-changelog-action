@@ -119,16 +119,16 @@ If you'd like to contribute to this project, all you need to do is clone and ins
 $ yarn install
 
 # To run / test json versioning
-$ act -j test-json -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=<your token>
+$ act -j test-json -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 
 # To run / test git versioning
-$ act -j test-git -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=<your token>
+$ act -j test-git -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 
 # To run / test yaml versioning
-$ act -j test-yaml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=<your token>
+$ act -j test-yaml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 
 # To run / toml git versioning
-$ act -j test-toml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=<your token>
+$ act -j test-toml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 ```
 
 ## [License](./LICENSE)

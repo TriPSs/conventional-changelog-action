@@ -16,7 +16,8 @@ module.exports = new (class Git {
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
 
-    if (ENV === 'test') {
+    // if the env is dont-use-git then we mock exec as we are testing a workflow locally
+    if (ENV === 'dont-use-git') {
       this.exec = (command) => {
         console.log(`Skipping "git ${command}" because of test env`)
       }
