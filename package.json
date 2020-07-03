@@ -1,22 +1,28 @@
 {
   "name": "conventional-changelog-action",
   "version": "2.4.0",
-  "description": "",
-  "main": "index.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+  "description": "Github Action that generates a changelog with the Conventional Changelog CLI",
+  "keywords": [
+    "actions",
+    "changelog",
+    "commits",
+    "conventional",
+    "github"
+  ],
+  "homepage": "https://github.com/TriPSs/conventional-changelog-action#readme",
+  "bugs": {
+    "url": "https://github.com/TriPSs/conventional-changelog-action/issues"
   },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TriPSs/conventional-changelog-action.git"
   },
-  "keywords": [],
-  "author": "",
   "license": "MIT",
-  "bugs": {
-    "url": "https://github.com/TriPSs/conventional-changelog-action/issues"
+  "author": {
+    "name": "Tycho Bokdam",
+    "email": "tycho@palmtreecoding.com"
   },
-  "homepage": "https://github.com/TriPSs/conventional-changelog-action#readme",
+  "main": "src/index.js",
   "dependencies": {
     "@actions/core": "1.2.4",
     "@actions/exec": "1.0.4",
@@ -26,5 +32,10 @@
     "object-path": "^0.11.4",
     "toml": "^3.0.0",
     "yaml": "^1.10.0"
+  },
+  "devDependencies": {
+    "@commitlint/cli": "8.3.5",
+    "@commitlint/config-conventional": "8.3.4",
+    "husky": "4.2.5"
   }
 }
