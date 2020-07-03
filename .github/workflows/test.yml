@@ -1,0 +1,75 @@
+name: 'Action to test the action locally with act'
+on:
+  push:
+    branches:
+    - branch-that-does-not-exist
+
+jobs:
+  test-json:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+        with:
+          github-token: ${{ secrets.github_token }}
+
+  test-git:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+        with:
+          github-token: ${{ secrets.github_token }}
+          skip-commit: 'true'
+
+  test-yaml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: 'test-file.yaml'
+          version-path: 'package.version'
+
+  test-toml:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: 'test-file.toml'
+          version-path: 'package.version'

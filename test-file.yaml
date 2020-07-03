@@ -1,0 +1,8 @@
+package:
+  version: '0.1.0'
+
+# Comment
+different:
+  props:
+    - one
+    - two

@@ -1,7 +1,7 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
 
-const { GITHUB_REPOSITORY, GITHUB_REF } = process.env
+const { GITHUB_REPOSITORY, GITHUB_REF, ENV } = process.env
 
 const branch = GITHUB_REF.replace('refs/heads/', '')
 
@@ -13,15 +13,22 @@ module.exports = new (class Git {
     // Make the Github token secret
     core.setSecret(githubToken)
 
+    const gitUserName = core.getInput('git-user-name')
+    const gitUserEmail = core.getInput('git-user-email')
+
+    // if the env is dont-use-git then we mock exec as we are testing a workflow locally
+    if (ENV === 'dont-use-git') {
+      this.exec = (command) => {
+        console.log(`Skipping "git ${command}" because of test env`)
+      }
+    }
+
     // Set config
-    this.config('user.name', 'Conventional Changelog Action')
-    this.config('user.email', 'conventional.changelog.action@github.com')
+    this.config('user.name', gitUserName)
+    this.config('user.email', gitUserEmail)
 
     // Update the origin
     this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
-
-    // Checkout the branch
-    this.checkout()
   }
 
   /**
@@ -90,7 +97,7 @@ module.exports = new (class Git {
    * @return {Promise<>}
    */
   pull = () => (
-    this.exec(`pull --unshallow`)
+    this.exec(`pull --unshallow ${core.getInput('git-pull-method')}`)
   )
 
   /**
@@ -100,15 +107,6 @@ module.exports = new (class Git {
    */
   push = () => (
     this.exec(`push origin ${branch} --follow-tags`)
-  )
-
-  /**
-   * Checkout branch
-   *
-   * @return {Promise<>}
-   */
-  checkout = () => (
-    this.exec(`checkout ${branch}`)
   )
 
   /**

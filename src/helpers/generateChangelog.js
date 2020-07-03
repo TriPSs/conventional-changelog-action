@@ -1,17 +1,39 @@
 const fs = require('fs')
 const conventionalChangelog = require('conventional-changelog')
 
-module.exports.generateStringChangelog = (tagPrefix, preset, jsonPackage, releaseCount) => new Promise((resolve, reject) => {
-  const changelogStream = conventionalChangelog({
-      preset,
-      releaseCount: parseInt(releaseCount, 10),
-      tagPrefix,
-    },
-    {
-      version: jsonPackage.version,
-      currentTag: `${tagPrefix}${jsonPackage.version}`,
-    },
-  )
+/**
+ * Generates a changelog stream with the given arguments
+ *
+ * @param tagPrefix
+ * @param preset
+ * @param version
+ * @param releaseCount
+ * @returns {*}
+ */
+const getChangelogStream = (tagPrefix, preset, version, releaseCount) => conventionalChangelog({
+    preset,
+    releaseCount: parseInt(releaseCount, 10),
+    tagPrefix,
+  },
+  {
+    version,
+    currentTag: `${tagPrefix}${version}`,
+  },
+)
+
+module.exports = getChangelogStream
+
+/**
+ * Generates a string changelog
+ *
+ * @param tagPrefix
+ * @param preset
+ * @param version
+ * @param releaseCount
+ * @returns {Promise<string>}
+ */
+module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCount) => new Promise((resolve, reject) => {
+  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount)
 
   let changelog = ''
 
@@ -22,17 +44,18 @@ module.exports.generateStringChangelog = (tagPrefix, preset, jsonPackage, releas
     .on('end', () => resolve(changelog))
 })
 
-module.exports.generateFileChangelog = (tagPrefix, preset, jsonPackage, fileName, releaseCount) => new Promise((resolve) => {
-  const changelogStream = conventionalChangelog({
-      preset,
-      releaseCount: parseInt(releaseCount, 10),
-      tagPrefix,
-    },
-    {
-      version: jsonPackage.version,
-      currentTag: `${tagPrefix}${jsonPackage.version}`,
-    },
-  )
+/**
+ * Generates a file changelog
+ *
+ * @param tagPrefix
+ * @param preset
+ * @param version
+ * @param fileName
+ * @param releaseCount
+ * @returns {Promise<>}
+ */
+module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, releaseCount) => new Promise((resolve) => {
+  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount)
 
   changelogStream
     .pipe(fs.createWriteStream(fileName))
