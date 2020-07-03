@@ -1,4 +1,4 @@
-const JSON = require('./json')
+const Json = require('./json')
 const Git = require('./git')
 const Yaml = require('./yaml')
 const Toml = require('./toml')
@@ -6,7 +6,8 @@ const Toml = require('./toml')
 module.exports = (fileExtension) => {
   switch (fileExtension.toLowerCase()) {
     case 'json':
-      return JSON
+      return Json
+
     case 'yaml':
     case 'yml':
       return Yaml
