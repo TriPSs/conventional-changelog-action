@@ -114,11 +114,21 @@ Github releases
 ## Development
 If you'd like to contribute to this project, all you need to do is clone and install [act](https://github.com/nektos/act) this project and run:
 > Make sure that `main: 'src/index.js'` is updated to `main: '../src/index.js'` inside the `action.yml`
+> Note: The image used is 18 gb!
 ```shell
 $ yarn install
 
-# We need the full 18 gb image because we use GIT
-$ act -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=<your token>
+# To run / test json versioning
+$ act -j test-json -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=<your token>
+
+# To run / test git versioning
+$ act -j test-git -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=<your token>
+
+# To run / test yaml versioning
+$ act -j test-yaml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=<your token>
+
+# To run / toml git versioning
+$ act -j test-toml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=<your token>
 ```
 
 ## [License](./LICENSE)
