@@ -1,3 +1,13 @@
+# [3.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.0.0...v3.1.0) (2020-07-13)
+
+
+### Features
+
+* **pre-commit:** Allow relative path for the pre-commit input ([afea49f](https://github.com/TriPSs/conventional-changelog-action/commit/afea49fa57e678f9c8117d73415a488600b3cd28))
+* Add pre-commit script file (hook) ([0aa82ce](https://github.com/TriPSs/conventional-changelog-action/commit/0aa82ce2ad5a23a200c8ce1eeba32eaefc846d9a))
+
+
+
 # [3.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.4.0...v3.0.0) (2020-07-03)
 
 
@@ -46,10 +56,6 @@
 ### Bug Fixes
 
 * Fixes for CI ([093fc9c](https://github.com/TriPSs/conventional-changelog-action/commit/093fc9c7c21c99f362e43df6c572f02b0bf6fc8e))
-
-
-
-## [2.3.1](https://github.com/TriPSs/conventional-changelog-action/compare/v2.3.0...v2.3.1) (2020-05-08)
 
 
 
