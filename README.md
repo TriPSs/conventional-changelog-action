@@ -18,6 +18,36 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `skip-on-empty`: Boolean to specify if you want to skip empty release (no-changelog generated). This case occured when you push `chore` commit with `angular` for example. Default `'false'`.
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
 - **Optional** `skip-commit`: Do create a release commit. Default `'false'`.
+- **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
+
+### Pre-Commit hook
+
+> Function in a specified file will be run right before the git-add-git-commit phase, when the next
+> version is already known and a new changelog has been generated. You can run any chores across your
+> repository that should be added and commited with the release commit.
+
+Specified path could be relative or absolute. If it is relative, then it will be based on the `GITHUB_WORKSPACE` path.
+
+Script should:
+- be a CommonJS module
+- have a single export: `exports.preCommit = (props) => { /* ... */ }`
+- not have any return value
+- be bundled (contain all dependencies in itself, just like the bundled webapp)
+
+`preCommit` function can be `async`.
+
+Following props will be passed to the function as a single parameter:
+
+```typescript
+interface Props {
+  tag: string; // Next tag e.g. v1.12.3
+  version: string; // Next version e.g. 1.12.3
+}
+
+export function preCommit(props: Props): void {}
+```
+
+A bunch of useful environment variables are available to the script with `process.env`. See [docs.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables](https://docs.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables) to learn more.
 
 ## Outputs
 
@@ -89,6 +119,16 @@ Use a custom file for versioning
     version-file: 'my-custom-file.yaml'
 ```
 
+Use a pre-commit hook
+
+```yaml
+- name: Conventional Changelog Action
+  uses: TriPSs/conventional-changelog-action@v3
+  with:
+    github-token: ${{ secrets.github_token }}
+    pre-commit: some/path/pre-commit.js
+```
+
 Github releases
 
 ```yaml
@@ -129,6 +169,9 @@ $ act -j test-yaml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s gith
 
 # To run / toml git versioning
 $ act -j test-toml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+
+# To run pre-commit test
+$ act -j test-pre-commit -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 ```
 
 ## [License](./LICENSE)
