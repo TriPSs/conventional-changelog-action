@@ -103,7 +103,7 @@ async function run() {
       if (!skipCommit) {
         // Add changed files to git
         if (preCommit) {
-          await require(preCommit).preCommit({
+          await require(path.resolve(preCommit)).preCommit({
             tag: gitTag,
             version: versioning.newVersion,
           })

@@ -38,7 +38,7 @@ jobs:
           ENV: 'dont-use-git'
         with:
           github-token: ${{ secrets.github_token }}
-          pre-commit: ${{ github.workspace }}/test/pre-commit.js
+          pre-commit: test/pre-commit.js
           skip-on-empty: 'false'
 
       - run: test -f pre-commit.test.json || (echo should be here && exit 1)
