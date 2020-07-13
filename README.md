@@ -26,14 +26,13 @@ This action will bump version, tag commit and generate a changelog with conventi
 > version is already known and a new changelog has been generated. You can run any chores across your
 > repository that should be added and commited with the release commit.
 
-An absolute path to the `.js` script file must be provided when specifying the `pre-commit` hook. File
-should contain all its dependencies bundled in itself just like for the webapp.
+Specified path could be relative or absolute. If it is relative, then it will be based on the `GITHUB_WORKSPACE` path.
 
 Script should:
 - be a CommonJS module
 - have a single export: `exports.preCommit = (props) => { /* ... */ }`
 - not have any return value
-- be bundled
+- be bundled (contain all dependencies in itself, just like the bundled webapp)
 
 `preCommit` function can be `async`.
 
@@ -41,13 +40,14 @@ Following props will be passed to the function as a single parameter:
 
 ```typescript
 interface Props {
-  workspace: string; // same as process.env.GITHUB_WORKSPACE
   tag: string; // Next tag e.g. v1.12.3
   version: string; // Next version e.g. 1.12.3
 }
 
 export function preCommit(props: Props): void {}
 ```
+
+A bunch of useful environment variables are available to the script with `process.env`. See [docs.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables](https://docs.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables) to learn more.
 
 ## Outputs
 
@@ -126,7 +126,7 @@ Use a pre-commit hook
   uses: TriPSs/conventional-changelog-action@v3
   with:
     github-token: ${{ secrets.github_token }}
-    pre-commit: ${{ github.workspace }}/some/path/pre-commit.js # requires absolute path
+    pre-commit: some/path/pre-commit.js
 ```
 
 Github releases
