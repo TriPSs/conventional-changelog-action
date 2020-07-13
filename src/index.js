@@ -104,7 +104,6 @@ async function run() {
         // Add changed files to git
         if (preCommit) {
           await require(preCommit).preCommit({
-            workspace: process.env.GITHUB_WORKSPACE,
             tag: gitTag,
             version: versioning.newVersion,
           })

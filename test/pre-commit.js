@@ -1,15 +1,19 @@
 const fs = require('fs')
-const path = require('path')
+const t = require('assert')
 
 exports.preCommit = (props) => {
+  const {GITHUB_WORKSPACE} = process.env;
+
+  t.ok(GITHUB_WORKSPACE, 'GITHUB_WORKSPACE should not be empty')
+  t.ok(props.tag, 'tag should not be empty')
+  t.ok(props.version, 'version should not be empty')
+
   const body = {
-    workspace: props.workspace,
+    workspace: GITHUB_WORKSPACE,
     tag: props.tag,
     version: props.version,
     random: Math.random(),
   }
 
-  const dest = path.resolve(props.workspace, 'pre-commit.test.json')
-
-  fs.writeFileSync(dest, JSON.stringify(body, null, 2))
+  fs.writeFileSync('pre-commit.test.json', JSON.stringify(body, null, 2))
 }
