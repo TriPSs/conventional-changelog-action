@@ -1,3 +1,13 @@
+## [3.1.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.1.0...v3.1.1) (2020-07-13)
+
+
+### Bug Fixes
+
+* Changed yarn --prod to npm ci --prod ([5ba044f](https://github.com/TriPSs/conventional-changelog-action/commit/5ba044f581579411517848e186a425258f30556a))
+* Removed node_modules so rerelease could add them again ([1bac915](https://github.com/TriPSs/conventional-changelog-action/commit/1bac915367fb7a9aef99bf8df172e524b4614909))
+
+
+
 # [3.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.0.0...v3.1.0) (2020-07-13)
 
 
@@ -47,15 +57,6 @@
 ### Bug Fixes
 
 * Fixes for CI ([b0698e5](https://github.com/TriPSs/conventional-changelog-action/commit/b0698e5e9b298cc4a6d95889e38638d8d6fd35fa))
-
-
-
-## [2.3.2](https://github.com/TriPSs/conventional-changelog-action/compare/v2.3.1...v2.3.2) (2020-05-08)
-
-
-### Bug Fixes
-
-* Fixes for CI ([093fc9c](https://github.com/TriPSs/conventional-changelog-action/commit/093fc9c7c21c99f362e43df6c572f02b0bf6fc8e))
 
 
 
