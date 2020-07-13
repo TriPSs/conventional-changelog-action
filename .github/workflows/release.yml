@@ -11,7 +11,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - run: yarn --production
+      - run: npm ci --prod
       - run: git add node_modules -f
 
       - name: Generate changelog
