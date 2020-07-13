@@ -13,6 +13,7 @@ async function run() {
     const gitUserEmail = core.getInput('git-user-email')
     const tagPrefix = core.getInput('tag-prefix')
     const preset = core.getInput('preset')
+    const preCommit = core.getInput('pre-commit')
     const outputFile = core.getInput('output-file')
     const releaseCount = core.getInput('release-count')
     const versionFile = core.getInput('version-file')
@@ -30,6 +31,10 @@ async function run() {
     core.info(`Using "${versionPath}" as version path`)
     core.info(`Using "${tagPrefix}" as tag prefix`)
     core.info(`Using "${outputFile}" as output file`)
+
+    if (preCommit) {
+      core.info(`Using "${preCommit}" as pre-commit script`)
+    }
 
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
     core.info(`Skipping the update of the version file is "${skipVersionFile ? 'enabled' : 'disabled'}"`)
@@ -97,6 +102,13 @@ async function run() {
 
       if (!skipCommit) {
         // Add changed files to git
+        if (preCommit) {
+          await require(preCommit).preCommit({
+            workspace: process.env.GITHUB_WORKSPACE,
+            tag: gitTag,
+            version: versioning.newVersion,
+          })
+        }
         await git.add('.')
         await git.commit(gitCommitMessage.replace('{version}', gitTag))
       }

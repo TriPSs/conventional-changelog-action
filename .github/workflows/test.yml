@@ -21,6 +21,29 @@ jobs:
         with:
           github-token: ${{ secrets.github_token }}
 
+  test-pre-commit:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - run: test -f pre-commit.test.json && (echo should not be here yet && exit 1) || exit 0
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+        with:
+          github-token: ${{ secrets.github_token }}
+          pre-commit: ${{ github.workspace }}/test/pre-commit.js
+          skip-on-empty: 'false'
+
+      - run: test -f pre-commit.test.json || (echo should be here && exit 1)
+      - run: cat pre-commit.test.json
+
   test-git:
     runs-on: ubuntu-latest
     steps:
