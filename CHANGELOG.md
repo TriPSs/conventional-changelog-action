@@ -1,3 +1,12 @@
+## [3.1.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.1.1...v3.1.2) (2020-07-27)
+
+
+### Bug Fixes
+
+* fail action on push rejection ([206a4e3](https://github.com/TriPSs/conventional-changelog-action/commit/206a4e313a58d868e56629ca59a29a5d8e0105ea))
+
+
+
 ## [3.1.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.1.0...v3.1.1) (2020-07-13)
 
 
@@ -48,15 +57,6 @@
 ### Features
 
 * add skip-on-empty feature ([153f866](https://github.com/TriPSs/conventional-changelog-action/commit/153f866251ba4d7c33881dbf082bb1e17974e2a1))
-
-
-
-## [2.3.3](https://github.com/TriPSs/conventional-changelog-action/compare/v2.3.2...v2.3.3) (2020-05-08)
-
-
-### Bug Fixes
-
-* Fixes for CI ([b0698e5](https://github.com/TriPSs/conventional-changelog-action/commit/b0698e5e9b298cc4a6d95889e38638d8d6fd35fa))
 
 
 
