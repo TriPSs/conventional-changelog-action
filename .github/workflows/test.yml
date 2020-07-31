@@ -96,3 +96,20 @@ jobs:
           github-token: ${{ secrets.github_token }}
           version-file: 'test-file.toml'
           version-path: 'package.version'
+
+  multiple-files:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: 'package.json, package-lock.json'
