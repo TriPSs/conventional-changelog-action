@@ -1,3 +1,18 @@
+# [3.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.1.2...v3.2.0) (2020-08-03)
+
+
+### Bug Fixes
+
+* Test name ([f66f6a2](https://github.com/TriPSs/conventional-changelog-action/commit/f66f6a29a71c9b5ee636cef9ee022f127da37304))
+
+
+### Features
+
+* Added 'multiple-files' test workflow ([bb40f54](https://github.com/TriPSs/conventional-changelog-action/commit/bb40f54b50fdae3a1a084b597370e7e0f95c28ab))
+* Added support for comma-separated version files ([3ba65fd](https://github.com/TriPSs/conventional-changelog-action/commit/3ba65fd7f7bff6e1c60178d49632067c6a8d6bfa))
+
+
+
 ## [3.1.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.1.1...v3.1.2) (2020-07-27)
 
 
@@ -48,15 +63,6 @@
 ### BREAKING CHANGES
 
 * `package-json` is now renamed to `version-file`
-
-
-
-# [2.4.0](https://github.com/TriPSs/conventional-changelog-action/compare/v2.3.3...v2.4.0) (2020-06-10)
-
-
-### Features
-
-* add skip-on-empty feature ([153f866](https://github.com/TriPSs/conventional-changelog-action/commit/153f866251ba4d7c33881dbf082bb1e17974e2a1))
 
 
 
