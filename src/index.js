@@ -6,6 +6,22 @@ const getVersioning = require('./version')
 const git = require('./helpers/git')
 const changelog = require('./helpers/generateChangelog')
 
+async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
+  const versioning = getVersioning(ext)
+
+  // File type not supported
+  if (versioning === null) {
+    throw new Error(`File extension "${ext}" from file "${x}" is not supported`)
+  }
+
+  versioning.init(path.resolve(file), versionPath)
+
+  // Bump the version in the package.json
+  await versioning.bump(releaseType)
+
+  return versioning
+}
+
 async function run() {
   try {
     const gitCommitMessage = core.getInput('git-message')
@@ -55,29 +71,32 @@ async function run() {
         core.info(`Because: ${recommendation.reason}`)
       }
 
+      let newVersion
+
       // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
       // skipVersionFile can mean there is no version file and skipCommit can mean that the user
       // is only interested in tags
-      const fileExtension = skipVersionFile || skipCommit
-        ? 'git'
-        : versionFile.split('.').pop()
+      if (skipVersionFile || skipCommit) {
+        core.info('Using GIT to determine the new version');
+        const versioning = await handleVersioningByExtension('git', versionFile, versionPath, recommendation.releaseType)
+        newVersion = versioning.newVersion
 
-      const versioning = getVersioning(fileExtension)
+      } else {
+        const files = versionFile.split(',').map(f => f.trim())
+        core.info(`Files to bump: ${files.join(', ')}`)
 
-      // File type not supported
-      if (versioning === null) {
-        throw new Error(`File extension "${fileExtension}" from file "${versionFile}" is not supported`)
+        const versioning = await Promise.all(files.map((file) => {
+          const fileExtension = file.split('.').pop()
+          core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
+          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
+        }));
+
+        newVersion = versioning[0].newVersion
       }
 
-      versioning.init(path.resolve(versionFile), versionPath)
-
-      // Bump the version in the package.json
-      await versioning.bump(
-        recommendation.releaseType,
-      )
 
       // Generate the string changelog
-      const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, versioning.newVersion, 1)
+      const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1)
       core.info('Changelog generated')
       core.info(stringChangelog)
 
@@ -90,22 +109,22 @@ async function run() {
         return
       }
 
-      core.info(`New version: ${versioning.newVersion}`)
+      core.info(`New version: ${newVersion}`)
 
       // If output file === 'false' we don't write it to file
       if (outputFile !== 'false') {
         // Generate the changelog
-        await changelog.generateFileChangelog(tagPrefix, preset, versioning.newVersion, outputFile, releaseCount)
+        await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount)
       }
 
-      const gitTag = `${tagPrefix}${versioning.newVersion}`
+      const gitTag = `${tagPrefix}${newVersion}`
 
       if (!skipCommit) {
         // Add changed files to git
         if (preCommit) {
           await require(path.resolve(preCommit)).preCommit({
             tag: gitTag,
-            version: versioning.newVersion,
+            version: newVersion,
           })
         }
         await git.add('.')
@@ -125,7 +144,7 @@ async function run() {
       // Set outputs so other actions (for example actions/create-release) can use it
       core.setOutput('changelog', stringChangelog)
       core.setOutput('clean_changelog', cleanChangelog)
-      core.setOutput('version', versioning.newVersion)
+      core.setOutput('version', newVersion)
       core.setOutput('tag', gitTag)
       core.setOutput('skipped', 'false')
     })
