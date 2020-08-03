@@ -55,7 +55,7 @@ inputs:
     required: false
 
   version-file:
-    description: 'The path to the file that contains the version to bump'
+    description: 'The path to the file that contains the version to bump (supports comma-separated list of file paths)'
     default: './package.json'
     required: false
 

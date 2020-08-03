@@ -172,6 +172,9 @@ $ act -j test-toml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s gith
 
 # To run pre-commit test
 $ act -j test-pre-commit -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+
+# To run / multiple files test
+$ act -j multiple-files -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 ```
 
 ## [License](./LICENSE)
