@@ -64,6 +64,11 @@ inputs:
     default: 'version'
     required: false
 
+  preMajor:
+    description: 'Sets the version to 0.y.z'
+    default: 'false'
+    required: false
+
   skip-on-empty:
     description: 'Do nothing when the changelog from the latest release is empty'
     default: 'true'

@@ -1,3 +1,5 @@
+const core = require('@actions/core')
+
 /**
  * Bumps the given version with the given release type
  *
@@ -7,6 +9,11 @@
  */
 module.exports = (releaseType, version) => {
   let [major, minor, patch] = version.split('.')
+
+  if (core.getInput('preMajor').toLowerCase() === 'true') {
+    major = 0
+    releaseType = releaseType === 'major' ? 'minor' : releaseType
+  }
 
   switch (releaseType) {
     case 'major':
