@@ -97,7 +97,7 @@ module.exports = new (class Git {
    * @return {Promise<>}
    */
   pull = () => (
-    this.exec(`pull --unshallow ${core.getInput('git-pull-method')}`)
+    this.exec(`pull ${core.getInput('git-pull-method')}`)
   )
 
   /**
