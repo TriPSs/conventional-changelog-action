@@ -25,7 +25,9 @@ module.exports = class BaseVersioning {
    * @return {string}
    */
   read = () => {
-    return fs.readFileSync(this.fileLocation, 'utf8')
+    if (fs.existsSync(this.fileLocation)) {
+      return fs.readFileSync(this.fileLocation, 'utf8')
+    }
   }
 
   /**

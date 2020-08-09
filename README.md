@@ -19,6 +19,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
 - **Optional** `skip-commit`: Do create a release commit. Default `'false'`.
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
+- **Optional** `fallback-version`: The fallback version, if none is recognized. Default `'0.1.0'`
 
 ### Pre-Commit hook
 
@@ -164,11 +165,17 @@ $ act -j test-json -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s gith
 # To run / test git versioning
 $ act -j test-git -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 
+# To run / test git fallback versioning
+$ act -j test-git-fallback -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+
 # To run / test yaml versioning
 $ act -j test-yaml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 
-# To run / toml git versioning
+# To run / test toml versioning
 $ act -j test-toml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+
+# To run / test empty / new files test
+$ act -j test-[json/toml/yaml]-[empty/new] -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 
 # To run pre-commit test
 $ act -j test-pre-commit -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token

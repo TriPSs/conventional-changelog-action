@@ -12,10 +12,15 @@ module.exports = new (class Json extends BaseVersioning {
    * @return {*}
    */
   bump = (releaseType) => {
+    let jsonContent = {}
+    let oldVersion
+
     // Read the file
     const fileContent = this.read()
-    const jsonContent = JSON.parse(fileContent)
-    const oldVersion = objectPath.get(jsonContent, this.versionPath)
+    if (fileContent) {
+      jsonContent = JSON.parse(fileContent)
+      oldVersion = objectPath.get(jsonContent, this.versionPath)
+    }
 
     // Get the new version
     this.newVersion = bumpVersion(
