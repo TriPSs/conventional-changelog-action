@@ -13,15 +13,10 @@ module.exports = new (class Yaml extends BaseVersioning{
    * @return {*}
    */
   bump = (releaseType) => {
-    let yamlContent = {}
-    let oldVersion
-
     // Read the file
     const fileContent = this.read()
-    if (fileContent) {
-      yamlContent = yaml.parse(fileContent)
-      oldVersion = objectPath.get(yamlContent, this.versionPath)
-    }
+    const yamlContent = yaml.parse(fileContent) || {}
+    const oldVersion = objectPath.get(yamlContent, this.versionPath, null)
 
     // Get the new version
     this.newVersion = bumpVersion(
@@ -29,11 +24,11 @@ module.exports = new (class Yaml extends BaseVersioning{
       oldVersion,
     )
 
-    // Get the name of where the version is in
-    const versionName = this.versionPath.split('.').pop()
-
     // Update the file
-    if (fileContent) {
+    if (oldVersion) {
+      // Get the name of where the version is in
+      const versionName = this.versionPath.split('.').pop()
+
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
         fileContent.replace(
