@@ -31,6 +31,7 @@
     "conventional-recommended-bump": "6.0.9",
     "git-semver-tags": "4.0.0",
     "object-path": "^0.11.4",
+    "semver": "^6.0.0",
     "yaml": "^1.10.0"
   },
   "devDependencies": {
