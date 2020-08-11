@@ -1,3 +1,4 @@
+const core = require('@actions/core')
 const objectPath = require('object-path')
 
 const BaseVersioning = require('./base')
@@ -14,7 +15,21 @@ module.exports = new (class Json extends BaseVersioning {
   bump = (releaseType) => {
     // Read the file
     const fileContent = this.read()
-    const jsonContent = JSON.parse(fileContent)
+
+    // Parse the file
+    let jsonContent
+    try {
+      jsonContent = JSON.parse(fileContent)
+    } catch (error) {
+      core.startGroup(`Error when parsing the file '${this.fileLocation}'`)
+      core.info(`File-Content: ${fileContent}`)
+      core.info(error) // should be 'warning' ?
+      core.endGroup()
+
+      jsonContent = {}
+    }
+
+    // Get the old version
     const oldVersion = objectPath.get(jsonContent, this.versionPath, null)
 
     // Get the new version
