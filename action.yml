@@ -84,7 +84,7 @@ inputs:
     required: false
 
   fallback-version:
-    description: 'The fallback version, if none is recognized'
+    description: 'The fallback version, if no older one can be detected, or if it is the first one'
     default: '0.1.0'
     required: false
 

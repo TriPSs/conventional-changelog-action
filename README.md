@@ -19,7 +19,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
 - **Optional** `skip-commit`: Do create a release commit. Default `'false'`.
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
-- **Optional** `fallback-version`: The fallback version, if none is recognized. Default `'0.1.0'`
+- **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
 
 ### Pre-Commit hook
 

@@ -42,5 +42,7 @@ module.exports = (releaseType, version) => {
     }
   }
 
+  core.info(`The version could not be detected, the new version is '${major}.${minor}.${patch}'.`)
+
   return `${major}.${minor}.${patch}`
 }
