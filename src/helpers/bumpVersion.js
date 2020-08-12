@@ -40,9 +40,9 @@ module.exports = (releaseType, version) => {
       minor = 1
       patch = 0
     }
-  }
 
-  core.info(`The version could not be detected, the new version is '${major}.${minor}.${patch}'.`)
+    core.info(`The version could not be detected, using fallback version '${major}.${minor}.${patch}'.`)
+  }
 
   return `${major}.${minor}.${patch}`
 }
