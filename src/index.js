@@ -37,6 +37,7 @@ async function run() {
     const skipVersionFile = core.getInput('skip-version-file').toLowerCase() === 'true'
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
+    const conventionalConfigFile = core.getInput('config-file-path')
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)
@@ -47,6 +48,7 @@ async function run() {
     core.info(`Using "${versionPath}" as version path`)
     core.info(`Using "${tagPrefix}" as tag prefix`)
     core.info(`Using "${outputFile}" as output file`)
+    core.info(`Using "${conventionalConfigFile}" as config file`)
 
     if (preCommit) {
       core.info(`Using "${preCommit}" as pre-commit script`)
@@ -58,7 +60,9 @@ async function run() {
     core.info('Pull to make sure we have the full git history')
     await git.pull()
 
-    conventionalRecommendedBump({ preset, tagPrefix }, async(error, recommendation) => {
+    const config = conventionalConfigFile && require(resolve(process.cwd(), conventionalConfigFile));
+
+    conventionalRecommendedBump({ preset, tagPrefix, config }, async (error, recommendation) => {
       if (error) {
         core.setFailed(error.message)
         return
@@ -96,7 +100,7 @@ async function run() {
 
 
       // Generate the string changelog
-      const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1)
+      const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1, config)
       core.info('Changelog generated')
       core.info(stringChangelog)
 
@@ -114,7 +118,7 @@ async function run() {
       // If output file === 'false' we don't write it to file
       if (outputFile !== 'false') {
         // Generate the changelog
-        await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount)
+        await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config)
       }
 
       const gitTag = `${tagPrefix}${newVersion}`
@@ -135,9 +139,9 @@ async function run() {
       await git.createTag(gitTag)
 
       core.info('Push all changes')
-      try{
+      try {
         await git.push()
-      }catch (error) {
+      } catch (error) {
         core.setFailed(error.message)
       }
 

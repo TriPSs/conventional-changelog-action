@@ -83,6 +83,10 @@ inputs:
     description: 'Path to the pre-commit script file'
     required: false
 
+  config-file-path:
+    description: 'Path to the conventional changelog config file'
+    required: false
+
 
 outputs:
   changelog:
