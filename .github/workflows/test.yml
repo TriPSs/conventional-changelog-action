@@ -259,3 +259,24 @@ jobs:
         with:
           github-token: ${{ secrets.github_token }}
           version-file: 'package.json, package-lock.json'
+
+  test-config-file-path:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - name: Install Packages
+        run: yarn
+
+      - name: Generate Changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+        with:
+          github-token: ${{ secrets.github_token }}
+          skip-version-file: 'true'
+          config-file-path: './test-changelog.config.js'
