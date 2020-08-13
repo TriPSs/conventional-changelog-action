@@ -15,10 +15,11 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `release-count`: Number of releases to preserve in changelog. Default `5`, use `0` to regenerate all.
 - **Optional** `version-file`: The path to the file that contains the version to bump. Default `./package.json`.
 - **Optional** `version-path`: The place inside the version file to bump. Default `version`.
-- **Optional** `skip-on-empty`: Boolean to specify if you want to skip empty release (no-changelog generated). This case occured when you push `chore` commit with `angular` for example. Default `'false'`.
+- **Optional** `skip-on-empty`: Boolean to specify if you want to skip empty release (no-changelog generated). This case occured when you push `chore` commit with `angular` for example. Default `'true'`.
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
 - **Optional** `skip-commit`: Do create a release commit. Default `'false'`.
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
+- **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
 
 ### Pre-Commit hook
 
@@ -29,6 +30,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 Specified path could be relative or absolute. If it is relative, then it will be based on the `GITHUB_WORKSPACE` path.
 
 Script should:
+
 - be a CommonJS module
 - have a single export: `exports.preCommit = (props) => { /* ... */ }`
 - not have any return value
@@ -96,7 +98,7 @@ No file changelog
   uses: TriPSs/conventional-changelog-action@v3
   with:
     github-token: ${{ secrets.github_token }}
-    output-file: 'false'
+    output-file: "false"
 ```
 
 Tag only
@@ -106,7 +108,7 @@ Tag only
   uses: TriPSs/conventional-changelog-action@v3
   with:
     github-token: ${{ secrets.github_token }}
-    skip-commit: 'true'
+    skip-commit: "true"
 ```
 
 Use a custom file for versioning
@@ -116,7 +118,7 @@ Use a custom file for versioning
   uses: TriPSs/conventional-changelog-action@v3
   with:
     github-token: ${{ secrets.github_token }}
-    version-file: 'my-custom-file.yaml'
+    version-file: "my-custom-file.yaml"
 ```
 
 Use a pre-commit hook
@@ -137,24 +139,26 @@ Github releases
   uses: TriPSs/conventional-changelog-action@v3
   with:
     github-token: ${{ secrets.github_token }}
-    output-file: 'false'
-    skip-on-empty: 'true'
+    output-file: "false"
 
 - name: Create Release
   uses: actions/create-release@v1
   if: ${{ steps.changelog.outputs.skipped == 'false' }}
   env:
-   GITHUB_TOKEN: ${{ secrets.github_token }}
+    GITHUB_TOKEN: ${{ secrets.github_token }}
   with:
-   tag_name: ${{ steps.changelog.outputs.tag }}
-   release_name: ${{ steps.changelog.outputs.tag }}
-   body: ${{ steps.changelog.outputs.clean_changelog }}
+    tag_name: ${{ steps.changelog.outputs.tag }}
+    release_name: ${{ steps.changelog.outputs.tag }}
+    body: ${{ steps.changelog.outputs.clean_changelog }}
 ```
 
 ## Development
+
 If you'd like to contribute to this project, all you need to do is clone and install [act](https://github.com/nektos/act) this project and run:
+
 > Make sure that `main: 'src/index.js'` is updated to `main: '../src/index.js'` inside the `action.yml`
 > Note: The image used is 18 gb!
+
 ```shell
 $ yarn install
 
@@ -164,11 +168,17 @@ $ act -j test-json -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s gith
 # To run / test git versioning
 $ act -j test-git -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 
+# To run / test git fallback versioning
+$ act -j test-git-fallback -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+
 # To run / test yaml versioning
 $ act -j test-yaml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 
-# To run / toml git versioning
+# To run / test toml versioning
 $ act -j test-toml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+
+# To run / test empty / new files test
+$ act -j test-[json/toml/yaml]-[empty/new] -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 
 # To run pre-commit test
 $ act -j test-pre-commit -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
