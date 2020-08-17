@@ -86,6 +86,9 @@ inputs:
   fallback-version:
     description: 'The fallback version, if no older one can be detected, or if it is the first one'
     default: '0.1.0'
+    
+  config-file-path:
+    description: 'Path to the conventional changelog config file. If set, the preset setting will be ignored'
     required: false
 
 
