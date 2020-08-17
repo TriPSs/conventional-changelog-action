@@ -1,3 +1,12 @@
+# [3.4.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.3.0...v3.4.0) (2020-08-17)
+
+
+### Features
+
+* Allow to specify a config file ([f0fabf6](https://github.com/TriPSs/conventional-changelog-action/commit/f0fabf6d88a3b7cef366530cc9cad6160a00d128))
+
+
+
 # [3.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.2.0...v3.3.0) (2020-08-13)
 
 
@@ -47,16 +56,6 @@
 
 * Changed yarn --prod to npm ci --prod ([5ba044f](https://github.com/TriPSs/conventional-changelog-action/commit/5ba044f581579411517848e186a425258f30556a))
 * Removed node_modules so rerelease could add them again ([1bac915](https://github.com/TriPSs/conventional-changelog-action/commit/1bac915367fb7a9aef99bf8df172e524b4614909))
-
-
-
-# [3.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.0.0...v3.1.0) (2020-07-13)
-
-
-### Features
-
-* **pre-commit:** Allow relative path for the pre-commit input ([afea49f](https://github.com/TriPSs/conventional-changelog-action/commit/afea49fa57e678f9c8117d73415a488600b3cd28))
-* Add pre-commit script file (hook) ([0aa82ce](https://github.com/TriPSs/conventional-changelog-action/commit/0aa82ce2ad5a23a200c8ce1eeba32eaefc846d9a))
 
 
 
