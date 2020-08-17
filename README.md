@@ -20,6 +20,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `skip-commit`: Do create a release commit. Default `'false'`.
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
 - **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
+- **Optional** `config-file-path`: Path to the conventional changelog config file. If set, the preset setting will be ignored
 
 ### Pre-Commit hook
 
@@ -50,6 +51,23 @@ export function preCommit(props: Props): void {}
 ```
 
 A bunch of useful environment variables are available to the script with `process.env`. See [docs.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables](https://docs.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables) to learn more.
+
+### Config-File-Path
+A config file to define the conventional commit settings. Use it if you need to override values like `issuePrefix` or `issueUrlFormat`. If you set a `config-file-path`, the `preset` setting will be ignored. Therefore use an existing config and override the values you want to adjust.
+
+example:  
+```javascript
+'use strict'
+const config = require('conventional-changelog-conventionalcommits');
+
+module.exports = config({
+    "issuePrefixes": ["TN-"],
+    "issueUrlFormat": "https://jira.example.com/browse/{{prefix}}{{id}}"
+})
+```
+The specified path can be relative or absolute. If it is relative, then it will be based on the `GITHUB_WORKSPACE` path.
+
+Make sure to install all required packages in the workflow before executing this action.
 
 ## Outputs
 
@@ -185,6 +203,9 @@ $ act -j test-pre-commit -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -
 
 # To run / multiple files test
 $ act -j multiple-files -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+
+# To run / config file path test
+$ act -j test-config-file-path -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 ```
 
 ## [License](./LICENSE)
