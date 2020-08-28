@@ -59,6 +59,10 @@ inputs:
     default: './package.json'
     required: false
 
+  version-file-type:
+    description: 'Specify an extension to handle version-file in case it has a custom extension'
+    required: false
+
   version-path:
     description: 'The place inside the version file to bump'
     default: 'version'

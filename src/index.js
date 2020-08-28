@@ -34,6 +34,7 @@ async function run() {
     const outputFile = core.getInput('output-file')
     const releaseCount = core.getInput('release-count')
     const versionFile = core.getInput('version-file')
+    const versionFileType = core.getInput('version-file-type')
     const versionPath = core.getInput('version-path')
     const skipVersionFile = core.getInput('skip-version-file').toLowerCase() === 'true'
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
@@ -46,6 +47,7 @@ async function run() {
     core.info(`Using "${gitUserEmail}" as git user.email`)
     core.info(`Using "${releaseCount}" release count`)
     core.info(`Using "${versionFile}" as version file`)
+    core.info(`Using "${versionFileType}" as version file type`)
     core.info(`Using "${versionPath}" as version path`)
     core.info(`Using "${tagPrefix}" as tag prefix`)
     core.info(`Using "${outputFile}" as output file`)
@@ -91,9 +93,13 @@ async function run() {
         core.info(`Files to bump: ${files.join(', ')}`)
 
         const versioning = await Promise.all(files.map((file) => {
-          const fileExtension = file.split('.').pop()
-          core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
-          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
+
+          var extension = versionFileType
+          if(versionFileType == null){
+            extension = file.split('.').pop()
+          }
+          core.info(`Bumping version to file "${file}" with extension "${extension}"`)
+          return handleVersioningByExtension(extension, file, versionPath, recommendation.releaseType)
         }));
 
         newVersion = versioning[0].newVersion
