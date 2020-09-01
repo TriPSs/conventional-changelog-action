@@ -95,7 +95,7 @@ async function run() {
         const versioning = await Promise.all(files.map((file) => {
 
           var extension = versionFileType
-          if(versionFileType == null){
+          if(versionFileType === null){
             extension = file.split('.').pop()
           }
           core.info(`Bumping version to file "${file}" with extension "${extension}"`)
