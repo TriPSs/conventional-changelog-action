@@ -1,4 +1,4 @@
-name: 'Conventional Changelog Action'
+name: 'Conventional Bump and Changelog'
 description: 'Bump version, tag commit and generates changelog with conventional commits.'
 author: 'Tycho Bokdam'
 runs:
