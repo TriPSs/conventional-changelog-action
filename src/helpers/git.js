@@ -102,6 +102,16 @@ module.exports = new (class Git {
   )
 
   /**
+   * fetch
+   *
+   * @return {Promise<>}
+   */
+  fetch = () => (
+    
+    this.exec(`fetch --depth 1`)
+  )
+
+  /**
    * Push all changes
    *
    * @return {Promise<>}
