@@ -39,6 +39,8 @@ async function run() {
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
     const conventionalConfigFile = core.getInput('config-file-path')
+    const dryRun = core.getInput('dry-run').toLowerCase() === 'true'
+    const skipTag = core.getInput('skip-tag').toLowerCase() === 'true'
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)
@@ -50,6 +52,8 @@ async function run() {
     core.info(`Using "${tagPrefix}" as tag prefix`)
     core.info(`Using "${outputFile}" as output file`)
     core.info(`Using "${conventionalConfigFile}" as config file`)
+    core.info(`Using "${dryRun}" as dry run`)
+    core.info(`Using "${skipTag}" as skip tag`)
 
     if (preCommit) {
       core.info(`Using "${preCommit}" as pre-commit script`)
@@ -117,14 +121,14 @@ async function run() {
       core.info(`New version: ${newVersion}`)
 
       // If output file === 'false' we don't write it to file
-      if (outputFile !== 'false') {
+      if (outputFile !== 'false' && !dryRun) {
         // Generate the changelog
         await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config)
       }
 
       const gitTag = `${tagPrefix}${newVersion}`
 
-      if (!skipCommit) {
+      if (!skipCommit && !dryRun) {
         // Add changed files to git
         if (preCommit) {
           await require(path.resolve(preCommit)).preCommit({
@@ -137,13 +141,19 @@ async function run() {
       }
 
       // Create the new tag
-      await git.createTag(gitTag)
-
-      core.info('Push all changes')
-      try {
-        await git.push()
-      } catch (error) {
-        core.setFailed(error.message)
+      if (!skipTag && !dryRun){
+        await git.createTag(gitTag)
+      }
+      
+      if (!dryRun){
+        core.info('Push all changes')
+        try {
+          await git.push()
+        } catch (error) {
+          core.setFailed(error.message)
+        }
+      } else {
+        core.info('Dry run specified, no changes will be pushed.')
       }
 
       // Set outputs so other actions (for example actions/create-release) can use it
