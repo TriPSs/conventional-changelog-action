@@ -104,6 +104,7 @@ module.exports = new (class Git {
       args.push('--unshallow')
     }
 
+    args.push('--tags')
     args.push(core.getInput('git-pull-method'))
 
     return this.exec(args.join(' '))
