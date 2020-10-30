@@ -24,19 +24,19 @@
   },
   "main": "src/index.js",
   "dependencies": {
-    "@actions/core": "1.2.4",
+    "@actions/core": "1.2.6",
     "@actions/exec": "1.0.4",
     "@iarna/toml": "^2.2.5",
-    "conventional-changelog": "3.1.21",
-    "conventional-recommended-bump": "6.0.9",
-    "git-semver-tags": "4.0.0",
-    "object-path": "^0.11.4",
-    "semver": "^6.0.0",
+    "conventional-changelog": "3.1.23",
+    "conventional-recommended-bump": "6.0.10",
+    "git-semver-tags": "4.1.0",
+    "object-path": "^0.11.5",
+    "semver": "^7.3.2",
     "yaml": "^1.10.0"
   },
   "devDependencies": {
-    "@commitlint/cli": "8.3.5",
-    "@commitlint/config-conventional": "8.3.4",
-    "husky": "4.2.5"
+    "@commitlint/cli": "11.0.0",
+    "@commitlint/config-conventional": "11.0.0",
+    "husky": "4.3.0"
   }
 }

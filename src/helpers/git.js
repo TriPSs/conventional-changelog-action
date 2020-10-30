@@ -96,9 +96,19 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  pull = () => (
-    this.exec(`pull --unshallow --tags ${core.getInput('git-pull-method')}`)
-  )
+  pull = async() => {
+    const args = ['pull']
+
+    // Check if the repo is unshallow
+    if (await this.isShallow()) {
+      args.push('--unshallow')
+    }
+
+    args.push('--tags')
+    args.push(core.getInput('git-pull-method'))
+
+    return this.exec(args.join(' '))
+  }
 
   /**
    * Push all changes
@@ -108,6 +118,17 @@ module.exports = new (class Git {
   push = () => (
     this.exec(`push origin ${branch} --follow-tags`)
   )
+
+  /**
+   * Check if the repo is shallow
+   *
+   * @return {Promise<>}
+   */
+  isShallow = async () => {
+    const isShallow = await this.exec('rev-parse --is-shallow-repository')
+
+    return isShallow.trim().replace('\n', '') === 'true'
+  }
 
   /**
    * Updates the origin remote
