@@ -23,6 +23,11 @@ jobs:
           ENV: 'dont-use-git'
         with:
           github-token: ${{ secrets.github_token }}
+          version-file: 'test-file.json'
+
+      - name: Show file
+        run: |
+          echo "$(<test-file.json)"
 
   test-json-new:
     runs-on: ubuntu-latest
@@ -48,7 +53,6 @@ jobs:
           version-file: 'test-file-new.json'
 
       - name: Show file
-        id: show
         run: |
           echo "$(<test-file-new.json)"
 
@@ -214,6 +218,10 @@ jobs:
           version-file: 'test-file.yaml'
           version-path: 'package.version'
 
+      - name: Show file
+        run: |
+          echo "$(<test-file.yaml)"
+
   test-yaml-new:
     runs-on: ubuntu-latest
     steps:
@@ -240,7 +248,9 @@ jobs:
           version-file: 'test-file-new.yaml'
           version-path: 'package.version'
 
-      - run: echo "$(<test-file-new.yaml)"
+      - name: Show file
+        run: |
+          echo "$(<test-file-new.yaml)"
 
   test-yaml-empty:
     runs-on: ubuntu-latest
@@ -266,7 +276,9 @@ jobs:
           version-file: './test-file-empty.yaml'
           version-path: 'package.version'
 
-      - run: echo "$(<./test-file-empty.yaml)"
+      - name: Show file
+        run: |
+          echo "$(<test-file-empty.yaml)"
 
   test-toml:
     runs-on: ubuntu-latest
@@ -292,6 +304,10 @@ jobs:
           version-file: 'test-file.toml'
           version-path: 'package.version'
 
+      - name: Show file
+        run: |
+          echo "$(<test-file.toml)"
+
   test-toml-new:
     runs-on: ubuntu-latest
     steps:
@@ -316,7 +332,9 @@ jobs:
           version-file: 'test-file-new.toml'
           version-path: 'package.version'
 
-      - run: echo "$(<test-file-new.toml)"
+      - name: Show file
+        run: |
+          echo "$(<test-file-new.toml)"
 
   test-toml-empty:
     runs-on: ubuntu-latest
@@ -344,7 +362,9 @@ jobs:
           version-file: './test/test-file-empty.toml'
           version-path: 'package.version'
 
-      - run: echo "$(<./test/test-file-empty.toml)"
+      - name: Show file
+        run: |
+          echo "$(<test-file-empty.toml)"
 
   test-multiple-files:
     runs-on: ubuntu-latest
@@ -367,7 +387,13 @@ jobs:
           ENV: 'dont-use-git'
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: 'package.json, package-lock.json'
+          version-file: 'test-file.json, test-file.toml, test-file.yaml'
+
+      - name: Show files
+        run: |
+          echo "$(<test-file.json)"
+          echo "$(<test-file.toml)"
+          echo "$(<test-file.yaml)"
 
   test-config-file-path:
     runs-on: ubuntu-latest
