@@ -127,7 +127,12 @@ module.exports = new (class Git {
   isShallow = async () => {
     const isShallow = await this.exec('rev-parse --is-shallow-repository')
 
-    return isShallow.trim().replace('\n', '') === 'true'
+    // isShallow does not return anything on local machine
+    if (isShallow) {
+      return isShallow.trim().replace('\n', '') === 'true'
+    } else {
+      return false
+    }
   }
 
   /**

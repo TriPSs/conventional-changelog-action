@@ -5,7 +5,6 @@ const path = require('path')
 const getVersioning = require('./version')
 const git = require('./helpers/git')
 const changelog = require('./helpers/generateChangelog')
-const resolve = require('path').resolve
 
 async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
   const versioning = getVersioning(ext)
@@ -39,6 +38,7 @@ async function run() {
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
     const conventionalConfigFile = core.getInput('config-file-path')
+    const preChangelogGeneration = core.getInput('pre-changelog-generation')
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)
@@ -55,13 +55,17 @@ async function run() {
       core.info(`Using "${preCommit}" as pre-commit script`)
     }
 
+    if (preChangelogGeneration) {
+      core.info(`Using "${preChangelogGeneration}" as pre-changelog-generation script`)
+    }
+
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
     core.info(`Skipping the update of the version file is "${skipVersionFile ? 'enabled' : 'disabled'}"`)
 
     core.info('Pull to make sure we have the full git history')
     await git.pull()
 
-    const config = conventionalConfigFile && require(resolve(process.cwd(), conventionalConfigFile));
+    const config = conventionalConfigFile && require(path.resolve(process.cwd(), conventionalConfigFile))
 
     conventionalRecommendedBump({ preset, tagPrefix, config }, async (error, recommendation) => {
       if (error) {
@@ -82,23 +86,42 @@ async function run() {
       // skipVersionFile can mean there is no version file and skipCommit can mean that the user
       // is only interested in tags
       if (skipVersionFile || skipCommit) {
-        core.info('Using GIT to determine the new version');
-        const versioning = await handleVersioningByExtension('git', versionFile, versionPath, recommendation.releaseType)
+        core.info('Using GIT to determine the new version')
+        const versioning = await handleVersioningByExtension(
+          'git',
+          versionFile,
+          versionPath,
+          recommendation.releaseType
+        )
         newVersion = versioning.newVersion
-
       } else {
-        const files = versionFile.split(',').map(f => f.trim())
+        const files = versionFile.split(',').map((f) => f.trim())
         core.info(`Files to bump: ${files.join(', ')}`)
 
-        const versioning = await Promise.all(files.map((file) => {
-          const fileExtension = file.split('.').pop()
-          core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
-          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
-        }));
+        const versioning = await Promise.all(
+          files.map((file) => {
+            const fileExtension = file.split('.').pop()
+            core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
+            return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
+          })
+        )
 
         newVersion = versioning[0].newVersion
       }
 
+      let gitTag = `${tagPrefix}${newVersion}`
+
+      if (preChangelogGeneration) {
+        const newVersionAndTag = await require(path.resolve(process.cwd(), preChangelogGeneration)).preChangelogGeneration({
+          tag: gitTag,
+          version: newVersion,
+        })
+
+        if (newVersionAndTag) {
+          if (newVersionAndTag.tag) gitTag = newVersionAndTag.tag
+          if (newVersionAndTag.version) newVersion = newVersionAndTag.version
+        }
+      }
 
       // Generate the string changelog
       const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1, config)
@@ -122,12 +145,10 @@ async function run() {
         await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config)
       }
 
-      const gitTag = `${tagPrefix}${newVersion}`
-
       if (!skipCommit) {
         // Add changed files to git
         if (preCommit) {
-          await require(path.resolve(preCommit)).preCommit({
+          await require(path.resolve(process.cwd(), preCommit)).preCommit({
             tag: gitTag,
             version: newVersion,
           })
@@ -153,7 +174,6 @@ async function run() {
       core.setOutput('tag', gitTag)
       core.setOutput('skipped', 'false')
     })
-
   } catch (error) {
     core.setFailed(error.message)
   }

@@ -87,6 +87,27 @@ jobs:
       - run: test -f pre-commit.test.json || (echo should be here && exit 1)
       - run: cat pre-commit.test.json
 
+
+  test-pre-changelog-generation:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+      - run: test -f pre-changelog-generation.test.json && (echo should not be here yet && exit 1) || exit 0
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+        with:
+          github-token: ${{ secrets.github_token }}
+          pre-changelog-generation: test/pre-changelog-generation.js
+          version-file: './test-file.toml'
+
+      - run: test -f pre-changelog-generation.test.json || (echo should be here && exit 1)
+      - run: cat pre-changelog-generation.test.json
   test-git:
     runs-on: ubuntu-latest
     steps:
