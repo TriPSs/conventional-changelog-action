@@ -13,6 +13,8 @@ jobs:
       - run: npm ci --prod
 
       - run: touch ./fake-file.log
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
       - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
