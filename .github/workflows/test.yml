@@ -105,7 +105,6 @@ jobs:
           github-token: ${{ secrets.github_token }}
           pre-changelog-generation: test/pre-changelog-generation.js
           version-file: './test-file.toml'
-          skip-on-empty: 'false'
 
       - run: test -f pre-changelog-generation.test.json || (echo should be here && exit 1)
       - run: cat pre-changelog-generation.test.json

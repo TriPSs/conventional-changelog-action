@@ -118,8 +118,10 @@ async function run() {
           version: newVersion,
         })
 
-        gitTag = newVersionAndTag.tag
-        newVersion = newVersionAndTag.version
+        if (newVersionAndTag) {
+          if (newVersionAndTag.tag) gitTag = newVersionAndTag.tag
+          if (newVersionAndTag.version) newVersion = newVersionAndTag.version
+        }
       }
 
       // Generate the string changelog
