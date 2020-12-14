@@ -1,3 +1,19 @@
+# [3.5.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.4.1...v3.5.0) (2020-12-14)
+
+
+### Bug Fixes
+
+* More checks. Fix test for changelog generation ([c6043fb](https://github.com/TriPSs/conventional-changelog-action/commit/c6043fb4f9cc46d59dea99e88ebae07976b3a87f))
+* Remove unneded import. More precise path for requiring hooks ([040d8e9](https://github.com/TriPSs/conventional-changelog-action/commit/040d8e90f4548fdebc6fe291763582d202c62e88))
+* Tag name can also be changed in pre-changelog-generation ([c0f4172](https://github.com/TriPSs/conventional-changelog-action/commit/c0f41727e6b6df5561d358a6bb0aaded9c25da61))
+
+
+### Features
+
+* Allow to specify custom tags which override auto generated ones ([8f6aa19](https://github.com/TriPSs/conventional-changelog-action/commit/8f6aa1969f7dd949c0b8c6456c792fa55dd21ce5))
+
+
+
 ## [3.4.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.4.0...v3.4.1) (2020-10-30)
 
 
@@ -46,15 +62,6 @@
 
 * Added 'multiple-files' test workflow ([bb40f54](https://github.com/TriPSs/conventional-changelog-action/commit/bb40f54b50fdae3a1a084b597370e7e0f95c28ab))
 * Added support for comma-separated version files ([3ba65fd](https://github.com/TriPSs/conventional-changelog-action/commit/3ba65fd7f7bff6e1c60178d49632067c6a8d6bfa))
-
-
-
-## [3.1.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.1.1...v3.1.2) (2020-07-27)
-
-
-### Bug Fixes
-
-* fail action on push rejection ([206a4e3](https://github.com/TriPSs/conventional-changelog-action/commit/206a4e313a58d868e56629ca59a29a5d8e0105ea))
 
 
 
