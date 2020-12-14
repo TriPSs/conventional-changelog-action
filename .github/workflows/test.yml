@@ -95,7 +95,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: "./"
-      - run: test -f test-version && (echo should not be here yet && exit 1) || exit 0
+      - run: test -f pre-changelog-generation.test.json && (echo should not be here yet && exit 1) || exit 0
       - name: Generate changelog
         id: changelog
         uses: ./
@@ -107,8 +107,8 @@ jobs:
           version-file: './test-file.toml'
           skip-on-empty: 'false'
 
-      - run: test -f test-version || (echo should be here && exit 1)
-      - run: cat test-version
+      - run: test -f pre-changelog-generation.test.json || (echo should be here && exit 1)
+      - run: cat pre-changelog-generation.test.json
   test-git:
     runs-on: ubuntu-latest
     steps:

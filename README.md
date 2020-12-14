@@ -59,7 +59,7 @@ A bunch of useful environment variables are available to the script with `proces
 
 Same restrictions as for the pre-commit hook, but exported function name should be `preChangelogGeneration` 
 
-Following props will be passed to the function as a single parameter and string output with version is expected:
+Following props will be passed to the function as a single parameter and same output is expected:
 
 ```typescript
 interface Props {
@@ -67,7 +67,7 @@ interface Props {
   version: string; // Next version e.g. 1.12.3
 }
 
-export function preChangelogGeneration(props: Props): string {}
+export function preChangelogGeneration(props: Props): Props {}
 ```
 
 ### Config-File-Path

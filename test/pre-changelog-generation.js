@@ -9,8 +9,14 @@ exports.preChangelogGeneration = (props) => {
   t.ok(props.version, 'version should not be empty')
 
   const newVersion = '1.0.100'
+  const newTag = 'v1.0.100'
 
-  fs.writeFileSync('test-version', newVersion)
+  const body = {
+    version: newVersion,
+    tag: newTag,
+  }
 
-  return newVersion
+  fs.writeFileSync('pre-changelog-generation.test.json', JSON.stringify(body, null, 2))
+
+  return body
 }

@@ -110,13 +110,16 @@ async function run() {
         newVersion = versioning[0].newVersion
       }
 
-      const gitTag = `${tagPrefix}${newVersion}`
+      let gitTag = `${tagPrefix}${newVersion}`
 
       if (preChangelogGeneration) {
-        newVersion = await require(path.resolve(preChangelogGeneration)).preChangelogGeneration({
+        const newVersionAndTag = await require(path.resolve(preChangelogGeneration)).preChangelogGeneration({
           tag: gitTag,
           version: newVersion,
         })
+
+        gitTag = newVersionAndTag.tag
+        newVersion = newVersionAndTag.version
       }
 
       // Generate the string changelog
