@@ -1,4 +1,4 @@
-name: 'Action to test the action locally with act'
+name: 'Test the action'
 on: [pull_request]
 
 jobs:
@@ -11,6 +11,9 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+
+      - run: touch ./fake-file.log
+      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
