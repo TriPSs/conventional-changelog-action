@@ -10,9 +10,10 @@ module.exports = new (class Toml extends BaseVersioning{
    * Bumps the version in the package.json
    *
    * @param {!string} releaseType - The type of release
+   * @param {string} customVersion - Bump file with manually provided version
    * @return {*}
    */
-  bump = (releaseType) => {
+  bump = (releaseType, customVersion) => {
     // Read the file
     const fileContent = this.read()
     const tomlContent = toml.parse(fileContent)
@@ -23,6 +24,10 @@ module.exports = new (class Toml extends BaseVersioning{
       releaseType,
       oldVersion,
     )
+
+    if (customVersion) {
+      this.newVersion = customVersion 
+    }
 
     // Update the file
     if (oldVersion) {

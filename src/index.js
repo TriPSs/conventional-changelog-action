@@ -6,7 +6,7 @@ const getVersioning = require('./version')
 const git = require('./helpers/git')
 const changelog = require('./helpers/generateChangelog')
 
-async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
+async function handleVersioningByExtension(ext, file, versionPath, releaseType, customVersion) {
   const versioning = getVersioning(ext)
 
   // File type not supported
@@ -17,7 +17,7 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType) 
   versioning.init(path.resolve(file), versionPath)
 
   // Bump the version in the package.json
-  await versioning.bump(releaseType)
+  await versioning.bump(releaseType, customVersion)
 
   return versioning
 }
@@ -81,35 +81,7 @@ async function run() {
       }
 
       let newVersion
-
-      // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
-      // skipVersionFile can mean there is no version file and skipCommit can mean that the user
-      // is only interested in tags
-      if (skipVersionFile || skipCommit) {
-        core.info('Using GIT to determine the new version')
-        const versioning = await handleVersioningByExtension(
-          'git',
-          versionFile,
-          versionPath,
-          recommendation.releaseType
-        )
-        newVersion = versioning.newVersion
-      } else {
-        const files = versionFile.split(',').map((f) => f.trim())
-        core.info(`Files to bump: ${files.join(', ')}`)
-
-        const versioning = await Promise.all(
-          files.map((file) => {
-            const fileExtension = file.split('.').pop()
-            core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
-            return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
-          })
-        )
-
-        newVersion = versioning[0].newVersion
-      }
-
-      let gitTag = `${tagPrefix}${newVersion}`
+      let gitTag
 
       if (preChangelogGeneration) {
         const newVersionAndTag = await require(path.resolve(process.cwd(), preChangelogGeneration)).preChangelogGeneration({
@@ -122,6 +94,35 @@ async function run() {
           if (newVersionAndTag.version) newVersion = newVersionAndTag.version
         }
       }
+
+      // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
+      // skipVersionFile can mean there is no version file and skipCommit can mean that the user
+      // is only interested in tags
+      if (skipVersionFile || skipCommit) {
+        core.info('Using GIT to determine the new version')
+        const versioning = await handleVersioningByExtension(
+          'git',
+          versionFile,
+          versionPath,
+          recommendation.releaseType,
+          newVersion
+        )
+        if (!newVersion) newVersion = versioning.newVersion
+      } else {
+        const files = versionFile.split(',').map((f) => f.trim())
+        core.info(`Files to bump: ${files.join(', ')}`)
+        const versioning = await Promise.all(
+          files.map((file) => {
+            const fileExtension = file.split('.').pop()
+            core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
+            return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType, newVersion)
+          })
+        )
+        if (!newVersion) newVersion = versioning[0].newVersion
+      }
+
+      // Preserve tag created in pre-changelog-generation hook
+      if (!gitTag) gitTag = `${tagPrefix}${newVersion}`
 
       // Generate the string changelog
       const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1, config)

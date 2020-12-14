@@ -10,9 +10,10 @@ module.exports = new (class Json extends BaseVersioning {
    * Bumps the version in the package.json
    *
    * @param {!string} releaseType - The type of release
+   * @param {string} customVersion - Bump file with manually provided version
    * @return {*}
    */
-  bump = (releaseType) => {
+  bump = (releaseType, customVersion) => {
     // Read the file
     const fileContent = this.read()
 
@@ -37,6 +38,10 @@ module.exports = new (class Json extends BaseVersioning {
       releaseType,
       oldVersion,
     )
+
+    if (customVersion) {
+      this.newVersion = customVersion 
+    }
 
     // Update the content with the new version
     objectPath.set(jsonContent, this.versionPath, this.newVersion)

@@ -32,9 +32,10 @@ module.exports = class BaseVersioning {
    * Logic for bumping the version
    *
    * @param {!string} releaseType - The type of release
+   * @param {string} customVersion - Bump file with manually provided version
    * @return {*}
    */
-  bump = (releaseType) => {
+  bump = (releaseType, customVersion) => {
     throw new Error('Implement bump logic in class!')
   }
 
