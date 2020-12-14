@@ -1,22 +1,29 @@
 const fs = require('fs')
 const t = require('assert')
 
-exports.preChangelogGeneration = (props) => {
+exports.preVersionGeneration = (version) => {
   const { GITHUB_WORKSPACE } = process.env
 
   t.ok(GITHUB_WORKSPACE, 'GITHUB_WORKSPACE should not be empty')
-  t.ok(props.tag, 'tag should not be empty')
-  t.ok(props.version, 'version should not be empty')
+  t.ok(version, 'version should not be empty')
 
   const newVersion = '1.0.100'
-  const newTag = 'v1.0.100'
 
-  const body = {
-    version: newVersion,
-    tag: newTag,
-  }
+  fs.writeFileSync('pre-changelog-generation.version.test.json', newVersion)
 
-  fs.writeFileSync('pre-changelog-generation.test.json', JSON.stringify(body, null, 2))
+  return newVersion
+}
 
-  return body
+exports.preTagGeneration = (tag) => {
+  const { GITHUB_WORKSPACE } = process.env
+
+  t.ok(GITHUB_WORKSPACE, 'GITHUB_WORKSPACE should not be empty')
+  t.ok(tag, 'tag should not be empty')
+  t.strictEqual(tag, 'v1.0.100')
+
+  const newTag = 'v1.0.100-alpha'
+
+  fs.writeFileSync('pre-changelog-generation.tag.test.json', newTag)
+
+  return newTag
 }

@@ -5,6 +5,7 @@ const path = require('path')
 const getVersioning = require('./version')
 const git = require('./helpers/git')
 const changelog = require('./helpers/generateChangelog')
+const requireScript = require('./helpers/requireScript')
 
 async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
   const versioning = getVersioning(ext)
@@ -29,7 +30,7 @@ async function run() {
     const gitUserEmail = core.getInput('git-user-email')
     const tagPrefix = core.getInput('tag-prefix')
     const preset = !core.getInput('config-file-path') ? core.getInput('preset') : ''
-    const preCommit = core.getInput('pre-commit')
+    const preCommitFile = core.getInput('pre-commit')
     const outputFile = core.getInput('output-file')
     const releaseCount = core.getInput('release-count')
     const versionFile = core.getInput('version-file')
@@ -38,7 +39,7 @@ async function run() {
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
     const conventionalConfigFile = core.getInput('config-file-path')
-    const preChangelogGeneration = core.getInput('pre-changelog-generation')
+    const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)
@@ -51,12 +52,12 @@ async function run() {
     core.info(`Using "${outputFile}" as output file`)
     core.info(`Using "${conventionalConfigFile}" as config file`)
 
-    if (preCommit) {
-      core.info(`Using "${preCommit}" as pre-commit script`)
+    if (preCommitFile) {
+      core.info(`Using "${preCommitFile}" as pre-commit script`)
     }
 
-    if (preChangelogGeneration) {
-      core.info(`Using "${preChangelogGeneration}" as pre-changelog-generation script`)
+    if (preChangelogGenerationFile) {
+      core.info(`Using "${preChangelogGenerationFile}" as pre-changelog-generation script`)
     }
 
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
@@ -65,9 +66,9 @@ async function run() {
     core.info('Pull to make sure we have the full git history')
     await git.pull()
 
-    const config = conventionalConfigFile && require(path.resolve(process.cwd(), conventionalConfigFile))
+    const config = conventionalConfigFile && requireScript(conventionalConfigFile)
 
-    conventionalRecommendedBump({ preset, tagPrefix, config }, async (error, recommendation) => {
+    conventionalRecommendedBump({ preset, tagPrefix, config }, async(error, recommendation) => {
       if (error) {
         core.setFailed(error.message)
         return
@@ -91,9 +92,11 @@ async function run() {
           'git',
           versionFile,
           versionPath,
-          recommendation.releaseType
+          recommendation.releaseType,
         )
+
         newVersion = versioning.newVersion
+
       } else {
         const files = versionFile.split(',').map((f) => f.trim())
         core.info(`Files to bump: ${files.join(', ')}`)
@@ -102,8 +105,9 @@ async function run() {
           files.map((file) => {
             const fileExtension = file.split('.').pop()
             core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
+
             return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
-          })
+          }),
         )
 
         newVersion = versioning[0].newVersion
@@ -111,15 +115,16 @@ async function run() {
 
       let gitTag = `${tagPrefix}${newVersion}`
 
-      if (preChangelogGeneration) {
-        const newVersionAndTag = await require(path.resolve(process.cwd(), preChangelogGeneration)).preChangelogGeneration({
-          tag: gitTag,
-          version: newVersion,
-        })
+      if (preChangelogGenerationFile) {
+        const preChangelogGenerationScript = requireScript(preChangelogGenerationFile)
 
-        if (newVersionAndTag) {
-          if (newVersionAndTag.tag) gitTag = newVersionAndTag.tag
-          if (newVersionAndTag.version) newVersion = newVersionAndTag.version
+        // Double check if we want to update / do something with the tag
+        if (preChangelogGenerationScript && preChangelogGenerationScript.preTagGeneration) {
+          const modifiedTag = preChangelogGenerationScript.preTagGeneration(gitTag)
+
+          if (modifiedTag) {
+            gitTag = modifiedTag
+          }
         }
       }
 
@@ -147,12 +152,18 @@ async function run() {
 
       if (!skipCommit) {
         // Add changed files to git
-        if (preCommit) {
-          await require(path.resolve(process.cwd(), preCommit)).preCommit({
-            tag: gitTag,
-            version: newVersion,
-          })
+        if (preCommitFile) {
+          const preCommitScript = await requireScript(preCommitFile)
+
+          // Double check if the file exists and the export exists
+          if (preCommitScript && preCommitScript.preCommit) {
+            preCommitScript.preCommit({
+              tag: gitTag,
+              version: newVersion,
+            })
+          }
         }
+
         await git.add('.')
         await git.commit(gitCommitMessage.replace('{version}', gitTag))
       }
@@ -163,6 +174,7 @@ async function run() {
       core.info('Push all changes')
       try {
         await git.push()
+
       } catch (error) {
         core.setFailed(error.message)
       }

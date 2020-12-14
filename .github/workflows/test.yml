@@ -1,8 +1,5 @@
 name: 'Action to test the action locally with act'
-on:
-  push:
-    branches:
-    - branch-that-does-not-exist
+on: [pull_request]
 
 jobs:
   test-json:
@@ -85,8 +82,8 @@ jobs:
           skip-on-empty: 'false'
 
       - run: test -f pre-commit.test.json || (echo should be here && exit 1)
-      - run: cat pre-commit.test.json
-
+      - run: cat pre-commit.test.json && echo ""
+      - run: cat ./package.json
 
   test-pre-changelog-generation:
     runs-on: ubuntu-latest
@@ -105,9 +102,14 @@ jobs:
           github-token: ${{ secrets.github_token }}
           pre-changelog-generation: test/pre-changelog-generation.js
           version-file: './test-file.toml'
+          version-path: 'package.version'
 
-      - run: test -f pre-changelog-generation.test.json || (echo should be here && exit 1)
-      - run: cat pre-changelog-generation.test.json
+      - run: test -f pre-changelog-generation.version.test.json || (echo should be here && exit 1)
+      - run: test -f pre-changelog-generation.tag.test.json || (echo should be here && exit 1)
+      - run: cat pre-changelog-generation.version.test.json && echo ""
+      - run: cat pre-changelog-generation.tag.test.json && echo ""
+      - run: cat ./test-file.toml
+
   test-git:
     runs-on: ubuntu-latest
     steps:
@@ -132,7 +134,7 @@ jobs:
         uses: actions/checkout@v2
         with:
           path: "./"
-      
+
       - run: git tag | xargs git tag -d
 
       - name: Generate changelog

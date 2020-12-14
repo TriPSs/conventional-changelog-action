@@ -58,17 +58,16 @@ A bunch of useful environment variables are available to the script with `proces
 > Function in a specified file will be run right before the changelog generation phase, when the next
 > version is already known, but it was not used anywhere yet. It can be useful if you want to manually update version or tag. 
 
-Same restrictions as for the pre-commit hook, but exported function name should be `preChangelogGeneration` 
+Same restrictions as for the pre-commit hook, but exported functions names should be `preVersionGeneration` for modifications to the version and `preTagGeneration` for modifications to the git tag. 
 
 Following props will be passed to the function as a single parameter and same output is expected:
 
 ```typescript
-interface Props {
-  tag: string; // Next tag e.g. v1.12.3
-  version: string; // Next version e.g. 1.12.3
-}
+// Next version e.g. 1.12.3
+export function preVersionGeneration(version: string): string {}
 
-export function preChangelogGeneration(props: Props): Props {}
+// Next tag e.g. v1.12.3
+export function preTagGeneration(tag: string): string {}
 ```
 
 ### Config-File-Path
