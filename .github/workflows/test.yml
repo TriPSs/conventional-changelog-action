@@ -323,9 +323,6 @@ jobs:
 
       - run: npm ci --prod
 
-      - name: Install Packages
-        run: yarn
-
       - name: Generate Changelog
         id: changelog
         uses: ./
