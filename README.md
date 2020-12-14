@@ -52,6 +52,24 @@ export function preCommit(props: Props): void {}
 
 A bunch of useful environment variables are available to the script with `process.env`. See [docs.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables](https://docs.github.com/en/actions/configuring-and-managing-workflows/using-environment-variables) to learn more.
 
+### Pre-Changelog-Generation hook
+
+> Function in a specified file will be run right before the changelog generation phase, when the next
+> version is already known, but it was not used anywhere yet. It can be useful if you want to manually update version or tag. 
+
+Same restrictions as for the pre-commit hook, but exported function name should be `preChangelogGeneration` 
+
+Following props will be passed to the function as a single parameter and string output with version is expected:
+
+```typescript
+interface Props {
+  tag: string; // Next tag e.g. v1.12.3
+  version: string; // Next version e.g. 1.12.3
+}
+
+export function preChangelogGeneration(props: Props): string {}
+```
+
 ### Config-File-Path
 A config file to define the conventional commit settings. Use it if you need to override values like `issuePrefix` or `issueUrlFormat`. If you set a `config-file-path`, the `preset` setting will be ignored. Therefore use an existing config and override the values you want to adjust.
 
@@ -206,6 +224,9 @@ $ act -j multiple-files -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s
 
 # To run / config file path test
 $ act -j test-config-file-path -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+
+# To run pre-changelog-generation test
+$ act -j test-pre-changelog-generation -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
 ```
 
 ## [License](./LICENSE)
