@@ -106,7 +106,7 @@ jobs:
           ENV: 'dont-use-git'
         with:
           github-token: ${{ secrets.github_token }}
-          pre-commit: test/pre-commit.js
+          pre-commit: './test-pre-commit.js'
           skip-on-empty: 'false'
 
       - run: test -f pre-commit.test.json || (echo should be here && exit 1)
@@ -136,7 +136,7 @@ jobs:
           ENV: 'dont-use-git'
         with:
           github-token: ${{ secrets.github_token }}
-          pre-changelog-generation: test/pre-changelog-generation.js
+          pre-changelog-generation: './test-pre-changelog-generation.js'
           version-file: './test-file.toml'
           version-path: 'package.version'
 
@@ -359,7 +359,7 @@ jobs:
           ENV: 'dont-use-git'
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: './test/test-file-empty.toml'
+          version-file: './test-file-empty.toml'
           version-path: 'package.version'
 
       - name: Show file

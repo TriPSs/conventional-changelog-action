@@ -1,12 +1,12 @@
 const fs = require('fs')
-const t = require('assert')
+const assert = require('assert')
 
 exports.preCommit = (props) => {
   const {GITHUB_WORKSPACE} = process.env;
 
-  t.ok(GITHUB_WORKSPACE, 'GITHUB_WORKSPACE should not be empty')
-  t.ok(props.tag, 'tag should not be empty')
-  t.ok(props.version, 'version should not be empty')
+  assert.ok(GITHUB_WORKSPACE, 'GITHUB_WORKSPACE should not be empty')
+  assert.ok(props.tag, 'tag should not be empty')
+  assert.ok(props.version, 'version should not be empty')
 
   const body = {
     workspace: GITHUB_WORKSPACE,

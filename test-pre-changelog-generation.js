@@ -1,11 +1,11 @@
 const fs = require('fs')
-const t = require('assert')
+const assert = require('assert')
 
 exports.preVersionGeneration = (version) => {
   const { GITHUB_WORKSPACE } = process.env
 
-  t.ok(GITHUB_WORKSPACE, 'GITHUB_WORKSPACE should not be empty')
-  t.ok(version, 'version should not be empty')
+  assert.ok(GITHUB_WORKSPACE, 'GITHUB_WORKSPACE should not be empty')
+  assert.ok(version, 'version should not be empty')
 
   const newVersion = '1.0.100'
 
@@ -17,9 +17,9 @@ exports.preVersionGeneration = (version) => {
 exports.preTagGeneration = (tag) => {
   const { GITHUB_WORKSPACE } = process.env
 
-  t.ok(GITHUB_WORKSPACE, 'GITHUB_WORKSPACE should not be empty')
-  t.ok(tag, 'tag should not be empty')
-  t.strictEqual(tag, 'v1.0.100')
+  assert.ok(GITHUB_WORKSPACE, 'GITHUB_WORKSPACE should not be empty')
+  assert.ok(tag, 'tag should not be empty')
+  assert.strictEqual(tag, 'v1.0.100')
 
   const newTag = 'v1.0.100-alpha'
 
