@@ -5,7 +5,6 @@ const path = require('path')
 const getVersioning = require('./version')
 const git = require('./helpers/git')
 const changelog = require('./helpers/generateChangelog')
-const resolve = require('path').resolve
 
 async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
   const versioning = getVersioning(ext)
@@ -66,7 +65,7 @@ async function run() {
     core.info('Pull to make sure we have the full git history')
     await git.pull()
 
-    const config = conventionalConfigFile && require(resolve(process.cwd(), conventionalConfigFile))
+    const config = conventionalConfigFile && require(path.resolve(process.cwd(), conventionalConfigFile))
 
     conventionalRecommendedBump({ preset, tagPrefix, config }, async (error, recommendation) => {
       if (error) {
@@ -113,7 +112,7 @@ async function run() {
       let gitTag = `${tagPrefix}${newVersion}`
 
       if (preChangelogGeneration) {
-        const newVersionAndTag = await require(path.resolve(preChangelogGeneration)).preChangelogGeneration({
+        const newVersionAndTag = await require(path.resolve(process.cwd(), preChangelogGeneration)).preChangelogGeneration({
           tag: gitTag,
           version: newVersion,
         })
@@ -149,7 +148,7 @@ async function run() {
       if (!skipCommit) {
         // Add changed files to git
         if (preCommit) {
-          await require(path.resolve(preCommit)).preCommit({
+          await require(path.resolve(process.cwd(), preCommit)).preCommit({
             tag: gitTag,
             version: newVersion,
           })
