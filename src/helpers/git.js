@@ -37,28 +37,14 @@ module.exports = new (class Git {
    * @param command
    * @return {Promise<>}
    */
-  exec = command => new Promise(async(resolve, reject) => {
-    let myOutput = ''
-    let myError = ''
+  exec = (command) => new Promise(async(resolve, reject) => {
+    const exitCode = await exec.exec(`git ${command}`)
 
-    const options = {
-      listeners: {
-        stdout: (data) => {
-          myOutput += data.toString()
-        },
-        stderr: (data) => {
-          myError += data.toString()
-        },
-      },
-    }
+    if (exitCode === 0) {
+      resolve()
 
-    try {
-      await exec.exec(`git ${command}`, null, options)
-
-      resolve(myOutput)
-
-    } catch (e) {
-      reject(e)
+    } else {
+      reject(`Command "git ${command}" exited with code ${exitCode}.`)
     }
   })
 
@@ -77,7 +63,7 @@ module.exports = new (class Git {
    * @param file
    * @returns {*}
    */
-  add = file => this.exec(`add ${file}`)
+  add = (file) => this.exec(`add ${file}`)
 
   /**
    * Commit all changes
@@ -124,7 +110,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  isShallow = async () => {
+  isShallow = async() => {
     const isShallow = await this.exec('rev-parse --is-shallow-repository')
 
     // isShallow does not return anything on local machine
@@ -141,7 +127,7 @@ module.exports = new (class Git {
    * @param repo
    * @return {Promise<>}
    */
-  updateOrigin = repo => this.exec(`remote set-url origin ${repo}`)
+  updateOrigin = (repo) => this.exec(`remote set-url origin ${repo}`)
 
   /**
    * Creates git tag
@@ -149,6 +135,6 @@ module.exports = new (class Git {
    * @param tag
    * @return {Promise<>}
    */
-  createTag = tag => this.exec(`tag -a ${tag} -m "${tag}"`)
+  createTag = (tag) => this.exec(`tag -a ${tag} -m "${tag}"`)
 
 })()

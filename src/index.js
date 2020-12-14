@@ -172,12 +172,7 @@ async function run() {
       await git.createTag(gitTag)
 
       core.info('Push all changes')
-      try {
-        await git.push()
-
-      } catch (error) {
-        core.setFailed(error.message)
-      }
+      await git.push()
 
       // Set outputs so other actions (for example actions/create-release) can use it
       core.setOutput('changelog', stringChangelog)
@@ -187,7 +182,7 @@ async function run() {
       core.setOutput('skipped', 'false')
     })
   } catch (error) {
-    core.setFailed(error.message)
+    core.setFailed(error)
   }
 }
 
