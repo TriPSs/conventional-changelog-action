@@ -58,6 +58,7 @@ module.exports = async (releaseType, version) => {
       const modifiedVersion = await preChangelogGenerationScript.preVersionGeneration(newVersion)
 
       if (modifiedVersion) {
+        core.info(`Using modified version "${modifiedVersion}"`)
         newVersion = modifiedVersion
       }
     }

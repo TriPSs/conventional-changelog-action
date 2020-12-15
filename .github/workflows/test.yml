@@ -122,14 +122,14 @@ jobs:
       - run: git tag | xargs git tag -d
       - name: Create fake tag
         run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit -m 'fix: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
         uses: ./
         env:
           ENV: 'dont-use-git'
-          EXPECTED_TAG: 'v0.56.0'
+          EXPECTED_TAG: 'v0.55.9'
           SKIPPED_COMMIT: true
         with:
           github-token: ${{ secrets.github_token }}
