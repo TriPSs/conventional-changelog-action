@@ -511,5 +511,3 @@ jobs:
           else
             echo "Changelog config not applied" && exit 1
           fi
-        with:
-          GENERATED_CHANGELOG_OUTPUT: ${{ steps.changelog.outputs.clean_changelog }}
