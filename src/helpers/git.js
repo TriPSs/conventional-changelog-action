@@ -26,7 +26,9 @@ module.exports = new (class Git {
 
         console.log(`Skipping "${fullCommand}" because of test env`)
 
-        this.commandsRun.push(fullCommand)
+        if (!fullCommand.includes('git remote set-url origin')) {
+          this.commandsRun.push(fullCommand)
+        }
       }
     }
 
@@ -153,7 +155,6 @@ module.exports = new (class Git {
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
         'git config user.email "conventional.changelog.action@github.com"',
-        'git remote set-url origin https://x-access-token:fake-token@github.com/TriPSs/conventional-changelog-action.git',
         'git rev-parse --is-shallow-repository',
         'git pull --tags --ff-only',
       ]
