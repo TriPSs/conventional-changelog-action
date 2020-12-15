@@ -119,14 +119,13 @@ module.exports = new (class Git {
    * @return {Promise<>}
    */
   isShallow = async() => {
-    const isShallow = await this.exec('rev-parse --is-shallow-repository')
-
-    // isShallow does not return anything on local machine
-    if (isShallow) {
-      return isShallow.trim().replace('\n', '') === 'true'
-    } else {
+    if (ENV === 'dont-use-git') {
       return false
     }
+
+    const isShallow = await this.exec('rev-parse --is-shallow-repository')
+
+    return isShallow.trim().replace('\n', '') === 'true'
   }
 
   /**
@@ -155,7 +154,6 @@ module.exports = new (class Git {
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
         'git config user.email "conventional.changelog.action@github.com"',
-        'git rev-parse --is-shallow-repository',
         'git pull --tags --ff-only',
       ]
 
