@@ -1,11 +1,14 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
+const assert = require('assert')
 
 const { GITHUB_REPOSITORY, GITHUB_REF, ENV } = process.env
 
 const branch = GITHUB_REF.replace('refs/heads/', '')
 
 module.exports = new (class Git {
+
+  commandsRun = []
 
   constructor() {
     const githubToken = core.getInput('github-token', { required: true })
@@ -16,10 +19,16 @@ module.exports = new (class Git {
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
 
-    // if the env is dont-use-git then we mock exec as we are testing a workflow locally
+    // if the env is dont-use-git then we mock exec as we are testing a workflow
     if (ENV === 'dont-use-git') {
       this.exec = (command) => {
-        console.log(`Skipping "git ${command}" because of test env`)
+        const fullCommand = `git ${command}`
+
+        console.log(`Skipping "${fullCommand}" because of test env`)
+
+        if (!fullCommand.includes('git remote set-url origin')) {
+          this.commandsRun.push(fullCommand)
+        }
       }
     }
 
@@ -37,28 +46,14 @@ module.exports = new (class Git {
    * @param command
    * @return {Promise<>}
    */
-  exec = command => new Promise(async(resolve, reject) => {
-    let myOutput = ''
-    let myError = ''
+  exec = (command) => new Promise(async(resolve, reject) => {
+    const exitCode = await exec.exec(`git ${command}`)
 
-    const options = {
-      listeners: {
-        stdout: (data) => {
-          myOutput += data.toString()
-        },
-        stderr: (data) => {
-          myError += data.toString()
-        },
-      },
-    }
+    if (exitCode === 0) {
+      resolve()
 
-    try {
-      await exec.exec(`git ${command}`, null, options)
-
-      resolve(myOutput)
-
-    } catch (e) {
-      reject(e)
+    } else {
+      reject(`Command "git ${command}" exited with code ${exitCode}.`)
     }
   })
 
@@ -77,18 +72,17 @@ module.exports = new (class Git {
    * @param file
    * @returns {*}
    */
-  add = file => this.exec(`add ${file}`)
+  add = (file) => this.exec(`add ${file}`)
 
   /**
    * Commit all changes
    *
    * @param message
-   * @param args
    *
    * @return {Promise<>}
    */
-  commit = (message, args = []) => (
-    this.exec(`commit -m "${message}" ${args.join(' ')}`)
+  commit = (message) => (
+    this.exec(`commit -m "${message}"`)
   )
 
   /**
@@ -124,7 +118,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  isShallow = async () => {
+  isShallow = async() => {
     const isShallow = await this.exec('rev-parse --is-shallow-repository')
 
     // isShallow does not return anything on local machine
@@ -141,7 +135,7 @@ module.exports = new (class Git {
    * @param repo
    * @return {Promise<>}
    */
-  updateOrigin = repo => this.exec(`remote set-url origin ${repo}`)
+  updateOrigin = (repo) => this.exec(`remote set-url origin ${repo}`)
 
   /**
    * Creates git tag
@@ -149,6 +143,35 @@ module.exports = new (class Git {
    * @param tag
    * @return {Promise<>}
    */
-  createTag = tag => this.exec(`tag -a ${tag} -m "${tag}"`)
+  createTag = (tag) => this.exec(`tag -a ${tag} -m "${tag}"`)
+
+  /**
+   * Validates the commands run
+   */
+  testHistory = () => {
+    if (ENV === 'dont-use-git') {
+      const { EXPECTED_TAG, SKIPPED_COMMIT } = process.env
+
+      const expectedCommands = [
+        'git config user.name "Conventional Changelog Action"',
+        'git config user.email "conventional.changelog.action@github.com"',
+        'git rev-parse --is-shallow-repository',
+        'git pull --tags --ff-only',
+      ]
+
+      if (!SKIPPED_COMMIT) {
+        expectedCommands.push('git add .')
+        expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+      }
+
+      expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
+      expectedCommands.push(`git push origin ${branch} --follow-tags`)
+
+      assert.deepStrictEqual(
+        this.commandsRun,
+        expectedCommands,
+      )
+    }
+  }
 
 })()

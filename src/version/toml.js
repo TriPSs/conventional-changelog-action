@@ -4,7 +4,7 @@ const toml = require('@iarna/toml')
 const BaseVersioning = require('./base')
 const bumpVersion = require('../helpers/bumpVersion')
 
-module.exports = new (class Toml extends BaseVersioning{
+module.exports = new (class Toml extends BaseVersioning {
 
   /**
    * Bumps the version in the package.json
@@ -12,14 +12,14 @@ module.exports = new (class Toml extends BaseVersioning{
    * @param {!string} releaseType - The type of release
    * @return {*}
    */
-  bump = (releaseType) => {
+  bump = async(releaseType) => {
     // Read the file
     const fileContent = this.read()
     const tomlContent = toml.parse(fileContent)
     const oldVersion = objectPath.get(tomlContent, this.versionPath, null)
 
     // Get the new version
-    this.newVersion = bumpVersion(
+    this.newVersion = await bumpVersion(
       releaseType,
       oldVersion,
     )
