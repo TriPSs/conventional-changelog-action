@@ -120,7 +120,7 @@ async function run() {
 
         // Double check if we want to update / do something with the tag
         if (preChangelogGenerationScript && preChangelogGenerationScript.preTagGeneration) {
-          const modifiedTag = preChangelogGenerationScript.preTagGeneration(gitTag)
+          const modifiedTag = await preChangelogGenerationScript.preTagGeneration(gitTag)
 
           if (modifiedTag) {
             gitTag = modifiedTag
@@ -153,11 +153,11 @@ async function run() {
       if (!skipCommit) {
         // Add changed files to git
         if (preCommitFile) {
-          const preCommitScript = await requireScript(preCommitFile)
+          const preCommitScript = requireScript(preCommitFile)
 
           // Double check if the file exists and the export exists
           if (preCommitScript && preCommitScript.preCommit) {
-            preCommitScript.preCommit({
+            await preCommitScript.preCommit({
               tag: gitTag,
               version: newVersion,
             })

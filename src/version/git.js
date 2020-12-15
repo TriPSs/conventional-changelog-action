@@ -12,11 +12,11 @@ module.exports = new (class Git extends BaseVersioning {
 
       gitSemverTags({
         tagPrefix,
-      }, (err, tags) => {
+      }, async (err, tags) => {
         const currentVersion = tags.length > 0 ? tags.shift().replace(tagPrefix, '') : null
 
         // Get the new version
-        this.newVersion = bumpVersion(
+        this.newVersion = await bumpVersion(
           releaseType,
           currentVersion,
         )

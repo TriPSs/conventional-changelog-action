@@ -12,14 +12,14 @@ module.exports = new (class Yaml extends BaseVersioning{
    * @param {!string} releaseType - The type of release
    * @return {*}
    */
-  bump = (releaseType) => {
+  bump = async (releaseType) => {
     // Read the file
     const fileContent = this.read()
     const yamlContent = yaml.parse(fileContent) || {}
     const oldVersion = objectPath.get(yamlContent, this.versionPath, null)
 
     // Get the new version
-    this.newVersion = bumpVersion(
+    this.newVersion =await bumpVersion(
       releaseType,
       oldVersion,
     )

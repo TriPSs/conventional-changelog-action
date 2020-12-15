@@ -12,14 +12,14 @@ module.exports = new (class Toml extends BaseVersioning{
    * @param {!string} releaseType - The type of release
    * @return {*}
    */
-  bump = (releaseType) => {
+  bump = async(releaseType) => {
     // Read the file
     const fileContent = this.read()
     const tomlContent = toml.parse(fileContent)
     const oldVersion = objectPath.get(tomlContent, this.versionPath, null)
 
     // Get the new version
-    this.newVersion = bumpVersion(
+    this.newVersion = await bumpVersion(
       releaseType,
       oldVersion,
     )

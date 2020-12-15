@@ -10,7 +10,7 @@ const requireScript = require('./requireScript')
  * @param version
  * @returns {string}
  */
-module.exports = (releaseType, version) => {
+module.exports = async (releaseType, version) => {
   let major, minor, patch
 
   if (version) {
@@ -55,7 +55,7 @@ module.exports = (releaseType, version) => {
 
     // Double check if we want to update / do something with the version
     if (preChangelogGenerationScript && preChangelogGenerationScript.preVersionGeneration) {
-      const modifiedVersion = preChangelogGenerationScript.preVersionGeneration(newVersion)
+      const modifiedVersion = await preChangelogGenerationScript.preVersionGeneration(newVersion)
 
       if (modifiedVersion) {
         newVersion = modifiedVersion

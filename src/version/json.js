@@ -12,7 +12,7 @@ module.exports = new (class Json extends BaseVersioning {
    * @param {!string} releaseType - The type of release
    * @return {*}
    */
-  bump = (releaseType) => {
+  bump = async (releaseType) => {
     // Read the file
     const fileContent = this.read()
 
@@ -33,7 +33,7 @@ module.exports = new (class Json extends BaseVersioning {
     const oldVersion = objectPath.get(jsonContent, this.versionPath, null)
 
     // Get the new version
-    this.newVersion = bumpVersion(
+    this.newVersion = await bumpVersion(
       releaseType,
       oldVersion,
     )
