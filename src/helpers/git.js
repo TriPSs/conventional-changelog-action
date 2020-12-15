@@ -47,10 +47,20 @@ module.exports = new (class Git {
    * @return {Promise<>}
    */
   exec = (command) => new Promise(async(resolve, reject) => {
-    const exitCode = await exec.exec(`git ${command}`)
+    let execOutput = ''
+
+    const options = {
+      listeners: {
+        stdout: (data) => {
+          execOutput += data.toString()
+        },
+      },
+    }
+
+    const exitCode = await exec.exec(`git ${command}`, null, options)
 
     if (exitCode === 0) {
-      resolve()
+      resolve(execOutput)
 
     } else {
       reject(`Command "git ${command}" exited with code ${exitCode}.`)
