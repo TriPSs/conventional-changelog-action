@@ -113,9 +113,12 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
-      - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
+
+      - run: git tag | xargs git tag -d
+      - name: Create fake tag
+        run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
       - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
@@ -123,7 +126,7 @@ jobs:
         uses: ./
         env:
           ENV: 'dont-use-git'
-          EXPECTED_TAG: 'v0.1.0'
+          EXPECTED_TAG: 'v0.56.0'
           SKIPPED_COMMIT: true
         with:
           github-token: ${{ secrets.github_token }}
@@ -398,10 +401,12 @@ jobs:
         uses: ./
         env:
           ENV: 'dont-use-git'
+          EXPECTED_TAG: 'v1.5.0'
         with:
           github-token: ${{ secrets.github_token }}
           pre-commit: './test-pre-commit.js'
           skip-on-empty: 'false'
+          version-file: './test-file.json'
 
       - run: test -f pre-commit.test.json || (echo should be here && exit 1)
       - run: cat pre-commit.test.json && echo ""
