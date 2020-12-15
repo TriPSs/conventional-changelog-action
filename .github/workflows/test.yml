@@ -505,12 +505,11 @@ jobs:
           config-file-path: './test-changelog.config.js'
 
       - name: Test output
-        with:
-          GENERATED_CHANGELOG_OUTPUT: ${{ steps.changelog.outputs.clean_changelog }}
         run: |
           if grep -q "### New Features" "./CHANGELOG.md"; then
             echo "Generated changelog file has config applied"
           else
             echo "Changelog config not applied" && exit 1
           fi
-
+        with:
+          GENERATED_CHANGELOG_OUTPUT: ${{ steps.changelog.outputs.clean_changelog }}
