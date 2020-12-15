@@ -1,6 +1,8 @@
 const core = require('@actions/core')
 const semverValid = require('semver').valid
 
+const requireScript = require('./requireScript')
+
 /**
  * Bumps the given version with the given release type
  *
@@ -8,7 +10,7 @@ const semverValid = require('semver').valid
  * @param version
  * @returns {string}
  */
-module.exports = (releaseType, version) => {
+module.exports = async (releaseType, version) => {
   let major, minor, patch
 
   if (version) {
@@ -44,5 +46,22 @@ module.exports = (releaseType, version) => {
     core.info(`The version could not be detected, using fallback version '${major}.${minor}.${patch}'.`)
   }
 
-  return `${major}.${minor}.${patch}`
+  const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
+
+  let newVersion = `${major}.${minor}.${patch}`
+
+  if (preChangelogGenerationFile) {
+    const preChangelogGenerationScript = requireScript(preChangelogGenerationFile)
+
+    // Double check if we want to update / do something with the version
+    if (preChangelogGenerationScript && preChangelogGenerationScript.preVersionGeneration) {
+      const modifiedVersion = await preChangelogGenerationScript.preVersionGeneration(newVersion)
+
+      if (modifiedVersion) {
+        newVersion = modifiedVersion
+      }
+    }
+  }
+
+  return newVersion
 }
