@@ -123,6 +123,7 @@ async function run() {
           const modifiedTag = await preChangelogGenerationScript.preTagGeneration(gitTag)
 
           if (modifiedTag) {
+            core.info(`Using modified tag "${modifiedTag}"`)
             gitTag = modifiedTag
           }
         }
