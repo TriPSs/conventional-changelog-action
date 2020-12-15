@@ -1,11 +1,14 @@
 const core = require('@actions/core')
 const exec = require('@actions/exec')
+const assert = require('assert')
 
 const { GITHUB_REPOSITORY, GITHUB_REF, ENV } = process.env
 
 const branch = GITHUB_REF.replace('refs/heads/', '')
 
 module.exports = new (class Git {
+
+  commandsRun = []
 
   constructor() {
     const githubToken = core.getInput('github-token', { required: true })
@@ -16,10 +19,14 @@ module.exports = new (class Git {
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
 
-    // if the env is dont-use-git then we mock exec as we are testing a workflow locally
+    // if the env is dont-use-git then we mock exec as we are testing a workflow
     if (ENV === 'dont-use-git') {
       this.exec = (command) => {
-        console.log(`Skipping "git ${command}" because of test env`)
+        const fullCommand = `git ${command}`
+
+        console.log(`Skipping "${fullCommand}" because of test env`)
+
+        this.commandsRun.push(fullCommand)
       }
     }
 
@@ -69,12 +76,11 @@ module.exports = new (class Git {
    * Commit all changes
    *
    * @param message
-   * @param args
    *
    * @return {Promise<>}
    */
-  commit = (message, args = []) => (
-    this.exec(`commit -m "${message}" ${args.join(' ')}`)
+  commit = (message) => (
+    this.exec(`commit -m "${message}"`)
   )
 
   /**
@@ -136,5 +142,35 @@ module.exports = new (class Git {
    * @return {Promise<>}
    */
   createTag = (tag) => this.exec(`tag -a ${tag} -m "${tag}"`)
+
+  /**
+   * Validates the commands run
+   */
+  testHistory = () => {
+    if (ENV === 'dont-use-git') {
+      const { EXPECTED_TAG, SKIPPED_COMMIT } = process.env
+
+      const expectedCommands = [
+        'git config user.name "Conventional Changelog Action"',
+        'git config user.email "conventional.changelog.action@github.com"',
+        'git remote set-url origin https://x-access-token:fake-token@github.com/TriPSs/conventional-changelog-action.git',
+        'git rev-parse --is-shallow-repository',
+        'git pull --tags --ff-only',
+      ]
+
+      if (!SKIPPED_COMMIT) {
+        expectedCommands.push('git add .')
+        expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+      }
+
+      expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
+      expectedCommands.push(`git push origin ${branch} --follow-tags`)
+
+      assert.deepStrictEqual(
+        this.commandsRun,
+        expectedCommands,
+      )
+    }
+  }
 
 })()

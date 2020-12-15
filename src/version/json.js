@@ -12,7 +12,7 @@ module.exports = new (class Json extends BaseVersioning {
    * @param {!string} releaseType - The type of release
    * @return {*}
    */
-  bump = async (releaseType) => {
+  bump = async(releaseType) => {
     // Read the file
     const fileContent = this.read()
 

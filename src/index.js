@@ -180,6 +180,16 @@ async function run() {
       core.setOutput('version', newVersion)
       core.setOutput('tag', gitTag)
       core.setOutput('skipped', 'false')
+
+      try {
+        // If we are running in test mode we use this to validate everything still runs
+        git.testHistory()
+
+      } catch (error) {
+        console.error(error)
+
+        core.setFailed(error)
+      }
     })
   } catch (error) {
     core.setFailed(error)

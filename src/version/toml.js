@@ -4,7 +4,7 @@ const toml = require('@iarna/toml')
 const BaseVersioning = require('./base')
 const bumpVersion = require('../helpers/bumpVersion')
 
-module.exports = new (class Toml extends BaseVersioning{
+module.exports = new (class Toml extends BaseVersioning {
 
   /**
    * Bumps the version in the package.json
