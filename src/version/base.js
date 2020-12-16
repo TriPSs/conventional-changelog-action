@@ -1,3 +1,4 @@
+const core = require('@actions/core')
 const fs = require('fs')
 
 module.exports = class BaseVersioning {
@@ -25,7 +26,13 @@ module.exports = class BaseVersioning {
    * @return {string}
    */
   read = () => {
-    return fs.existsSync(this.fileLocation) ? fs.readFileSync(this.fileLocation, 'utf8') : ''
+    if (fs.existsSync(this.fileLocation)) {
+      return fs.readFileSync(this.fileLocation, 'utf8')
+    }
+
+    core.warning(`Tried to read "${this.fileLocation}" but file does not exist!`)
+
+    return ''
   }
 
   /**

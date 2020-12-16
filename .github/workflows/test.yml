@@ -184,6 +184,26 @@ jobs:
           version-file: 'test-file.yaml'
           version-path: 'package.version'
 
+      - name: Generate changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: 'v9.6.0'
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: 'test-file.yaml'
+          version-path: 'package.no-quotes-version'
+
+      - name: Generate changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: 'v9.7.0'
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: 'test-file.yaml'
+          version-path: 'package.double-quotes-version'
+
       - name: Show file
         run: |
           echo "$(<test-file.yaml)"
@@ -194,6 +214,20 @@ jobs:
           FILES: 'test-file.yaml'
           EXPECTED_VERSION: '9.5.0'
           EXPECTED_VERSION_PATH: 'package.version'
+
+      - name: Test output
+        run: node ./test-output.js
+        env:
+          FILES: 'test-file.yaml'
+          EXPECTED_VERSION: '9.6.0'
+          EXPECTED_VERSION_PATH: 'package.no-quotes-version'
+
+      - name: Test output
+        run: node ./test-output.js
+        env:
+          FILES: 'test-file.yaml'
+          EXPECTED_VERSION: '9.7.0'
+          EXPECTED_VERSION_PATH: 'package.double-quotes-version'
 
   test-yaml-new:
     runs-on: ubuntu-latest
@@ -482,7 +516,7 @@ jobs:
         run: node ./test-output.js
         env:
           FILES: 'test-file.json, test-file.toml, test-file.yaml'
-          EXPECTED_VERSION: '1.5.0, 0.1.0, 0.1.0'
+          EXPECTED_VERSION: '1.5.0, 1.5.0, 1.11.0'
 
   test-config-file-path:
     runs-on: ubuntu-latest

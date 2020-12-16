@@ -1,3 +1,4 @@
+const core = require('@actions/core')
 const objectPath = require('object-path')
 const yaml = require('yaml')
 
@@ -29,11 +30,20 @@ module.exports = new (class Yaml extends BaseVersioning {
       // Get the name of where the version is in
       const versionName = this.versionPath.split('.').pop()
 
+      core.info(`Bumped file "${this.fileLocation}" from "${oldVersion}" to "${this.newVersion}"`)
+
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
+        // Replace if version was used with single quotes
         fileContent.replace(
           `${versionName}: '${oldVersion}'`,
           `${versionName}: '${this.newVersion}'`,
+        ).replace( // Replace if version was used with double quotes
+          `${versionName}: "${oldVersion}"`,
+          `${versionName}: "${this.newVersion}"`,
+        ).replace( // Replace if version was used with no quotes
+          `${versionName}: ${oldVersion}`,
+          `${versionName}: ${this.newVersion}`,
         ),
       )
     } else {
