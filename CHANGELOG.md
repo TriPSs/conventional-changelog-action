@@ -1,3 +1,12 @@
+## [3.7.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.7.0...v3.7.1) (2020-12-16)
+
+
+### Bug Fixes
+
+* Fixed that bumping multiple files with same extension type did only update one ([62453ed](https://github.com/TriPSs/conventional-changelog-action/commit/62453ed268eb6e82fcaf11351ce4cdd4f4b323aa))
+
+
+
 # [3.7.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.6.0...v3.7.0) (2020-12-16)
 
 
@@ -49,15 +58,6 @@
 ### Bug Fixes
 
 * Check if repo is shallow before unshallowing ([c5bb2b1](https://github.com/TriPSs/conventional-changelog-action/commit/c5bb2b18afb00739c65c2bee9fc9bb6da52a8c90))
-
-
-
-# [3.4.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.3.0...v3.4.0) (2020-08-17)
-
-
-### Features
-
-* Allow to specify a config file ([f0fabf6](https://github.com/TriPSs/conventional-changelog-action/commit/f0fabf6d88a3b7cef366530cc9cad6160a00d128))
 
 
 
