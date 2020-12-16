@@ -1,3 +1,12 @@
+# [3.7.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.6.0...v3.7.0) (2020-12-16)
+
+
+### Features
+
+* **yml:** Added support for no quotes and double quotes ([2a80eb3](https://github.com/TriPSs/conventional-changelog-action/commit/2a80eb3e4a1914fcd08a6ae083fa7a94c94d8137))
+
+
+
 # [3.6.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.5.0...v3.6.0) (2020-12-15)
 
 
@@ -49,24 +58,6 @@
 ### Features
 
 * Allow to specify a config file ([f0fabf6](https://github.com/TriPSs/conventional-changelog-action/commit/f0fabf6d88a3b7cef366530cc9cad6160a00d128))
-
-
-
-# [3.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.2.0...v3.3.0) (2020-08-13)
-
-
-### Bug Fixes
-
-* Empty version files ([091fdfc](https://github.com/TriPSs/conventional-changelog-action/commit/091fdfc6a55a151e3adff5ada382986ead85d58e))
-* Message when using the fallback version ([b525f9a](https://github.com/TriPSs/conventional-changelog-action/commit/b525f9ae66cb03aa2a58cd043963504b911bac31))
-* Pull all tags ([3396dfc](https://github.com/TriPSs/conventional-changelog-action/commit/3396dfc4323e48de090308fff522ef4c557f73e5))
-* Show info if the version couldn't be detected ([9a324db](https://github.com/TriPSs/conventional-changelog-action/commit/9a324dbd51d0d32c1b9df1a291e14cc20a5bbaff))
-* Use fallback if it's not a valid JSON-File ([97f1bb3](https://github.com/TriPSs/conventional-changelog-action/commit/97f1bb3543e6f2480ef3e699fc695ecb8b3f881b))
-
-
-### Features
-
-* Add fallback version ([63d0e46](https://github.com/TriPSs/conventional-changelog-action/commit/63d0e46a0b69e3db3f7a5f44e963323afc35d29c))
 
 
 
