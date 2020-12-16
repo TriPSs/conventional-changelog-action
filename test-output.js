@@ -18,6 +18,8 @@ assert.ok(FILES, 'Files not defined!')
  * Test if all the files are updated
  */
 FILES.split(',').map((file, index) => {
+  console.log(`Going to test file "${file}"`)
+
   const fileContent = fs.readFileSync(file.trim(), 'utf8')
   const fileExtension = file.split('.').pop()
 
@@ -43,7 +45,11 @@ FILES.split(',').map((file, index) => {
       assert.fail('File extension not supported!')
   }
 
+  console.log(`"${file}" has a valid extension "${fileExtension.toLowerCase()}"`)
+
   assert.ok(parsedContent, 'Content could not be parsed!')
+
+  console.log(`"${file}" has valid content`, parsedContent)
 
   const newVersionInFile = objectPath.get(parsedContent, EXPECTED_VERSION_PATH, null)
 
@@ -51,6 +57,8 @@ FILES.split(',').map((file, index) => {
   const expectedVersion = expectedVersions.length > 0
     ? expectedVersions[index]
     : expectedVersions
+
+  console.log(`"${file}" check if "${newVersionInFile}" matches what is expected "${expectedVersion.trim()}"`)
 
   assert.strictEqual(newVersionInFile, expectedVersion.trim(), 'Version does not match what is expected')
 })

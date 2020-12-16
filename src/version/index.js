@@ -6,17 +6,17 @@ const Toml = require('./toml')
 module.exports = (fileExtension) => {
   switch (fileExtension.toLowerCase()) {
     case 'json':
-      return Json
+      return new Json()
 
     case 'yaml':
     case 'yml':
-      return Yaml
+      return new Yaml()
 
     case 'toml':
-      return Toml
+      return new Toml()
 
     case 'git':
-      return Git
+      return new Git()
 
     default:
       return null

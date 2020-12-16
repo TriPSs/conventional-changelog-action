@@ -1,5 +1,8 @@
 name: 'Test the action'
-on: [pull_request]
+on:
+  pull_request:
+    branches:
+      - master
 
 jobs:
   test-json:
@@ -502,21 +505,24 @@ jobs:
           EXPECTED_TAG: 'v1.5.0'
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: 'test-file.json, test-file.toml, test-file.yaml'
+          version-file: 'test-file.json, test-file-2.json, test-file.toml, test-file.yaml'
 
       - name: Show files
         run: |
-          echo "$(<test-file.json)"
-          echo ""
-          echo "$(<test-file.toml)"
-          echo ""
-          echo "$(<test-file.yaml)"
+          echo "Test json file"
+          echo "$(<test-file.json)\n\n"
+          echo "Test json 2 file"
+          echo "$(<test-file-2.json)\n\n"
+          echo "Test toml file"
+          echo "$(<test-file.toml)\n\n"
+          echo "Test yaml file"
+          echo "$(<test-file.yaml)\n\n"
 
       - name: Test output
         run: node ./test-output.js
         env:
-          FILES: 'test-file.json, test-file.toml, test-file.yaml'
-          EXPECTED_VERSION: '1.5.0, 1.5.0, 1.11.0'
+          FILES: 'test-file.json, test-file-2.json, test-file.toml, test-file.yaml'
+          EXPECTED_VERSION: '1.5.0, 1.5.0, 1.5.0, 1.11.0'
 
   test-config-file-path:
     runs-on: ubuntu-latest
