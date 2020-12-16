@@ -5,7 +5,7 @@ const yaml = require('yaml')
 const BaseVersioning = require('./base')
 const bumpVersion = require('../helpers/bumpVersion')
 
-module.exports = new (class Yaml extends BaseVersioning {
+module.exports = class Yaml extends BaseVersioning {
 
   /**
    * Bumps the version in the package.json
@@ -53,5 +53,4 @@ module.exports = new (class Yaml extends BaseVersioning {
     }
   }
 
-})
-
+}
