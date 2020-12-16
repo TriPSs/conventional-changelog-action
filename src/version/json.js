@@ -4,7 +4,7 @@ const objectPath = require('object-path')
 const BaseVersioning = require('./base')
 const bumpVersion = require('../helpers/bumpVersion')
 
-module.exports = new (class Json extends BaseVersioning {
+module.exports = class Json extends BaseVersioning {
 
   /**
    * Bumps the version in the package.json
@@ -49,5 +49,5 @@ module.exports = new (class Json extends BaseVersioning {
     )
   }
 
-})
+}
 

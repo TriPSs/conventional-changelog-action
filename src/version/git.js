@@ -4,7 +4,7 @@ const gitSemverTags = require('git-semver-tags')
 const BaseVersioning = require('./base')
 const bumpVersion = require('../helpers/bumpVersion')
 
-module.exports = new (class Git extends BaseVersioning {
+module.exports = class Git extends BaseVersioning {
 
   bump = (releaseType) => {
     return new Promise((resolve) => {
@@ -27,5 +27,4 @@ module.exports = new (class Git extends BaseVersioning {
     })
   }
 
-})
-
+}
