@@ -17,7 +17,10 @@ module.exports = class Toml extends BaseVersioning {
     // Read the file
     const fileContent = this.read()
     const tomlContent = toml.parse(fileContent)
+
+    // Get the old version
     const oldVersion = objectPath.get(tomlContent, this.versionPath, null)
+    this.oldVersion = oldVersion
 
     // Get the new version
     this.newVersion = await bumpVersion(
