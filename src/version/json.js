@@ -31,6 +31,7 @@ module.exports = class Json extends BaseVersioning {
 
     // Get the old version
     const oldVersion = objectPath.get(jsonContent, this.versionPath, null)
+    this.oldVersion = oldVersion
 
     // Get the new version
     this.newVersion = await bumpVersion(

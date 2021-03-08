@@ -115,6 +115,15 @@ module.exports = new (class Git {
   }
 
   /**
+   * fetch
+   *
+   * @return {Promise<>}
+   */
+  fetch = () => (
+    this.exec(`fetch --depth 1000`)
+  )
+
+  /**
    * Push all changes
    *
    * @return {Promise<>}
@@ -164,6 +173,7 @@ module.exports = new (class Git {
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
         'git config user.email "conventional.changelog.action@github.com"',
+        'git fetch --depth 1000',
         'git pull --tags --ff-only',
       ]
 

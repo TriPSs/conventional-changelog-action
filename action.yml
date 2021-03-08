@@ -1,4 +1,4 @@
-name: 'Conventional Changelog Action'
+name: 'Conventional Changelog Action - fork taliesins'
 description: 'Bump version, tag commit and generates changelog with conventional commits.'
 author: 'Tycho Bokdam'
 runs:
@@ -90,6 +90,16 @@ inputs:
 
   config-file-path:
     description: 'Path to the conventional changelog config file. If set, the preset setting will be ignored'
+    required: false
+    
+  dry-run:
+    description: 'Output latest tag and change log, but do not push changes'
+    default: 'false'
+    required: false
+    
+  skip-tag:
+    description: 'Determines whether or not a new tag is created or not'
+    default: 'false'
     required: false
 
   pre-changelog-generation:

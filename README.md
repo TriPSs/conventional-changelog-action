@@ -17,11 +17,12 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `version-path`: The place inside the version file to bump. Default `version`.
 - **Optional** `skip-on-empty`: Boolean to specify if you want to skip empty release (no-changelog generated). This case occured when you push `chore` commit with `angular` for example. Default `'true'`.
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
-- **Optional** `skip-commit`: Do create a release commit. Default `'false'`.
+- **Optional** `skip-commit`: Do not create a release commit. Default `'false'`.
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
 - **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
 - **Optional** `config-file-path`: Path to the conventional changelog config file. If set, the preset setting will be ignored
-- **Optional** `pre-changelog-generation`: Path to the pre-changelog-generation script file. No hook by default.
+- **Optional** `pre-changelog-generation`: Path to the pre-changelog-generation script file. No hook by default.- **Optional** `dry-run`: Output generated data, but do not commit
+- **Optional** `skip-tag`: Whether or not to push a tag
 
 ### Pre-Commit hook
 
@@ -92,6 +93,7 @@ Make sure to install all required packages in the workflow before executing this
 - `changelog`: The generated changelog for the new version.
 - `clean_changelog`: The generated changelog for the new version without the version name in it (Better for Github releases)
 - `version`: The new version.
+- `old_version`: The old version.
 - `tag`: The name of the generated tag.
 - `skipped`: Boolean (`'true'` or `'false'`) specifying if this step have been skipped
 
@@ -236,3 +238,4 @@ Conventional Changelog Action is [MIT licensed](./LICENSE).
 ## Collaboration
 
 If you have questions or [issues](https://github.com/TriPSs/conventional-changelog-action/issues), please [open an issue](https://github.com/TriPSs/conventional-changelog-action/issues/new)!
+
