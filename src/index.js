@@ -39,7 +39,8 @@ async function run() {
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
     const conventionalConfigFile = core.getInput('config-file-path')
-    const preChangelogGenerationFile = core.getInput('pre-changelog-generation')    const dryRun = core.getInput('dry-run').toLowerCase() === 'true'
+    const preChangelogGenerationFile = core.getInput('pre-changelog-generation')    
+    const dryRun = core.getInput('dry-run').toLowerCase() === 'true'
     const skipTag = core.getInput('skip-tag').toLowerCase() === 'true'
 
     core.info(`Using "${preset}" preset`)
