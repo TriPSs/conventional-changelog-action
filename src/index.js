@@ -85,6 +85,7 @@ async function run() {
         core.info(`Because: ${recommendation.reason}`)
       }
 
+      let oldVersion
       let newVersion
 
       // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
@@ -99,6 +100,7 @@ async function run() {
           recommendation.releaseType,
         )
 
+        oldVersion = versioning.oldVersion
         newVersion = versioning.newVersion
 
       } else {
@@ -114,6 +116,7 @@ async function run() {
           }),
         )
 
+        oldVersion = versioning[0].oldVersion
         newVersion = versioning[0].newVersion
       }
 
@@ -147,6 +150,7 @@ async function run() {
         return
       }
 
+      core.info(`Old version: ${oldVersion}`)
       core.info(`New version: ${newVersion}`)
 
       // If output file === 'false' we don't write it to file
@@ -193,6 +197,7 @@ async function run() {
       core.setOutput('changelog', stringChangelog)
       core.setOutput('clean_changelog', cleanChangelog)
       core.setOutput('version', newVersion)
+      core.setOutput('old_version', oldVersion)
       core.setOutput('tag', gitTag)
       core.setOutput('skipped', 'false')
 

@@ -17,7 +17,10 @@ module.exports = class Yaml extends BaseVersioning {
     // Read the file
     const fileContent = this.read()
     const yamlContent = yaml.parse(fileContent) || {}
+
+    // Get the old version
     const oldVersion = objectPath.get(yamlContent, this.versionPath, null)
+    this.oldVersion = oldVersion
 
     // Get the new version
     this.newVersion = await bumpVersion(

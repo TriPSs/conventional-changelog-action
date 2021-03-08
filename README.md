@@ -93,6 +93,7 @@ Make sure to install all required packages in the workflow before executing this
 - `changelog`: The generated changelog for the new version.
 - `clean_changelog`: The generated changelog for the new version without the version name in it (Better for Github releases)
 - `version`: The new version.
+- `old_version`: The old version.
 - `tag`: The name of the generated tag.
 - `skipped`: Boolean (`'true'` or `'false'`) specifying if this step have been skipped
 
