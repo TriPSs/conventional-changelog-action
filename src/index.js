@@ -42,6 +42,7 @@ async function run() {
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')    
     const dryRun = core.getInput('dry-run').toLowerCase() === 'true'
     const skipTag = core.getInput('skip-tag').toLowerCase() === 'true'
+    const forcePush = core.getInput('force-push').toLowerCase() === 'false'
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)
@@ -55,6 +56,7 @@ async function run() {
     core.info(`Using "${conventionalConfigFile}" as config file`)
     core.info(`Using "${dryRun}" as dry run`)
     core.info(`Using "${skipTag}" as skip tag`)
+    core.info(`Using "${forcePush}" as force push`)
 
     if (preCommitFile) {
       core.info(`Using "${preCommitFile}" as pre-commit script`)
@@ -186,7 +188,7 @@ async function run() {
       if (!dryRun){
         core.info('Push all changes')
         try {
-          await git.push()
+          await git.push(forcePush)
         } catch (error) {
           core.setFailed(error.message)
         }
