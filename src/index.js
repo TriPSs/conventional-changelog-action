@@ -42,7 +42,7 @@ async function run() {
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')    
     const dryRun = core.getInput('dry-run').toLowerCase() === 'true'
     const skipTag = core.getInput('skip-tag').toLowerCase() === 'true'
-    const forcePush = core.getInput('force-push').toLowerCase() === 'false'
+    const forcePush = core.getInput('force-push').toLowerCase() === 'true'
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)
