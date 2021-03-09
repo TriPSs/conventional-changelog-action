@@ -162,6 +162,8 @@ async function run() {
         await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config)
       }
 
+      let needsPush = false
+
       if (!skipCommit && !dryRun) {
         // Add changed files to git
         if (preCommitFile) {
@@ -176,16 +178,21 @@ async function run() {
           }
         }
 
-        await git.add('.')
-        await git.commit(gitCommitMessage.replace('{version}', gitTag))
+        let hasChanges = await git.hasChanges()
+        if (hasChanges){
+          await git.add('.')
+          await git.commit(gitCommitMessage.replace('{version}', gitTag))
+          needsPush = true
+        }
       }
 
       // Create the new tag
       if (!skipTag && !dryRun){
         await git.createTag(gitTag)
+        needsPush = true
       }
       
-      if (!dryRun){
+      if (!dryRun && needsPush){
         core.info('Push all changes')
         try {
           await git.push(forcePush)
