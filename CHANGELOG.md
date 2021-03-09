@@ -1,3 +1,12 @@
+## [3.8.4](https://github.com/TriPSs/conventional-changelog-action/compare/v3.8.3...v3.8.4) (2021-03-09)
+
+
+### Bug Fixes
+
+* **forcepush:** add missing inputs and output ([3c106e7](https://github.com/TriPSs/conventional-changelog-action/commit/3c106e7c7cd3cf891e773a5079d5100ad1681a68))
+
+
+
 ## [3.8.3](https://github.com/TriPSs/conventional-changelog-action/compare/v3.8.2...v3.8.3) (2021-03-09)
 
 
@@ -30,15 +39,6 @@
 * **oldversion:** trigger build ([1927af0](https://github.com/TriPSs/conventional-changelog-action/commit/1927af03bef8ddf7769599a5c4e98ca33885e97d))
 * **unshallow:** fix unshallow ([33d4912](https://github.com/TriPSs/conventional-changelog-action/commit/33d49129d19df31f79f253be9702a0f778ee370b))
 * **unshallow:** remove unshallow ([c32fcd7](https://github.com/TriPSs/conventional-changelog-action/commit/c32fcd79474b7c4cd7086cf5787ace52cdb03312))
-
-
-
-## [3.7.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.7.0...v3.7.1) (2020-12-16)
-
-
-### Bug Fixes
-
-* Fixed that bumping multiple files with same extension type did only update one ([62453ed](https://github.com/TriPSs/conventional-changelog-action/commit/62453ed268eb6e82fcaf11351ce4cdd4f4b323aa))
 
 
 
