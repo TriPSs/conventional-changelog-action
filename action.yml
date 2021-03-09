@@ -91,7 +91,11 @@ inputs:
   config-file-path:
     description: 'Path to the conventional changelog config file. If set, the preset setting will be ignored'
     required: false
-    
+
+  pre-changelog-generation:
+    description: 'Path to the pre-changelog-generation script file'
+    required: false
+
   dry-run:
     description: 'Output latest tag and change log, but do not push changes'
     default: 'false'
@@ -102,10 +106,10 @@ inputs:
     default: 'false'
     required: false
 
-  pre-changelog-generation:
-    description: 'Path to the pre-changelog-generation script file'
+  force-push:
+    description: 'Determines whether or not to force push'
+    default: 'false'
     required: false
-
 
 outputs:
   changelog:
@@ -114,6 +118,8 @@ outputs:
     description: 'The generated changelog for the new version without the version name in it'
   version:
     description: 'The new version'
+  old_version:
+    description: 'The old version'
   tag:
     description: 'The name of the generated tag'
   skipped:
