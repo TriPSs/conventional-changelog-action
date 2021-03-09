@@ -25,12 +25,12 @@ jobs:
 
       - name: Get release information
         env:
-          CLEAN_CHANGELOG: ${{ steps.release_number_and_changelog.outputs.clean_changelog }}
-          CHANGELOG: ${{ steps.release_number_and_changelog.outputs.changelog }}
-          VERSION: ${{ steps.release_number_and_changelog.outputs.version }}
-          OLDVERSION: ${{ steps.release_number_and_changelog.outputs.old_version }}
-          TAG: ${{ steps.release_number_and_changelog.outputs.tag }}
-          SKIPPED: ${{ steps.release_number_and_changelog.outputs.skipped }}
+          CLEAN_CHANGELOG: ${{ steps.changelog.outputs.clean_changelog }}
+          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
+          VERSION: ${{ steps.changelog.outputs.version }}
+          OLDVERSION: ${{ steps.changelog.outputs.old_version }}
+          TAG: ${{ steps.changelog.outputs.tag }}
+          SKIPPED: ${{ steps.changelog.outputs.skipped }}
         run: |
           echo "clean_changelog: $CLEAN_CHANGELOG"
           echo "changelog: $CHANGELOG"
