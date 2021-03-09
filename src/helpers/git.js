@@ -160,14 +160,11 @@ module.exports = new (class Git {
    * @return {Promise<>}
    */
   hasChanges = async() => {
-    if (ENV === 'dont-use-git') {
-      return true
-    }
     let execOutput = ''
 
     const options = {
       ignoreReturnCode : true,
-      failOnStdErr: false,
+      failOnStdErr: true,
       listeners: {
         stdout: (data) => {
           execOutput += data.toString()
@@ -175,7 +172,7 @@ module.exports = new (class Git {
       },
     }
 
-    const exitCode = await exec.exec(`git diff --no-ext-diff --quie;t --exit-code`, null, options)
+    const exitCode = await exec.exec(`git diff --no-ext-diff --quiet --exit-code`, null, options)
 
     if (execOutput.trim()){
       throw `Unable to determine git status: ${execOutput.trim()}`
