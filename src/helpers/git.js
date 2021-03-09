@@ -175,7 +175,7 @@ module.exports = new (class Git {
       },
     }
 
-    const exitCode = await exec.exec(`git diff --no-ext-diff --quie;t --exit-code`, null, options)
+    const exitCode = await exec.exec(`git diff --no-ext-diff --quiet --exit-code`, null, options)
 
     if (execOutput.trim()){
       throw `Unable to determine git status: ${execOutput.trim()}`
