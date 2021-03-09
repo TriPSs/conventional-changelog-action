@@ -164,7 +164,7 @@ module.exports = new (class Git {
 
     const options = {
       ignoreReturnCode : true,
-      failOnStdErr: true,
+      failOnStdErr: false,
       listeners: {
         stdout: (data) => {
           execOutput += data.toString()
