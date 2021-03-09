@@ -1,3 +1,7 @@
+## [3.8.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.8.0...v3.8.1) (2021-03-09)
+
+
+
 # [3.8.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.7.1...v3.8.0) (2021-03-08)
 
 
@@ -56,22 +60,6 @@
 ### Features
 
 * Added more logging ([d46daa9](https://github.com/TriPSs/conventional-changelog-action/commit/d46daa9a537c6d12a6ec4d859e55ef76372a15a8))
-
-
-
-# [3.5.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.4.1...v3.5.0) (2020-12-14)
-
-
-### Bug Fixes
-
-* More checks. Fix test for changelog generation ([c6043fb](https://github.com/TriPSs/conventional-changelog-action/commit/c6043fb4f9cc46d59dea99e88ebae07976b3a87f))
-* Remove unneded import. More precise path for requiring hooks ([040d8e9](https://github.com/TriPSs/conventional-changelog-action/commit/040d8e90f4548fdebc6fe291763582d202c62e88))
-* Tag name can also be changed in pre-changelog-generation ([c0f4172](https://github.com/TriPSs/conventional-changelog-action/commit/c0f41727e6b6df5561d358a6bb0aaded9c25da61))
-
-
-### Features
-
-* Allow to specify custom tags which override auto generated ones ([8f6aa19](https://github.com/TriPSs/conventional-changelog-action/commit/8f6aa1969f7dd949c0b8c6456c792fa55dd21ce5))
 
 
 
