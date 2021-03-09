@@ -128,9 +128,16 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  push = () => (
-    this.exec(`push origin ${branch} --follow-tags`)
-  )
+  push = (forcePush) => {
+    const args = ['push']
+    args.push(`origin ${branch}`)
+    if (forcePush) {
+      args.push(`--force-with-lease`)
+    }
+    args.push(`--follow-tags`)
+
+    this.exec(args.join(' '))
+  }
 
   /**
    * Check if the repo is shallow
