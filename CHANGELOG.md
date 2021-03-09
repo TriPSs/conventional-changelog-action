@@ -1,3 +1,7 @@
+## [3.8.3](https://github.com/TriPSs/conventional-changelog-action/compare/v3.8.2...v3.8.3) (2021-03-09)
+
+
+
 ## [3.8.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.8.1...v3.8.2) (2021-03-09)
 
 
@@ -35,15 +39,6 @@
 ### Bug Fixes
 
 * Fixed that bumping multiple files with same extension type did only update one ([62453ed](https://github.com/TriPSs/conventional-changelog-action/commit/62453ed268eb6e82fcaf11351ce4cdd4f4b323aa))
-
-
-
-# [3.7.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.6.0...v3.7.0) (2020-12-16)
-
-
-### Features
-
-* **yml:** Added support for no quotes and double quotes ([2a80eb3](https://github.com/TriPSs/conventional-changelog-action/commit/2a80eb3e4a1914fcd08a6ae083fa7a94c94d8137))
 
 
 
