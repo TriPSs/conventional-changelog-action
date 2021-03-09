@@ -154,6 +154,31 @@ module.exports = new (class Git {
     return isShallow.trim().replace('\n', '') === 'true'
   }
 
+    /**
+   * Check if the repo is shallow
+   *
+   * @return {Promise<>}
+   */
+  hasChanges = async() => {
+    let execOutput = ''
+
+    const options = {
+      listeners: {
+        stdout: (data) => {
+          execOutput += data.toString()
+        },
+      },
+    }
+
+    const exitCode = await exec.exec(`git diff --no-ext-diff --quiet --exit-code`, null, options)
+
+    if (execOutput.trim()){
+      throw `Unable to determine git status: ${execOutput.trim()}`
+    }
+
+    return exitCode !== 0
+  } 
+
   /**
    * Updates the origin remote
    *
