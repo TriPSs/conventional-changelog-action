@@ -10,6 +10,8 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v2
+        with:
+          path: "./"
 
       - run: npm ci --prod
       - run: git add node_modules -f
