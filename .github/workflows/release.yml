@@ -22,11 +22,27 @@ jobs:
         with:
           github-token: ${{ secrets.github_token }}
 
+      - name: Get release information
+        env:
+          CLEAN_CHANGELOG: ${{ steps.release_number_and_changelog.outputs.clean_changelog }}
+          CHANGELOG: ${{ steps.release_number_and_changelog.outputs.changelog }}
+          VERSION: ${{ steps.release_number_and_changelog.outputs.version }}
+          OLDVERSION: ${{ steps.release_number_and_changelog.outputs.old_version }}
+          TAG: ${{ steps.release_number_and_changelog.outputs.tag }}
+          SKIPPED: ${{ steps.release_number_and_changelog.outputs.skipped }}
+        run: |
+          echo "clean_changelog: $CLEAN_CHANGELOG"
+          echo "changelog: $CHANGELOG"
+          echo "version: $VERSION"
+          echo "old_version: $OLDVERSION"
+          echo "tag: $TAG"
+          echo "skipped: $SKIPPED"
+
       - name: Create Release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
         with:
-          tag_name: ${{ steps.changelog.outputs.tag }}
-          release_name: ${{ steps.changelog.outputs.tag }}
+          tag_name: v${{ steps.changelog.outputs.version }}
+          release_name: v${{ steps.changelog.outputs.version }}
           body: ${{ steps.changelog.outputs.clean_changelog }}
