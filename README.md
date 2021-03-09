@@ -21,8 +21,10 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
 - **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
 - **Optional** `config-file-path`: Path to the conventional changelog config file. If set, the preset setting will be ignored
-- **Optional** `pre-changelog-generation`: Path to the pre-changelog-generation script file. No hook by default.- **Optional** `dry-run`: Output generated data, but do not commit
+- **Optional** `pre-changelog-generation`: Path to the pre-changelog-generation script file. No hook by default.
+- **Optional** `dry-run`: Output generated data, but do not commit
 - **Optional** `skip-tag`: Whether or not to push a tag
+- **Optional** `force-push`: Whether or not to force push a tag. This can be useful when branch protection requires pull request review
 
 ### Pre-Commit hook
 
