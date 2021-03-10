@@ -41,7 +41,8 @@ inputs:
 
   tag-prefix:
     description: 'Prefix that is used for the git tag'
-    required: true
+    default: ''
+    required: false
 
   output-file:
     description: 'File to output the changelog to'
