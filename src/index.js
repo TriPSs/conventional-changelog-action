@@ -75,15 +75,16 @@ async function run() {
         return
       }
 
-      core.info(`Recommended release type: ${recommendation.releaseType}`)
+      releaseType = recommendation.releaseType
+      core.info(`Recommended release type: ${releaseType}`)
 
       // If we have a reason also log it
       if (recommendation.reason) {
         core.info(`Because: ${recommendation.reason}`)
       }
 
-      if (recommendation.releaseType == "major" && breakingBumpsMinor) {
-        recommendation.releaseType = "minor"
+      if (releaseType == "major" && breakingBumpsMinor) {
+        releaseType = "minor"
       }
 
       let newVersion
@@ -97,7 +98,7 @@ async function run() {
           'git',
           versionFile,
           versionPath,
-          recommendation.releaseType,
+          releaseType,
         )
 
         newVersion = versioning.newVersion
@@ -111,7 +112,7 @@ async function run() {
             const fileExtension = file.split('.').pop()
             core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
 
-            return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
+            return handleVersioningByExtension(fileExtension, file, versionPath, releaseType)
           }),
         )
 
