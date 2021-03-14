@@ -83,8 +83,8 @@ async function run() {
         core.info(`Because: ${recommendation.reason}`)
       }
 
-      if (releaseType == "major" && breakingBumpsMinor) {
-        releaseType = "minor"
+      if (releaseType == 'major' && breakingBumpsMinor == 'true') {
+        releaseType = 'minor'
       }
 
       let newVersion
