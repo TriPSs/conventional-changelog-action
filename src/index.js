@@ -40,6 +40,7 @@ async function run() {
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
     const conventionalConfigFile = core.getInput('config-file-path')
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
+    const breakingBumpsMinor = core.getInput('breaking-bumps-minor')
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)
@@ -79,6 +80,10 @@ async function run() {
       // If we have a reason also log it
       if (recommendation.reason) {
         core.info(`Because: ${recommendation.reason}`)
+      }
+
+      if (recommendation.releaseType == "major" && breakingBumpsMinor) {
+        recommendation.releaseType = "minor"
       }
 
       let newVersion
