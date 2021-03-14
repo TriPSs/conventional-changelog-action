@@ -95,7 +95,11 @@ inputs:
   pre-changelog-generation:
     description: 'Path to the pre-changelog-generation script file'
     required: false
-
+    
+  breaking-bumps-minor:
+    description: 'On Breaking Change, bump Minor instead of Major version'
+    default: 'false'
+    required: false
 
 outputs:
   changelog:
