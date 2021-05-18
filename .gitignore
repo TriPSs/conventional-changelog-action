@@ -1,8 +1,9 @@
 # comment this out distribution branches
-# node_modules/
+node_modules/
 
 # Editors
 .vscode
+.idea
 
 # Logs
 logs
