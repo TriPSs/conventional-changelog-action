@@ -12,7 +12,7 @@ branding:
 inputs:
   github-token:
     description: 'Github token'
-    required: true
+    required: false
 
   git-message:
     description: 'Commit message to use'
