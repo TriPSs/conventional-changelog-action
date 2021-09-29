@@ -1,3 +1,12 @@
+# [3.8.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.7.1...v3.8.0) (2021-09-29)
+
+
+### Features
+
+* use same permissions used at repo checkout ([c82c3a1](https://github.com/TriPSs/conventional-changelog-action/commit/c82c3a1b1de521412af47239e9d46a2c49e7c8c7)), closes [#115](https://github.com/TriPSs/conventional-changelog-action/issues/115)
+
+
+
 ## [3.7.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.7.0...v3.7.1) (2020-12-16)
 
 
@@ -49,15 +58,6 @@
 ### Features
 
 * Allow to specify custom tags which override auto generated ones ([8f6aa19](https://github.com/TriPSs/conventional-changelog-action/commit/8f6aa1969f7dd949c0b8c6456c792fa55dd21ce5))
-
-
-
-## [3.4.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.4.0...v3.4.1) (2020-10-30)
-
-
-### Bug Fixes
-
-* Check if repo is shallow before unshallowing ([c5bb2b1](https://github.com/TriPSs/conventional-changelog-action/commit/c5bb2b18afb00739c65c2bee9fc9bb6da52a8c90))
 
 
 
