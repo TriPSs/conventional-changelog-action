@@ -163,7 +163,6 @@ jobs:
         env:
           ENV: 'dont-use-git'
           EXPECTED_TAG: 'v0.55.9'
-          SKIPPED_COMMIT: true
         with:
           github-token: ${{ secrets.github_token }}
           git-push: 'false'
