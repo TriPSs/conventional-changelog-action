@@ -7,7 +7,8 @@
     "changelog",
     "commits",
     "conventional",
-    "github"
+    "github",
+    "conventional commits"
   ],
   "homepage": "https://github.com/TriPSs/conventional-changelog-action#readme",
   "bugs": {
@@ -22,7 +23,11 @@
     "name": "Tycho Bokdam",
     "email": "tycho@palmtreecoding.com"
   },
-  "main": "src/index.js",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "ncc build src/index.js --minify --out lib",
+    "watch": "ncc build src/index.js --watch"
+  },
   "dependencies": {
     "@actions/core": "1.6.0",
     "@actions/exec": "1.1.0",
@@ -37,6 +42,7 @@
   "devDependencies": {
     "@commitlint/cli": "13.2.0",
     "@commitlint/config-conventional": "13.2.0",
+    "@vercel/ncc": "^0.31.1",
     "husky": "4.3.6"
   }
 }

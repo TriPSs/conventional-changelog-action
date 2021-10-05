@@ -11,8 +11,9 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      - run: npm ci --prod
-      - run: git add node_modules -f
+      - run: npm ci
+      - run: npm run build
+      - run: git add ./lib -f
 
       - name: Generate changelog
         id: changelog
