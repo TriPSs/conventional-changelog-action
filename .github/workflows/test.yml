@@ -15,6 +15,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -50,6 +53,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -85,6 +91,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -120,6 +129,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
 
@@ -139,34 +151,6 @@ jobs:
           github-token: ${{ secrets.github_token }}
           skip-commit: 'true'
 
-  test-git-no-push:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
-        with:
-          path: "./"
-
-      - run: npm ci
-      - run: npm run build
-      - run: "git config --global user.email 'changelog@github.com'"
-      - run: "git config --global user.name 'Awesome Github action'"
-
-      - run: git tag | xargs git tag -d
-      - name: Create fake tag
-        run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
-      - run: "git add . && git commit -m 'fix: Added fake file so version will be bumped'"
-
-      - name: Generate changelog
-        id: changelog
-        uses: ./
-        env:
-          ENV: 'dont-use-git'
-          EXPECTED_TAG: 'v0.55.9'
-        with:
-          github-token: ${{ secrets.github_token }}
-          git-push: 'false'
-
   test-git-fallback:
     runs-on: ubuntu-latest
     steps:
@@ -177,6 +161,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -195,6 +182,40 @@ jobs:
           github-token: ${{ secrets.github_token }}
           skip-commit: 'true'
 
+  test-git-no-push:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - run: npm ci
+      - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+
+      - run: git tag | xargs git tag -d
+      - name: Create fake tag
+        run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
+      - run: "git add . && git commit -m 'fix: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: 'v0.55.9'
+          SKIPPED_COMMIT: true
+          EXPECTED_NO_PUSH: true
+        with:
+          github-token: ${{ secrets.github_token }}
+          skip-commit: 'true'
+          git-push: 'false'
+
   test-yaml:
     runs-on: ubuntu-latest
     steps:
@@ -205,6 +226,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -276,6 +300,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -315,6 +342,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -352,6 +382,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -389,6 +422,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -426,6 +462,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -466,6 +505,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -499,6 +541,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -534,6 +579,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -576,6 +624,9 @@ jobs:
 
       - run: npm ci
       - run: npm run build
+      - run: rm -rf node_modules
+      - run: npm ci --prod
+
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
