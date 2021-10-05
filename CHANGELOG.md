@@ -1,3 +1,12 @@
+## [3.9.6](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.5...v3.9.6) (2021-10-05)
+
+
+### Bug Fixes
+
+* Redeploy with src/action again ([8977e61](https://github.com/TriPSs/conventional-changelog-action/commit/8977e6168a89eec51d459921bc0a85f7aaa494c6))
+
+
+
 ## [3.9.5](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.4...v3.9.5) (2021-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * Fixed ci and removed node_modules ([c2f6f9a](https://github.com/TriPSs/conventional-changelog-action/commit/c2f6f9ae3055a752fd6437121bbffc4434354e1a))
-
-
-
-## [3.9.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.0...v3.9.1) (2021-10-05)
-
-
-### Bug Fixes
-
-* Reformat code so we can release ([0ba6821](https://github.com/TriPSs/conventional-changelog-action/commit/0ba68212f41940954beb406ee679b4e89c792a3a))
 
 
 
