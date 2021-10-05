@@ -1,6 +1,7 @@
 name: 'Conventional Changelog Action'
 description: 'Bump version, tag commit and generates changelog with conventional commits.'
 author: 'Tycho Bokdam'
+
 runs:
   using: 'node12'
   main: 'lib/index.js'
