@@ -13,7 +13,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -47,7 +48,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -81,7 +83,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -115,7 +118,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
 
@@ -143,7 +147,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
 
@@ -171,7 +176,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -198,7 +204,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -268,7 +275,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -306,7 +314,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -342,7 +351,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -378,7 +388,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -414,7 +425,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -453,7 +465,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -485,7 +498,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -519,7 +533,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -560,7 +575,8 @@ jobs:
         with:
           path: "./"
 
-      - run: npm ci --prod
+      - run: npm ci
+      - run: npm build
       - run: touch ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
