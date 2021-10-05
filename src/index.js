@@ -2,6 +2,9 @@ const core = require('@actions/core')
 const conventionalRecommendedBump = require('conventional-recommended-bump')
 const path = require('path')
 
+// Make sure the angular preset is loaded
+require('conventional-changelog-angular')
+
 const getVersioning = require('./version')
 const git = require('./helpers/git')
 const changelog = require('./helpers/generateChangelog')
