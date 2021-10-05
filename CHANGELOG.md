@@ -1,3 +1,12 @@
+## [3.9.9](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.8...v3.9.9) (2021-10-05)
+
+
+### Bug Fixes
+
+* Try again with different node_modules ([9378b30](https://github.com/TriPSs/conventional-changelog-action/commit/9378b3051abbd2f793956f852cdc7bac0fea7d9c))
+
+
+
 ## [3.9.8](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.7...v3.9.8) (2021-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * Retry again with the node_modules ([949ce5e](https://github.com/TriPSs/conventional-changelog-action/commit/949ce5e5a6447f5232585b381468821acbf713f2))
-
-
-
-## [3.9.4](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.3...v3.9.4) (2021-10-05)
-
-
-### Bug Fixes
-
-* Make sure the angular preset is loaded ([2b646ec](https://github.com/TriPSs/conventional-changelog-action/commit/2b646ec8807a2e493c68cab23071c47d385acbd6))
 
 
 
