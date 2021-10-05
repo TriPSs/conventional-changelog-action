@@ -1,3 +1,12 @@
+## [3.9.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.1...v3.9.2) (2021-10-05)
+
+
+### Bug Fixes
+
+* Fixed ci and removed node_modules ([c2f6f9a](https://github.com/TriPSs/conventional-changelog-action/commit/c2f6f9ae3055a752fd6437121bbffc4434354e1a))
+
+
+
 ## [3.9.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.0...v3.9.1) (2021-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * Fixed that bumping multiple files with same extension type did only update one ([62453ed](https://github.com/TriPSs/conventional-changelog-action/commit/62453ed268eb6e82fcaf11351ce4cdd4f4b323aa))
-
-
-
-# [3.7.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.6.0...v3.7.0) (2020-12-16)
-
-
-### Features
-
-* **yml:** Added support for no quotes and double quotes ([2a80eb3](https://github.com/TriPSs/conventional-changelog-action/commit/2a80eb3e4a1914fcd08a6ae083fa7a94c94d8137))
 
 
 
