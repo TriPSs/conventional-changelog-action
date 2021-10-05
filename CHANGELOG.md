@@ -1,3 +1,12 @@
+## [3.9.4](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.3...v3.9.4) (2021-10-05)
+
+
+### Bug Fixes
+
+* Make sure the angular preset is loaded ([2b646ec](https://github.com/TriPSs/conventional-changelog-action/commit/2b646ec8807a2e493c68cab23071c47d385acbd6))
+
+
+
 ## [3.9.3](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.2...v3.9.3) (2021-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * Added `git-push` option to skip pushing git changes ([9b90fb3](https://github.com/TriPSs/conventional-changelog-action/commit/9b90fb3eeafcfac330320d99235c4462cd7c7614))
-
-
-
-# [3.8.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.7.1...v3.8.0) (2021-09-29)
-
-
-### Features
-
-* use same permissions used at repo checkout ([c82c3a1](https://github.com/TriPSs/conventional-changelog-action/commit/c82c3a1b1de521412af47239e9d46a2c49e7c8c7)), closes [#115](https://github.com/TriPSs/conventional-changelog-action/issues/115)
 
 
 
