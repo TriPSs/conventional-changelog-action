@@ -199,7 +199,7 @@ async function run() {
 
       try {
         // If we are running in test mode we use this to validate everything still runs
-        git.testHistory()
+        git.testHistory(gitPush)
 
       } catch (error) {
         console.error(error)

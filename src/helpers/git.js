@@ -48,7 +48,7 @@ module.exports = new (class Git {
    * @param command
    * @return {Promise<>}
    */
-  exec = (command) => new Promise(async(resolve, reject) => {
+  exec = (command) => new Promise(async (resolve, reject) => {
     let execOutput = ''
 
     const options = {
@@ -102,7 +102,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  pull = async() => {
+  pull = async () => {
     const args = ['pull']
 
     // Check if the repo is unshallow
@@ -130,7 +130,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  isShallow = async() => {
+  isShallow = async () => {
     if (ENV === 'dont-use-git') {
       return false
     }
@@ -159,7 +159,7 @@ module.exports = new (class Git {
   /**
    * Validates the commands run
    */
-  testHistory = () => {
+  testHistory = (gitPush) => {
     if (ENV === 'dont-use-git') {
       const { EXPECTED_TAG, SKIPPED_COMMIT } = process.env
 
@@ -175,7 +175,15 @@ module.exports = new (class Git {
       }
 
       expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
-      expectedCommands.push(`git push origin ${branch} --follow-tags`)
+
+      if (gitPush) {
+        expectedCommands.push(`git push origin ${branch} --follow-tags`)
+      }
+
+      console.log('Testing GIT history')
+      console.log(this.commandsRun)
+      console.log('Should equal')
+      console.log(expectedCommands)
 
       assert.deepStrictEqual(
         this.commandsRun,
