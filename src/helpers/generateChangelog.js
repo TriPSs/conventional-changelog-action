@@ -11,11 +11,11 @@ const conventionalChangelog = require('conventional-changelog')
  * @returns {*}
  */
 const getChangelogStream = (tagPrefix, preset, version, releaseCount, config) => conventionalChangelog({
-  preset,
-  releaseCount: parseInt(releaseCount, 10),
-  tagPrefix,
-  config
-},
+    preset,
+    releaseCount: parseInt(releaseCount, 10),
+    tagPrefix,
+    config
+  },
   {
     version,
     currentTag: `${tagPrefix}${version}`,
