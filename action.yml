@@ -34,6 +34,11 @@ inputs:
     default: '--ff-only'
     required: false
 
+  git-push:
+    description: 'Should all the git changes be push'
+    default: 'true'
+    required: false
+
   preset:
     description: 'The preset from Conventional Changelog to use'
     default: 'angular'

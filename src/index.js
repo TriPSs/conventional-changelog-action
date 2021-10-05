@@ -28,6 +28,7 @@ async function run() {
     const gitCommitMessage = core.getInput('git-message')
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
+    const gitPush = core.getInput('git-push').toLowerCase() === 'true'
     const tagPrefix = core.getInput('tag-prefix')
     const preset = !core.getInput('config-file-path') ? core.getInput('preset') : ''
     const preCommitFile = core.getInput('pre-commit')
@@ -68,7 +69,7 @@ async function run() {
 
     const config = conventionalConfigFile && requireScript(conventionalConfigFile)
 
-    conventionalRecommendedBump({ preset, tagPrefix, config }, async(error, recommendation) => {
+    conventionalRecommendedBump({ preset, tagPrefix, config }, async (error, recommendation) => {
       if (error) {
         core.setFailed(error.message)
         return
@@ -172,8 +173,22 @@ async function run() {
       // Create the new tag
       await git.createTag(gitTag)
 
-      core.info('Push all changes')
-      await git.push()
+      if (gitPush) {
+        try {
+          core.info('Push all changes')
+          await git.push()
+
+        } catch (error) {
+          console.error(error)
+
+          core.setFailed(error)
+
+          return
+        }
+
+      } else {
+        core.info('We not going to push the GIT changes')
+      }
 
       // Set outputs so other actions (for example actions/create-release) can use it
       core.setOutput('changelog', stringChangelog)
