@@ -1,3 +1,12 @@
+## [3.9.5](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.4...v3.9.5) (2021-10-05)
+
+
+### Bug Fixes
+
+* Retry again with the node_modules ([949ce5e](https://github.com/TriPSs/conventional-changelog-action/commit/949ce5e5a6447f5232585b381468821acbf713f2))
+
+
+
 ## [3.9.4](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.3...v3.9.4) (2021-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * Reformat code so we can release ([0ba6821](https://github.com/TriPSs/conventional-changelog-action/commit/0ba68212f41940954beb406ee679b4e89c792a3a))
-
-
-
-# [3.9.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.8.0...v3.9.0) (2021-10-05)
-
-
-### Features
-
-* Added `git-push` option to skip pushing git changes ([9b90fb3](https://github.com/TriPSs/conventional-changelog-action/commit/9b90fb3eeafcfac330320d99235c4462cd7c7614))
 
 
 
