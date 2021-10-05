@@ -1,3 +1,12 @@
+## [3.9.3](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.2...v3.9.3) (2021-10-05)
+
+
+### Bug Fixes
+
+* Remove node_modules and ignore folder ([3ed803a](https://github.com/TriPSs/conventional-changelog-action/commit/3ed803a60bcddc0bf9a18d441c3a1c52bdab2477))
+
+
+
 ## [3.9.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.1...v3.9.2) (2021-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Features
 
 * use same permissions used at repo checkout ([c82c3a1](https://github.com/TriPSs/conventional-changelog-action/commit/c82c3a1b1de521412af47239e9d46a2c49e7c8c7)), closes [#115](https://github.com/TriPSs/conventional-changelog-action/issues/115)
-
-
-
-## [3.7.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.7.0...v3.7.1) (2020-12-16)
-
-
-### Bug Fixes
-
-* Fixed that bumping multiple files with same extension type did only update one ([62453ed](https://github.com/TriPSs/conventional-changelog-action/commit/62453ed268eb6e82fcaf11351ce4cdd4f4b323aa))
 
 
 
