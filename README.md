@@ -23,6 +23,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
 - **Optional** `config-file-path`: Path to the conventional changelog config file. If set, the preset setting will be ignored
 - **Optional** `pre-changelog-generation`: Path to the pre-changelog-generation script file. No hook by default.
+- **Optional** `git-push`: Do not push any changes to GIT, including any tags or commits. Default `'true'`
 
 ### Pre-Commit hook
 
@@ -146,6 +147,16 @@ Tag only
   with:
     github-token: ${{ secrets.github_token }}
     skip-commit: "true"
+```
+
+No GIT changes, useful for when you want to get the output variables before pushing GIT changes
+
+```yaml
+- name: Conventional Changelog Action
+  uses: TriPSs/conventional-changelog-action@v3
+  with:
+    github-token: ${{ secrets.github_token }}
+    git-push: "false"
 ```
 
 Use a custom file for versioning
