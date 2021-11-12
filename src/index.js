@@ -36,6 +36,7 @@ async function run() {
     const releaseCount = core.getInput('release-count')
     const versionFile = core.getInput('version-file')
     const versionPath = core.getInput('version-path')
+    const skipGitPull = core.getInput('skip-git-pull').toLowerCase() === 'true'
     const skipVersionFile = core.getInput('skip-version-file').toLowerCase() === 'true'
     const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
@@ -64,8 +65,10 @@ async function run() {
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
     core.info(`Skipping the update of the version file is "${skipVersionFile ? 'enabled' : 'disabled'}"`)
 
-    core.info('Pull to make sure we have the full git history')
-    await git.pull()
+    if (!skipGitPull) {
+      core.info('Pull to make sure we have the full git history')
+      await git.pull()
+    }
 
     const config = conventionalConfigFile && requireScript(conventionalConfigFile)
 
