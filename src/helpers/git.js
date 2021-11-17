@@ -166,7 +166,7 @@ module.exports = new (class Git {
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
         'git config user.email "conventional.changelog.action@github.com"',
-        'git upll --tags --ff-only',
+        'git pull --tags --ff-only',
       ]
 
       if (!SKIPPED_COMMIT) {
