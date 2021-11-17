@@ -161,13 +161,16 @@ module.exports = new (class Git {
    */
   testHistory = () => {
     if (ENV === 'dont-use-git') {
-      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH } = process.env
+      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH, SKIPPED_PULL } = process.env
 
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
         'git config user.email "conventional.changelog.action@github.com"',
-        'git pull --tags --ff-only',
       ]
+
+      if (!SKIPPED_PULL) {
+        expectedCommands.push('git pull --tags --ff-only')
+      }
 
       if (!SKIPPED_COMMIT) {
         expectedCommands.push('git add .')

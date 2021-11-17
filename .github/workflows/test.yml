@@ -1,8 +1,5 @@
 name: 'Test the action'
 on:
-  push:
-    branches:
-      - skip_git_pull-1
   pull_request:
     branches:
       - master
@@ -129,7 +126,6 @@ jobs:
       - run: git tag | xargs git tag -d
       - name: Create fake tag
         run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
-      - run: "echo 'askjfhsadjkfh' > banana.txt"
       - run: "git add . && git commit -m 'fix: Added fake file so version will be bumped'"
 
       - name: Generate changelog
@@ -159,7 +155,6 @@ jobs:
       - run: git tag | xargs git tag -d
       - name: Create fake tag
         run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
-      - run: "echo 'askjfhsadjkfh' > banana.txt"
       - run: "git add . && git commit -m 'fix: Added fake file so version will be bumped'"
 
       - name: Generate changelog
@@ -169,6 +164,7 @@ jobs:
           ENV: 'dont-use-git'
           EXPECTED_TAG: 'v0.55.9'
           SKIPPED_COMMIT: true
+          SKIPPED_PULL: true
         with:
           github-token: ${{ secrets.github_token }}
           skip-commit: 'true'
