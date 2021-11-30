@@ -1,3 +1,12 @@
+# [3.10.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.9...v3.10.0) (2021-11-30)
+
+
+### Features
+
+* Added  option ([d9201c2](https://github.com/TriPSs/conventional-changelog-action/commit/d9201c2107f9c691396768f75fe261ad3588b413))
+
+
+
 ## [3.9.9](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.8...v3.9.9) (2021-10-05)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * Redeploy with src/action again ([8977e61](https://github.com/TriPSs/conventional-changelog-action/commit/8977e6168a89eec51d459921bc0a85f7aaa494c6))
-
-
-
-## [3.9.5](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.4...v3.9.5) (2021-10-05)
-
-
-### Bug Fixes
-
-* Retry again with the node_modules ([949ce5e](https://github.com/TriPSs/conventional-changelog-action/commit/949ce5e5a6447f5232585b381468821acbf713f2))
 
 
 
