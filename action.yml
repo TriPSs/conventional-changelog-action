@@ -70,6 +70,11 @@ inputs:
     default: 'version'
     required: false
 
+  skip-git-pull:
+    description: 'Do not pull the repo before tagging. Ensure you full cloned the repo in the first place to get tags'
+    default: 'false'
+    required: false
+  
   skip-on-empty:
     description: 'Do nothing when the changelog from the latest release is empty'
     default: 'true'

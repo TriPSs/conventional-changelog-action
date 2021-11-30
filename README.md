@@ -16,6 +16,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `release-count`: Number of releases to preserve in changelog. Default `5`, use `0` to regenerate all.
 - **Optional** `version-file`: The path to the file that contains the version to bump. Default `./package.json`.
 - **Optional** `version-path`: The place inside the version file to bump. Default `version`.
+- **Optional** `skip-git-pull`: Do not pull the repo before tagging. Ensure you full cloned the repo in the first place to get tags. Default `'false'`.
 - **Optional** `skip-on-empty`: Boolean to specify if you want to skip empty release (no-changelog generated). This case occured when you push `chore` commit with `angular` for example. Default `'true'`.
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
 - **Optional** `skip-commit`: Do not create a release commit. Default `'false'`.
@@ -146,6 +147,22 @@ Tag only
   with:
     github-token: ${{ secrets.github_token }}
     skip-commit: "true"
+```
+
+Skip Git Pull
+In CI you might not want to pull extra changes before tagging e.g. if running a long build before tagging, another commit may have come into the branch which would get pulled leading to tagging a different commit to the one which was built.
+
+```yaml
+- name: Checkout repository
+  uses: actions/checkout@v2
+  with:
+    fetch-depth: 0
+
+- name: Conventional Changelog Action
+  uses: TriPSs/conventional-changelog-action@v3
+  with:
+    github-token: ${{ secrets.github_token }}
+    skip-git-pull: "true"
 ```
 
 Use a custom file for versioning
