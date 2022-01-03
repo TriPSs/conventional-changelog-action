@@ -13,6 +13,7 @@ branding:
 inputs:
   github-token:
     description: 'Github token'
+    default: ${{ github.token }}
     required: false
 
   git-message:
