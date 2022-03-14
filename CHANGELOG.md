@@ -1,3 +1,12 @@
+# [3.11.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.10.0...v3.11.0) (2022-03-14)
+
+
+### Features
+
+* use default GitHub token as default token ([d1907da](https://github.com/TriPSs/conventional-changelog-action/commit/d1907daae2d8e03d0a63daec2099349817a4a1fc))
+
+
+
 # [3.10.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.9...v3.10.0) (2021-11-30)
 
 
@@ -31,15 +40,6 @@
 ### Bug Fixes
 
 * Release with all deps ([2b36c79](https://github.com/TriPSs/conventional-changelog-action/commit/2b36c79d01330e9272a6f28e9f019a7c6203425e))
-
-
-
-## [3.9.6](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.5...v3.9.6) (2021-10-05)
-
-
-### Bug Fixes
-
-* Redeploy with src/action again ([8977e61](https://github.com/TriPSs/conventional-changelog-action/commit/8977e6168a89eec51d459921bc0a85f7aaa494c6))
 
 
 
