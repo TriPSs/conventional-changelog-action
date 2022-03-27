@@ -108,6 +108,11 @@ inputs:
     description: 'Path to the pre-changelog-generation script file'
     required: false
 
+  git-url:
+    description: 'Git Url'
+    default: 'github.com'
+    required: false
+
 
 outputs:
   changelog:

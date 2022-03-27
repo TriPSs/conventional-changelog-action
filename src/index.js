@@ -42,6 +42,7 @@ async function run() {
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
     const conventionalConfigFile = core.getInput('config-file-path')
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
+    const gitUrl = core.getInput('git-url')
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)
@@ -53,6 +54,7 @@ async function run() {
     core.info(`Using "${tagPrefix}" as tag prefix`)
     core.info(`Using "${outputFile}" as output file`)
     core.info(`Using "${conventionalConfigFile}" as config file`)
+    core.info(`Using "${gitUrl}" as gitUrl`)
 
     if (preCommitFile) {
       core.info(`Using "${preCommitFile}" as pre-commit script`)
