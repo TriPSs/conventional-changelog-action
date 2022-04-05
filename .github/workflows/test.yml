@@ -16,10 +16,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -51,10 +50,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -86,10 +84,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - run: touch ./test-file-empty.json
 
@@ -127,7 +124,7 @@ jobs:
       - run: git tag | xargs git tag -d
       - name: Create fake tag
         run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
-      - run: "git add . && git commit -m 'fix: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'fix: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -156,7 +153,7 @@ jobs:
       - run: git tag | xargs git tag -d
       - name: Create fake tag
         run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
-      - run: "git add . && git commit -m 'fix: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'fix: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -181,10 +178,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - run: git tag | xargs git tag -d
 
@@ -215,7 +211,7 @@ jobs:
       - run: git tag | xargs git tag -d
       - name: Create fake tag
         run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
-      - run: "git add . && git commit -m 'fix: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'fix: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -240,10 +236,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -311,10 +306,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - run: touch ./test-file-empty.yaml
 
@@ -350,10 +344,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -387,10 +380,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -424,10 +416,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -461,10 +452,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - run: touch ./test-file-empty.toml
 
@@ -501,10 +491,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - run: test -f pre-commit.test.json && (echo should not be here yet && exit 1) || exit 0
 
@@ -534,10 +523,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - run: test -f pre-changelog-generation.test.json && (echo should not be here yet && exit 1) || exit 0
 
@@ -569,10 +557,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
         id: changelog
@@ -611,10 +598,9 @@ jobs:
 
       - run: npm ci --prod
 
-      - run: echo "test" > ./fake-file.log
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
-      - run: "git add . && git commit -m 'feat: Added fake file so version will be bumped'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate Changelog
         id: changelog
