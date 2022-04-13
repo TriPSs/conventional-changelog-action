@@ -43,6 +43,7 @@ async function run() {
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')    
     const dryRun = core.getInput('dry-run').toLowerCase() === 'true'
     const skipTag = core.getInput('skip-tag').toLowerCase() === 'true'
+    const forcePush = core.getInput('force-push').toLowerCase() === 'true'
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)
@@ -56,6 +57,7 @@ async function run() {
     core.info(`Using "${conventionalConfigFile}" as config file`)
     core.info(`Using "${dryRun}" as dry run`)
     core.info(`Using "${skipTag}" as skip tag`)
+    core.info(`Using "${forcePush}" as force push`)
 
     if (preCommitFile) {
       core.info(`Using "${preCommitFile}" as pre-commit script`)
@@ -161,6 +163,8 @@ async function run() {
         await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config)
       }
 
+      let needsPush = false
+
       if (!skipCommit && !dryRun) {
         // Add changed files to git
         if (preCommitFile) {
@@ -175,19 +179,24 @@ async function run() {
           }
         }
 
-        await git.add('.')
-        await git.commit(gitCommitMessage.replace('{version}', gitTag))
+        let hasChanges = await git.hasChanges()
+        if (hasChanges){
+          await git.add('.')
+          await git.commit(gitCommitMessage.replace('{version}', gitTag))
+          needsPush = true
+        }
       }
 
       // Create the new tag
       if (!skipTag && !dryRun){
         await git.createTag(gitTag)
+        needsPush = true
       }
       
-      if (!dryRun){
+      if (!dryRun && needsPush){
         core.info('Push all changes')
         try {
-          await git.push()
+          await git.push(forcePush)
         } catch (error) {
           core.setFailed(error.message)
         }

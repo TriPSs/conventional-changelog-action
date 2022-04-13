@@ -130,9 +130,16 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  push = () => (
-    this.exec(`push origin ${branch} --follow-tags`)
-  )
+  push = (forcePush) => {
+    const args = ['push']
+    args.push(`origin ${branch}`)
+    if (forcePush) {
+      args.push(`--force-with-lease`)
+    }
+    args.push(`--follow-tags`)
+
+    this.exec(args.join(' '))
+  }
 
   /**
    * Check if the repo is shallow
@@ -148,6 +155,33 @@ module.exports = new (class Git {
 
     return isShallow.trim().replace('\n', '') === 'true'
   }
+
+    /**
+   * Check if the repo is shallow
+   *
+   * @return {Promise<>}
+   */
+  hasChanges = async() => {
+    let execOutput = ''
+
+    const options = {
+      ignoreReturnCode : true,
+      failOnStdErr: true,
+      listeners: {
+        stdout: (data) => {
+          execOutput += data.toString()
+        },
+      },
+    }
+
+    const exitCode = await exec.exec(`git diff --no-ext-diff --quiet --exit-code`, null, options)
+
+    if (execOutput.trim()){
+      throw `Unable to determine git status: ${execOutput.trim()}`
+    }
+
+    return exitCode !== 0
+  } 
 
   /**
    * Updates the origin remote
