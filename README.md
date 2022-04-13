@@ -4,11 +4,12 @@ This action will bump version, tag commit and generate a changelog with conventi
 
 ## Inputs
 
-- **Required** `github-token`: Github token.
+- **Optional** `github-token`: Github token, if different permissions required than from checkout.
 - **Optional** `git-message`: Commit message that is used when committing the changelog.
 - **Optional** `git-user-name`: The git user.name to use for the commit. Default `Conventional Changelog Action`
 - **Optional** `git-user-email`: The git user.email to use for the commit. Default `conventional.changelog.action@github.com`
 - **Optional** `git-pull-method`: The git pull method used when pulling all changes from remote. Default `--ff-only`
+- **Optional** `git-push`: Push all the GIT changes. Default `true`
 - **Optional** `preset`: Preset that is used from conventional commits. Default `angular`.
 - **Optional** `tag-prefix`: Prefix for the git tags. Default `v`.
 - **Optional** `output-file`: File to output the changelog to. Default `CHANGELOG.md`, when providing `'false'` no file will be generated / updated.
@@ -57,9 +58,9 @@ A bunch of useful environment variables are available to the script with `proces
 ### Pre-Changelog-Generation hook
 
 > Function in a specified file will be run right before the changelog generation phase, when the next
-> version is already known, but it was not used anywhere yet. It can be useful if you want to manually update version or tag. 
+> version is already known, but it was not used anywhere yet. It can be useful if you want to manually update version or tag.
 
-Same restrictions as for the pre-commit hook, but exported functions names should be `preVersionGeneration` for modifications to the version and `preTagGeneration` for modifications to the git tag. 
+Same restrictions as for the pre-commit hook, but exported functions names should be `preVersionGeneration` for modifications to the version and `preTagGeneration` for modifications to the git tag.
 
 Following props will be passed to the function as a single parameter and same output is expected:
 
@@ -74,7 +75,7 @@ export function preTagGeneration(tag: string): string {}
 ### Config-File-Path
 A config file to define the conventional commit settings. Use it if you need to override values like `issuePrefix` or `issueUrlFormat`. If you set a `config-file-path`, the `preset` setting will be ignored. Therefore use an existing config and override the values you want to adjust.
 
-example:  
+example:
 ```javascript
 'use strict'
 const config = require('conventional-changelog-conventionalcommits');
@@ -188,6 +189,18 @@ Github releases
     tag_name: ${{ steps.changelog.outputs.tag }}
     release_name: ${{ steps.changelog.outputs.tag }}
     body: ${{ steps.changelog.outputs.clean_changelog }}
+```
+
+Use a deploy key
+
+```yaml
+- name: Checkout GitHub Action
+  uses: actions/checkout@v2
+  with:
+    ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
+- name: Conventional Changelog Action
+  id: changelog
+  uses: TriPSs/conventional-changelog-action@v3
 ```
 
 ## Development

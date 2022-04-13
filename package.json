@@ -7,7 +7,8 @@
     "changelog",
     "commits",
     "conventional",
-    "github"
+    "github",
+    "conventional commits"
   ],
   "homepage": "https://github.com/TriPSs/conventional-changelog-action#readme",
   "bugs": {
@@ -22,21 +23,26 @@
     "name": "Tycho Bokdam",
     "email": "tycho@palmtreecoding.com"
   },
-  "main": "src/index.js",
+  "main": "lib/index.js",
+  "scripts": {
+    "build": "ncc build src/index.js --minify --out lib",
+    "watch": "ncc build src/index.js --watch"
+  },
   "dependencies": {
-    "@actions/core": "1.2.6",
-    "@actions/exec": "1.0.4",
+    "@actions/core": "1.6.0",
+    "@actions/exec": "1.1.0",
     "@iarna/toml": "^2.2.5",
-    "conventional-changelog": "3.1.23",
-    "conventional-recommended-bump": "6.0.10",
-    "git-semver-tags": "4.1.0",
-    "object-path": "^0.11.5",
-    "semver": "^7.3.2",
-    "yaml": "^1.10.0"
+    "conventional-changelog": "3.1.24",
+    "conventional-recommended-bump": "6.1.0",
+    "git-semver-tags": "4.1.1",
+    "object-path": "^0.11.8",
+    "semver": "^7.3.5",
+    "yaml": "^1.10.2"
   },
   "devDependencies": {
-    "@commitlint/cli": "11.0.0",
-    "@commitlint/config-conventional": "11.0.0",
+    "@commitlint/cli": "13.2.0",
+    "@commitlint/config-conventional": "13.2.0",
+    "@vercel/ncc": "^0.31.1",
     "husky": "4.3.6"
   }
 }

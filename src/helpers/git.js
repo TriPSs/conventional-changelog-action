@@ -11,7 +11,7 @@ module.exports = new (class Git {
   commandsRun = []
 
   constructor() {
-    const githubToken = core.getInput('github-token', { required: true })
+    const githubToken = core.getInput('github-token')
 
     // Make the Github token secret
     core.setSecret(githubToken)
@@ -37,7 +37,9 @@ module.exports = new (class Git {
     this.config('user.email', gitUserEmail)
 
     // Update the origin
-    this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
+    if (githubToken) {
+      this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
+    }
   }
 
   /**
@@ -46,7 +48,7 @@ module.exports = new (class Git {
    * @param command
    * @return {Promise<>}
    */
-  exec = (command) => new Promise(async(resolve, reject) => {
+  exec = (command) => new Promise(async (resolve, reject) => {
     let execOutput = ''
 
     const options = {
@@ -100,7 +102,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  pull = async() => {
+  pull = async () => {
     const args = ['pull']
 
     // Check if the repo is unshallow
@@ -137,7 +139,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  isShallow = async() => {
+  isShallow = async () => {
     if (ENV === 'dont-use-git') {
       return false
     }
@@ -168,7 +170,7 @@ module.exports = new (class Git {
    */
   testHistory = () => {
     if (ENV === 'dont-use-git') {
-      const { EXPECTED_TAG, SKIPPED_COMMIT } = process.env
+      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH } = process.env
 
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
@@ -183,7 +185,10 @@ module.exports = new (class Git {
       }
 
       expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
-      expectedCommands.push(`git push origin ${branch} --follow-tags`)
+
+      if (!EXPECTED_NO_PUSH) {
+        expectedCommands.push(`git push origin ${branch} --follow-tags`)
+      }
 
       assert.deepStrictEqual(
         this.commandsRun,

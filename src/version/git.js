@@ -10,9 +10,7 @@ module.exports = class Git extends BaseVersioning {
     return new Promise((resolve) => {
       const tagPrefix = core.getInput('tag-prefix')
 
-      gitSemverTags({
-        tagPrefix,
-      }, async(err, tags) => {
+      gitSemverTags({ tagPrefix, }, async (err, tags) => {
         // Get the old version
         const currentVersion = tags.length > 0 ? tags.shift().replace(tagPrefix, '') : null
         this.oldVersion = currentVersion

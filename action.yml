@@ -1,9 +1,10 @@
 name: 'Conventional Changelog Action - fork taliesins'
 description: 'Bump version, tag commit and generates changelog with conventional commits.'
 author: 'Tycho Bokdam'
+
 runs:
   using: 'node12'
-  main: 'src/index.js'
+  main: 'lib/index.js'
 
 branding:
   icon: 'edit'
@@ -12,7 +13,7 @@ branding:
 inputs:
   github-token:
     description: 'Github token'
-    required: true
+    required: false
 
   git-message:
     description: 'Commit message to use'
@@ -32,6 +33,11 @@ inputs:
   git-pull-method:
     description: 'The git pull method used when pulling all changes from remote'
     default: '--ff-only'
+    required: false
+
+  git-push:
+    description: 'Should all the git changes be push'
+    default: 'true'
     required: false
 
   preset:

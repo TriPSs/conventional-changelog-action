@@ -13,7 +13,7 @@ module.exports = class Toml extends BaseVersioning {
    * @param {!string} releaseType - The type of release
    * @return {*}
    */
-  bump = async(releaseType) => {
+  bump = async (releaseType) => {
     // Read the file
     const fileContent = this.read()
     const tomlContent = toml.parse(fileContent)
