@@ -18,6 +18,7 @@ module.exports = new (class Git {
 
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
+    const gitUrl = core.getInput('git-url')
 
     // if the env is dont-use-git then we mock exec as we are testing a workflow
     if (ENV === 'dont-use-git') {
@@ -38,7 +39,7 @@ module.exports = new (class Git {
 
     // Update the origin
     if (githubToken) {
-      this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
+      this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
     }
   }
 
