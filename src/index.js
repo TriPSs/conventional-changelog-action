@@ -25,7 +25,7 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType) 
 
 async function run() {
   try {
-    const gitCommitMessage = core.getInput('git-message')
+    let gitCommitMessage = core.getInput('git-message')
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
     const gitPush = core.getInput('git-push').toLowerCase() === 'true'
@@ -42,6 +42,11 @@ async function run() {
     const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
     const conventionalConfigFile = core.getInput('config-file-path')
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
+    const skipCi = core.getInput('skip-ci')
+
+    if (skipCi) {
+      gitCommitMessage += " [skip ci]"
+    }
 
     core.info(`Using "${preset}" preset`)
     core.info(`Using "${gitCommitMessage}" as commit message`)

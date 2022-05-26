@@ -161,7 +161,7 @@ module.exports = new (class Git {
    */
   testHistory = () => {
     if (ENV === 'dont-use-git') {
-      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH, SKIPPED_PULL } = process.env
+      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH, SKIPPED_PULL, SKIP_CI } = process.env
 
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
@@ -174,7 +174,11 @@ module.exports = new (class Git {
 
       if (!SKIPPED_COMMIT) {
         expectedCommands.push('git add .')
-        expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+        if (SKIP_CI === false) {
+          expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+        } else {
+          expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG} [skip ci]"`)
+        }
       }
 
       expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)

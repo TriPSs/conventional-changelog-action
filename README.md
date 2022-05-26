@@ -24,6 +24,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
 - **Optional** `config-file-path`: Path to the conventional changelog config file. If set, the preset setting will be ignored
 - **Optional** `pre-changelog-generation`: Path to the pre-changelog-generation script file. No hook by default.
+- **Optional** `skip-ci`: Adds instruction to github to not consider the push something to rebuild. Default `true`.
 
 ### Pre-Commit hook
 
