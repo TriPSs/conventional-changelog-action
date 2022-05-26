@@ -113,6 +113,10 @@ inputs:
     default: 'github.com'
     required: false
 
+  skip-ci:
+    description: 'Adds [skip ci] to commit message, to avoid triggering a new build'
+    default: 'true'
+    required: false
 
 outputs:
   changelog:
