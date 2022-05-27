@@ -28,7 +28,7 @@ async function run() {
     let gitCommitMessage = core.getInput('git-message')
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
-    const gitPush = core.getInput('git-push').toLowerCase() === 'true'
+    const gitPush = core.getBooleanInput('git-push')
     const tagPrefix = core.getInput('tag-prefix')
     const preset = !core.getInput('config-file-path') ? core.getInput('preset') : ''
     const preCommitFile = core.getInput('pre-commit')
@@ -36,14 +36,14 @@ async function run() {
     const releaseCount = core.getInput('release-count')
     const versionFile = core.getInput('version-file')
     const versionPath = core.getInput('version-path')
-    const skipGitPull = core.getInput('skip-git-pull').toLowerCase() === 'true'
-    const skipVersionFile = core.getInput('skip-version-file').toLowerCase() === 'true'
-    const skipCommit = core.getInput('skip-commit').toLowerCase() === 'true'
-    const skipEmptyRelease = core.getInput('skip-on-empty').toLowerCase() === 'true'
+    const skipGitPull = core.getBooleanInput('skip-git-pull')
+    const skipVersionFile = core.getBooleanInput('skip-version-file')
+    const skipCommit = core.getBooleanInput('skip-commit')
+    const skipEmptyRelease = core.getBooleanInput('skip-on-empty')
     const conventionalConfigFile = core.getInput('config-file-path')
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
     const gitUrl = core.getInput('git-url')
-    const skipCi = core.getInput('skip-ci')
+    const skipCi = core.getBooleanInput('skip-ci')
 
     if (skipCi) {
       gitCommitMessage += " [skip ci]"
