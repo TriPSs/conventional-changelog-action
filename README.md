@@ -24,13 +24,14 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
 - **Optional** `config-file-path`: Path to the conventional changelog config file. If set, the preset setting will be ignored
 - **Optional** `pre-changelog-generation`: Path to the pre-changelog-generation script file. No hook by default.
-- **Optional** `skip-ci`: Adds instruction to github to not consider the push something to rebuild. Default `true`.
+- **Optional** `skip-ci`: Adds instruction to Github to not consider the push something to rebuild. Default `true`.
+- **Optional** `create-summary`: Adds the generated changelog as Action Summary. Default `false`.
 
 ### Pre-Commit hook
 
 > Function in a specified file will be run right before the git-add-git-commit phase, when the next
 > version is already known and a new changelog has been generated. You can run any chores across your
-> repository that should be added and commited with the release commit.
+> repository that should be added and committed with the release commit.
 
 Specified path could be relative or absolute. If it is relative, then it will be based on the `GITHUB_WORKSPACE` path.
 

@@ -118,6 +118,11 @@ inputs:
     default: 'true'
     required: false
 
+  create-summary:
+    description: 'Adds the generated changelog as Action Summary'
+    default: 'false'
+    required: false
+
 outputs:
   changelog:
     description: 'The generated changelog for the new version'

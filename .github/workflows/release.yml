@@ -19,6 +19,7 @@ jobs:
         uses: ./
         with:
           github-token: ${{ secrets.github_token }}
+          create-summary: true
 
       - name: Create Release
         uses: actions/create-release@v1

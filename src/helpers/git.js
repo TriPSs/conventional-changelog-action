@@ -175,8 +175,9 @@ module.exports = new (class Git {
 
       if (!SKIPPED_COMMIT) {
         expectedCommands.push('git add .')
-        if (SKIP_CI === false) {
+        if (SKIP_CI === 'false') {
           expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+
         } else {
           expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG} [skip ci]"`)
         }
