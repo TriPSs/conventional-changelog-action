@@ -1,3 +1,17 @@
+# [3.13.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.12.0...v3.13.0) (2022-05-27)
+
+
+### Bug Fixes
+
+* Use `getBooleanInput` for boolean values ([ae32d56](https://github.com/TriPSs/conventional-changelog-action/commit/ae32d567b6902c5fd23868ef5717c1d5127fe06a)), closes [#161](https://github.com/TriPSs/conventional-changelog-action/issues/161)
+
+
+### Features
+
+* Added `create-summary` option that adds the changelog as Action summary ([38e51f4](https://github.com/TriPSs/conventional-changelog-action/commit/38e51f47d7298945df398f8d89bf474ff1198df3))
+
+
+
 # [3.12.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.11.0...v3.12.0) (2022-05-26)
 
 
@@ -31,15 +45,6 @@
 ### Bug Fixes
 
 * Try again with different node_modules ([9378b30](https://github.com/TriPSs/conventional-changelog-action/commit/9378b3051abbd2f793956f852cdc7bac0fea7d9c))
-
-
-
-## [3.9.8](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.7...v3.9.8) (2021-10-05)
-
-
-### Bug Fixes
-
-* Downgraded the conventional packages ([052fce1](https://github.com/TriPSs/conventional-changelog-action/commit/052fce1f3fc33b9194f6e7ea5793691128ee732b))
 
 
 
