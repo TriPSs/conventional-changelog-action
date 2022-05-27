@@ -44,9 +44,10 @@ async function run() {
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
     const gitUrl = core.getInput('git-url')
     const skipCi = core.getBooleanInput('skip-ci')
+    const createSummary = core.getBooleanInput('create-summary')
 
     if (skipCi) {
-      gitCommitMessage += " [skip ci]"
+      gitCommitMessage += ' [skip ci]'
     }
 
     core.info(`Using "${preset}" preset`)
@@ -206,6 +207,17 @@ async function run() {
       core.setOutput('version', newVersion)
       core.setOutput('tag', gitTag)
       core.setOutput('skipped', 'false')
+
+      if (createSummary) {
+        try {
+          await core.summary
+            .addHeading(gitTag, 2)
+            .addRaw(cleanChangelog)
+            .write()
+        } catch (err) {
+          core.warning(`Was unable to create summary! Error: "${err}"`,)
+        }
+      }
 
       try {
         // If we are running in test mode we use this to validate everything still runs
