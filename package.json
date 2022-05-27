@@ -25,14 +25,14 @@
   },
   "main": "src/index.js",
   "dependencies": {
-    "@actions/core": "1.6.0",
-    "@actions/exec": "1.1.0",
+    "@actions/core": "^1.8.2",
+    "@actions/exec": "^1.1.1",
     "@iarna/toml": "^2.2.5",
-    "conventional-changelog": "3.1.24",
-    "conventional-recommended-bump": "^6.0.11",
+    "conventional-changelog": "^3.1.25",
+    "conventional-recommended-bump": "^6.1.0",
     "git-semver-tags": "4.1.1",
     "object-path": "^0.11.8",
-    "semver": "^7.3.5",
-    "yaml": "^1.10.2"
+    "semver": "^7.3.7",
+    "yaml": "^2.1.0"
   }
 }
