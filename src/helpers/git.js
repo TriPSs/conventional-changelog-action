@@ -2,9 +2,7 @@ const core = require('@actions/core')
 const exec = require('@actions/exec')
 const assert = require('assert')
 
-const { GITHUB_REPOSITORY, GITHUB_REF, ENV } = process.env
-
-const branch = GITHUB_REF.replace('refs/heads/', '')
+const { GITHUB_REPOSITORY, ENV } = process.env
 
 module.exports = new (class Git {
 
@@ -122,7 +120,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  push = () => (
+  push = (branch) => (
     this.exec(`push origin ${branch} --follow-tags`)
   )
 
@@ -160,7 +158,7 @@ module.exports = new (class Git {
   /**
    * Validates the commands run
    */
-  testHistory = () => {
+  testHistory = (branch) => {
     if (ENV === 'dont-use-git') {
       const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH, SKIPPED_PULL, SKIP_CI } = process.env
 

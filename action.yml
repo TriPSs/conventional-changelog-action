@@ -41,6 +41,11 @@ inputs:
     default: 'true'
     required: false
 
+  git-branch:
+    description: 'The git branch to be pushed'
+    default: ${{ github.ref }}
+    required: false    
+
   preset:
     description: 'The preset from Conventional Changelog to use'
     default: 'angular'
