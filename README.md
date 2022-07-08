@@ -10,6 +10,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `git-user-email`: The git user.email to use for the commit. Default `conventional.changelog.action@github.com`
 - **Optional** `git-pull-method`: The git pull method used when pulling all changes from remote. Default `--ff-only`
 - **Optional** `git-push`: Push all the GIT changes. Default `true`
+- **Optional** `git-branch`: The branch used to push. Default is the current branch (`${{ github.ref }}`)
 - **Optional** `preset`: Preset that is used from conventional commits. Default `angular`.
 - **Optional** `tag-prefix`: Prefix for the git tags. Default `v`.
 - **Optional** `output-file`: File to output the changelog to. Default `CHANGELOG.md`, when providing `'false'` no file will be generated / updated.
@@ -129,6 +130,7 @@ Overwrite everything
     skip-on-empty: 'false'
     skip-version-file: 'false'
     skip-commit: 'false'
+    git-branch: 'my-maintenance-branch'
 ```
 
 No file changelog

@@ -29,6 +29,7 @@ async function run() {
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
     const gitPush = core.getBooleanInput('git-push')
+    const gitBranch = core.getInput('git-branch').replace('refs/heads/', '')
     const tagPrefix = core.getInput('tag-prefix')
     const preset = !core.getInput('config-file-path') ? core.getInput('preset') : ''
     const preCommitFile = core.getInput('pre-commit')
@@ -61,6 +62,7 @@ async function run() {
     core.info(`Using "${outputFile}" as output file`)
     core.info(`Using "${conventionalConfigFile}" as config file`)
     core.info(`Using "${gitUrl}" as gitUrl`)
+    core.info(`Using "${gitBranch}" as gitBranch`)
 
     if (preCommitFile) {
       core.info(`Using "${preCommitFile}" as pre-commit script`)
@@ -187,7 +189,7 @@ async function run() {
       if (gitPush) {
         try {
           core.info('Push all changes')
-          await git.push()
+          await git.push(gitBranch)
 
         } catch (error) {
           console.error(error)
@@ -221,7 +223,7 @@ async function run() {
 
       try {
         // If we are running in test mode we use this to validate everything still runs
-        git.testHistory()
+        git.testHistory(gitBranch)
 
       } catch (error) {
         console.error(error)
