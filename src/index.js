@@ -25,6 +25,13 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType) 
 
 async function run() {
   try {
+
+    process.on('unhandledRejection', (reason, promise) => {
+      let error = `Unhandled Rejection occurred. Reason: ${reason.stack}`
+      console.error(error)
+      core.setFailed(error)
+    });
+
     let gitCommitMessage = core.getInput('git-message')
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
