@@ -1,3 +1,12 @@
+## [3.14.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.14.0...v3.14.1) (2022-08-31)
+
+
+### Bug Fixes
+
+* Add global unhandledRejection handler ([0600ca1](https://github.com/TriPSs/conventional-changelog-action/commit/0600ca1902042ed6a922d78a40b180eadc546142))
+
+
+
 # [3.14.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.13.0...v3.14.0) (2022-07-08)
 
 
@@ -41,15 +50,6 @@
 ### Features
 
 * use default GitHub token as default token ([d1907da](https://github.com/TriPSs/conventional-changelog-action/commit/d1907daae2d8e03d0a63daec2099349817a4a1fc))
-
-
-
-# [3.10.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.9...v3.10.0) (2021-11-30)
-
-
-### Features
-
-* Added  option ([d9201c2](https://github.com/TriPSs/conventional-changelog-action/commit/d9201c2107f9c691396768f75fe261ad3588b413))
 
 
 
