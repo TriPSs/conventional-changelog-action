@@ -236,4 +236,10 @@ async function run() {
   }
 }
 
+process.on('unhandledRejection', (reason, promise) => {
+  let error = `Unhandled Rejection occurred. ${reason.stack}`
+  console.error(error)
+  core.setFailed(error)
+});
+
 run()
