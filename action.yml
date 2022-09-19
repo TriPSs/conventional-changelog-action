@@ -118,6 +118,11 @@ inputs:
     default: 'github.com'
     required: false
 
+  git-path:
+    description: 'Path filter for the logs. If set, only commits that match the path filter will be considered'
+    default: ''
+    required: false
+
   skip-ci:
     description: 'Adds [skip ci] to commit message, to avoid triggering a new build'
     default: 'true'
