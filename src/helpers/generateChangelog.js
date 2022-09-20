@@ -8,9 +8,11 @@ const conventionalChangelog = require('conventional-changelog')
  * @param preset
  * @param version
  * @param releaseCount
+ * @param config
+ * @param gitPath
  * @returns {*}
  */
-const getChangelogStream = (tagPrefix, preset, version, releaseCount, config) => conventionalChangelog({
+const getChangelogStream = (tagPrefix, preset, version, releaseCount, config, gitPath) => conventionalChangelog({
     preset,
     releaseCount: parseInt(releaseCount, 10),
     tagPrefix,
@@ -20,7 +22,9 @@ const getChangelogStream = (tagPrefix, preset, version, releaseCount, config) =>
     version,
     currentTag: `${tagPrefix}${version}`,
   },
-  {},
+  {
+    path: gitPath === '' || gitPath === null ? undefined : gitPath
+  },
   config && config.parserOpts,
   config && config.writerOpts
 )
@@ -34,10 +38,12 @@ module.exports = getChangelogStream
  * @param preset
  * @param version
  * @param releaseCount
+ * @param config
+ * @param gitPath
  * @returns {Promise<string>}
  */
-module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCount, config) => new Promise((resolve, reject) => {
-  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount, config)
+module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCount, config, gitPath) => new Promise((resolve, reject) => {
+  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount, config, gitPath)
 
   let changelog = ''
 
@@ -56,10 +62,12 @@ module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCou
  * @param version
  * @param fileName
  * @param releaseCount
+ * @param config
+ * @param gitPath
  * @returns {Promise<>}
  */
-module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, releaseCount, config) => new Promise((resolve) => {
-  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount, config)
+module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, releaseCount, config, gitPath) => new Promise((resolve) => {
+  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount, config, gitPath)
 
   changelogStream
     .pipe(fs.createWriteStream(fileName))

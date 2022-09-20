@@ -11,6 +11,8 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `git-pull-method`: The git pull method used when pulling all changes from remote. Default `--ff-only`
 - **Optional** `git-push`: Push all the GIT changes. Default `true`
 - **Optional** `git-branch`: The branch used to push. Default is the current branch (`${{ github.ref }}`)
+- **Optional** `git-url`: Git repository domain. Default is `github.com`
+- **Optional** `git-path`: Path filter for the logs. If set, only commits that match the path filter will be considered. By default, we won't use this feature(empty string).
 - **Optional** `preset`: Preset that is used from conventional commits. Default `angular`.
 - **Optional** `tag-prefix`: Prefix for the git tags. Default `v`.
 - **Optional** `output-file`: File to output the changelog to. Default `CHANGELOG.md`, when providing `'false'` no file will be generated / updated.
@@ -18,7 +20,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `version-file`: The path to the file that contains the version to bump. Default `./package.json`.
 - **Optional** `version-path`: The place inside the version file to bump. Default `version`.
 - **Optional** `skip-git-pull`: Do not pull the repo before tagging. Ensure you full cloned the repo in the first place to get tags. Default `'false'`.
-- **Optional** `skip-on-empty`: Boolean to specify if you want to skip empty release (no-changelog generated). This case occured when you push `chore` commit with `angular` for example. Default `'true'`.
+- **Optional** `skip-on-empty`: Boolean to specify if you want to skip empty release (no-changelog generated). This case occurred when you push `chore` commit with `angular` for example. Default `'true'`.
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
 - **Optional** `skip-commit`: Do not create a release commit. Default `'false'`.
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
