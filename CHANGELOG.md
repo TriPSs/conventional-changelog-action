@@ -1,3 +1,12 @@
+# [3.15.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.14.1...v3.15.0) (2022-09-20)
+
+
+### Features
+
+* Add `git-path` option ([96b4f2c](https://github.com/TriPSs/conventional-changelog-action/commit/96b4f2ca996f2193165c87e184b8a765102c814c)), closes [#178](https://github.com/TriPSs/conventional-changelog-action/issues/178)
+
+
+
 ## [3.14.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.14.0...v3.14.1) (2022-08-31)
 
 
@@ -41,15 +50,6 @@
 ### Features
 
 * add [skip ci] by default to commit message ([a0bcde8](https://github.com/TriPSs/conventional-changelog-action/commit/a0bcde8dcf6c731817d1142609d778fd4367ae05))
-
-
-
-# [3.11.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.10.0...v3.11.0) (2022-03-14)
-
-
-### Features
-
-* use default GitHub token as default token ([d1907da](https://github.com/TriPSs/conventional-changelog-action/commit/d1907daae2d8e03d0a63daec2099349817a4a1fc))
 
 
 
