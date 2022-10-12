@@ -1,7 +1,7 @@
-const core = require("@actions/core");
-const semverValid = require("semver").valid;
+const core = require('@actions/core');
+const semverValid = require('semver').valid;
 
-const requireScript = require("./requireScript");
+const requireScript = require('./requireScript');
 
 /**
  * Bumps the given version with the given release type
@@ -14,16 +14,16 @@ module.exports = async (releaseType, version) => {
   let major, minor, patch;
 
   if (version) {
-    [major, minor, patch] = version.match(/\d*\.\d*\.\d/)?.[0].split(".");
+    [major, minor, patch] = version.match(/\d*\.\d*\.\d/)?.[0].split('.');
 
     switch (releaseType) {
-      case "major":
+      case 'major':
         major = parseInt(major, 10) + 1;
         minor = 0;
         patch = 0;
         break;
 
-      case "minor":
+      case 'minor':
         minor = parseInt(minor, 10) + 1;
         patch = 0;
         break;
@@ -32,10 +32,10 @@ module.exports = async (releaseType, version) => {
         patch = parseInt(patch, 10) + 1;
     }
   } else {
-    let version = semverValid(core.getInput("fallback-version"));
+    let version = semverValid(core.getInput('fallback-version'));
 
     if (version) {
-      [major, minor, patch] = version.match(/\d*\.\d*\.\d/)?.[0].split(".");
+      [major, minor, patch] = version.match(/\d*\.\d*\.\d/)?.[0].split('.');
     } else {
       // default
       major = 0;
@@ -48,7 +48,7 @@ module.exports = async (releaseType, version) => {
     );
   }
 
-  const preChangelogGenerationFile = core.getInput("pre-changelog-generation");
+  const preChangelogGenerationFile = core.getInput('pre-changelog-generation');
 
   let newVersion = version
     .replace(/\d*\.\d*\.\d/, `${major}.${minor}.${patch}`)
