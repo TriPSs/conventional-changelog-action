@@ -1,5 +1,6 @@
 const core = require('@actions/core');
 const semverValid = require('semver').valid;
+const SemVer = require('semver/classes/semver');
 
 const requireScript = require('./requireScript');
 
@@ -11,48 +12,24 @@ const requireScript = require('./requireScript');
  * @returns {string}
  */
 module.exports = async (releaseType, version) => {
-  let major, minor, patch;
-
-  if (version) {
-    [major, minor, patch] = version.match(/\d*\.\d*\.\d/)?.[0].split('.');
-
-    switch (releaseType) {
-      case 'major':
-        major = parseInt(major, 10) + 1;
-        minor = 0;
-        patch = 0;
-        break;
-
-      case 'minor':
-        minor = parseInt(minor, 10) + 1;
-        patch = 0;
-        break;
-
-      default:
-        patch = parseInt(patch, 10) + 1;
-    }
-  } else {
-    let version = semverValid(core.getInput('fallback-version'));
-
-    if (version) {
-      [major, minor, patch] = version.match(/\d*\.\d*\.\d/)?.[0].split('.');
-    } else {
-      // default
-      major = 0;
-      minor = 1;
-      patch = 0;
-    }
-
+  let semver;
+  if (!version) {
+    semver = new SemVer(
+      semverValid(core.getInput('fallback-version')) ?? '0.1.0'
+    );
     core.info(
       `The version could not be detected, using fallback version '${major}.${minor}.${patch}'.`
     );
+  } else {
+    semver = new SemVer(version);
+    if (semver.prerelease) {
+      semver.inc('prerelease');
+    } else {
+      semver.inc(releaseType);
+    }
   }
 
   const preChangelogGenerationFile = core.getInput('pre-changelog-generation');
-
-  let newVersion = version
-    .replace(/\d*\.\d*\.\d/, `${major}.${minor}.${patch}`)
-    .replace(/(?<=-.*\.)\d+/, 0);
 
   if (preChangelogGenerationFile) {
     const preChangelogGenerationScript = requireScript(
@@ -65,14 +42,14 @@ module.exports = async (releaseType, version) => {
       preChangelogGenerationScript.preVersionGeneration
     ) {
       const modifiedVersion =
-        await preChangelogGenerationScript.preVersionGeneration(newVersion);
+        await preChangelogGenerationScript.preVersionGeneration(semver.version);
 
       if (modifiedVersion) {
         core.info(`Using modified version "${modifiedVersion}"`);
-        newVersion = modifiedVersion;
+        semver = new SemVer(modifiedVersion);
       }
     }
   }
 
-  return newVersion;
+  return semver.version;
 };
