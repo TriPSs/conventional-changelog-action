@@ -1,8 +1,8 @@
-const core = require('@actions/core');
-const semverValid = require('semver').valid;
-const SemVer = require('semver/classes/semver');
+const core = require("@actions/core");
+const semverValid = require("semver").valid;
+const SemVer = require("semver/classes/semver");
 
-const requireScript = require('./requireScript');
+const requireScript = require("./requireScript");
 
 /**
  * Bumps the given version with the given release type
@@ -15,21 +15,21 @@ module.exports = async (releaseType, version) => {
   let semver;
   if (!version) {
     semver = new SemVer(
-      semverValid(core.getInput('fallback-version')) ?? '0.1.0'
+      semverValid(core.getInput("fallback-version")) ?? "0.1.0"
     );
     core.info(
       `The version could not be detected, using fallback version '${major}.${minor}.${patch}'.`
     );
   } else {
     semver = new SemVer(version);
-    if (semver.prerelease) {
-      semver.inc('prerelease');
+    if (semver.prerelease && semver.prerelease.length > 0) {
+      semver.inc("prerelease");
     } else {
       semver.inc(releaseType);
     }
   }
 
-  const preChangelogGenerationFile = core.getInput('pre-changelog-generation');
+  const preChangelogGenerationFile = core.getInput("pre-changelog-generation");
 
   if (preChangelogGenerationFile) {
     const preChangelogGenerationScript = requireScript(
