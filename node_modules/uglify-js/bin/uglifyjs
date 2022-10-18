@@ -10,7 +10,9 @@ var info = require("../package.json");
 var path = require("path");
 var UglifyJS = require("../tools/node");
 
-var skip_keys = [ "cname", "fixed", "inlined", "parent_scope", "scope", "uses_eval", "uses_with" ];
+var skip_keys = [ "cname", "fixed", "in_arg", "inlined", "length_read", "parent_scope", "redef", "scope", "unused" ];
+var truthy_keys = [ "optional", "pure", "terminal", "uses_arguments", "uses_eval", "uses_with" ];
+
 var files = {};
 var options = {};
 var short_forms = {
@@ -70,6 +72,7 @@ function process_option(name, no_value) {
                 } else {
                     if (padding.length < name.length) padding = Array(name.length + 1).join(" ");
                     toplevels.push([ {
+                        keep_fargs: "keep-fargs",
                         keep_fnames: "keep-fnames",
                         nameCache: "name-cache",
                     }[name] || name, option ]);
@@ -101,8 +104,11 @@ function process_option(name, no_value) {
                 "  --config-file <file>                     Read minify() options from JSON file.",
                 "  -d, --define <expr>[=value]              Global definitions.",
                 "  -e, --enclose [arg[,...][:value[,...]]]  Embed everything in a big function, with configurable argument(s) & value(s).",
+                "  --expression                             Parse a single expression, rather than a program.",
                 "  --ie                                     Support non-standard Internet Explorer.",
+                "  --keep-fargs                             Do not mangle/drop function arguments.",
                 "  --keep-fnames                            Do not mangle/drop function names. Useful for code relying on Function.prototype.name.",
+                "  --module                                 Process input as ES module (implies --toplevel)",
                 "  --name-cache <file>                      File to hold mangled name mappings.",
                 "  --rename                                 Force symbol expansion.",
                 "  --no-rename                              Disable symbol expansion.",
@@ -146,8 +152,10 @@ function process_option(name, no_value) {
         options[name] = read_value();
         break;
       case "annotations":
+      case "expression":
       case "ie":
       case "ie8":
+      case "module":
       case "timings":
       case "toplevel":
       case "v8":
@@ -157,6 +165,9 @@ function process_option(name, no_value) {
         break;
       case "no-annotations":
         options.annotations = false;
+        break;
+      case "keep-fargs":
+        options.keep_fargs = true;
         break;
       case "keep-fnames":
         options.keep_fnames = true;
@@ -227,17 +238,6 @@ if (specified["beautify"] && specified["output-opts"]) fatal("--beautify cannot 
 [ "compress", "mangle" ].forEach(function(name) {
     if (!(name in options)) options[name] = false;
 });
-if (options.mangle && options.mangle.properties) {
-    if (options.mangle.properties.domprops) {
-        delete options.mangle.properties.domprops;
-    } else {
-        if (typeof options.mangle.properties != "object") options.mangle.properties = {};
-        if (!Array.isArray(options.mangle.properties.reserved)) options.mangle.properties.reserved = [];
-        require("../tools/domprops").forEach(function(name) {
-            UglifyJS.push_uniq(options.mangle.properties.reserved, name);
-        });
-    }
-}
 if (/^ast|spidermonkey$/.test(output)) {
     if (typeof options.output != "object") options.output = {};
     options.output.ast = true;
@@ -267,6 +267,8 @@ if (specified["self"]) {
     if (paths.length) UglifyJS.AST_Node.warn("Ignoring input files since --self was passed");
     if (!options.wrap) options.wrap = "UglifyJS";
     paths = UglifyJS.FILES;
+} else if (paths.length) {
+    paths = simple_glob(paths);
 }
 if (specified["in-situ"]) {
     if (output && output != "spidermonkey" || specified["reduce-test"] || specified["self"]) {
@@ -281,7 +283,7 @@ if (specified["in-situ"]) {
         run();
     });
 } else if (paths.length) {
-    simple_glob(paths).forEach(function(name) {
+    paths.forEach(function(name) {
         files[convert_path(name)] = read_file(name);
     });
     run();
@@ -430,7 +432,7 @@ function run() {
               case "thedef":
                 return symdef(value);
             }
-            if (skip_key(key)) return;
+            if (skip_property(key, value)) return;
             if (value instanceof UglifyJS.AST_Token) return;
             if (value instanceof UglifyJS.Dictionary) return;
             if (value instanceof UglifyJS.AST_Node) {
@@ -480,33 +482,42 @@ function fatal(message) {
 
 // A file glob function that only supports "*" and "?" wildcards in the basename.
 // Example: "foo/bar/*baz??.*.js"
-// Argument `glob` may be a string or an array of strings.
+// Argument `paths` must be an array of strings.
 // Returns an array of strings. Garbage in, garbage out.
-function simple_glob(glob) {
-    if (Array.isArray(glob)) {
-        return [].concat.apply([], glob.map(simple_glob));
-    }
-    if (glob.match(/\*|\?/)) {
-        var dir = path.dirname(glob);
-        try {
-            var entries = fs.readdirSync(dir);
-        } catch (ex) {}
-        if (entries) {
-            var pattern = "^" + path.basename(glob)
-                .replace(/[.+^$[\]\\(){}]/g, "\\$&")
-                .replace(/\*/g, "[^/\\\\]*")
-                .replace(/\?/g, "[^/\\\\]") + "$";
-            var mod = process.platform === "win32" ? "i" : "";
-            var rx = new RegExp(pattern, mod);
-            var results = entries.sort().filter(function(name) {
-                return rx.test(name);
-            }).map(function(name) {
-                return path.join(dir, name);
-            });
-            if (results.length) return results;
+function simple_glob(paths) {
+    return paths.reduce(function(paths, glob) {
+        if (/\*|\?/.test(glob)) {
+            var dir = path.dirname(glob);
+            try {
+                var entries = fs.readdirSync(dir).filter(function(name) {
+                    try {
+                        return fs.statSync(path.join(dir, name)).isFile();
+                    } catch (ex) {
+                        return false;
+                    }
+                });
+            } catch (ex) {}
+            if (entries) {
+                var pattern = "^" + path.basename(glob)
+                    .replace(/[.+^$[\]\\(){}]/g, "\\$&")
+                    .replace(/\*/g, "[^/\\\\]*")
+                    .replace(/\?/g, "[^/\\\\]") + "$";
+                var mod = process.platform === "win32" ? "i" : "";
+                var rx = new RegExp(pattern, mod);
+                var results = entries.filter(function(name) {
+                    return rx.test(name);
+                }).sort().map(function(name) {
+                    return path.join(dir, name);
+                });
+                if (results.length) {
+                    [].push.apply(paths, results);
+                    return paths;
+                }
+            }
         }
-    }
-    return [ glob ];
+        paths.push(glob);
+        return paths;
+    }, []);
 }
 
 function read_file(path, default_value) {
@@ -519,7 +530,7 @@ function read_file(path, default_value) {
 }
 
 function parse_js(value, options, flag) {
-    if (!options || typeof options != "object") options = {};
+    if (!options || typeof options != "object") options = Object.create(null);
     if (typeof value == "string") try {
         UglifyJS.parse(value, {
             expression: true
@@ -559,8 +570,10 @@ function parse_js(value, options, flag) {
     return options;
 }
 
-function skip_key(key) {
-    return skip_keys.indexOf(key) >= 0;
+function skip_property(key, value) {
+    return skip_keys.indexOf(key) >= 0
+        // only skip truthy_keys if their value is falsy
+        || truthy_keys.indexOf(key) >= 0 && !value;
 }
 
 function symdef(def) {

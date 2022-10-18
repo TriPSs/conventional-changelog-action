@@ -22,7 +22,7 @@ module.exports = async (releaseType, version) => {
     );
   } else {
     semver = new SemVer(version);
-    if (semver.prerelease) {
+    if (semver.prerelease && semver.prerelease.length) {
       semver.inc('prerelease');
     } else {
       semver.inc(releaseType);
