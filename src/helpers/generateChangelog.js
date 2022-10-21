@@ -10,13 +10,15 @@ const conventionalChangelog = require('conventional-changelog')
  * @param releaseCount
  * @param config
  * @param gitPath
+ * @param skipUnstable
  * @returns {*}
  */
-const getChangelogStream = (tagPrefix, preset, version, releaseCount, config, gitPath) => conventionalChangelog({
+const getChangelogStream = (tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => conventionalChangelog({
     preset,
     releaseCount: parseInt(releaseCount, 10),
     tagPrefix,
-    config
+    config,
+    skipUnstable
   },
   {
     version,
@@ -40,10 +42,11 @@ module.exports = getChangelogStream
  * @param releaseCount
  * @param config
  * @param gitPath
+ * @param skipUnstable
  * @returns {Promise<string>}
  */
-module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCount, config, gitPath) => new Promise((resolve, reject) => {
-  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount, config, gitPath)
+module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => new Promise((resolve, reject) => {
+  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable)
 
   let changelog = ''
 

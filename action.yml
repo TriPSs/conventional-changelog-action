@@ -44,7 +44,7 @@ inputs:
   git-branch:
     description: 'The git branch to be pushed'
     default: ${{ github.ref }}
-    required: false    
+    required: false
 
   preset:
     description: 'The preset from Conventional Changelog to use'
@@ -80,7 +80,7 @@ inputs:
     description: 'Do not pull the repo before tagging. Ensure you full cloned the repo in the first place to get tags'
     default: 'false'
     required: false
-  
+
   skip-on-empty:
     description: 'Do nothing when the changelog from the latest release is empty'
     default: 'true'
@@ -131,6 +131,16 @@ inputs:
   create-summary:
     description: 'Adds the generated changelog as Action Summary'
     default: 'false'
+    required: false
+
+  pre-release:
+    description: 'Marks the release as pre-release'
+    default: 'false'
+    required: false
+
+  pre-release-identifier:
+    description: 'The identifier to use for pre-releases'
+    default: 'rc'
     required: false
 
 outputs:
