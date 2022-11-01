@@ -1,3 +1,12 @@
+# [3.16.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.15.0...v3.16.0) (2022-11-01)
+
+
+### Features
+
+* Update action to node 16 ([08c1b12](https://github.com/TriPSs/conventional-changelog-action/commit/08c1b1237bb2dbed93fa7ecba9c334f094cb6b0b))
+
+
+
 # [3.15.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.14.1...v3.15.0) (2022-09-20)
 
 
@@ -41,15 +50,6 @@
 ### Features
 
 * Added `create-summary` option that adds the changelog as Action summary ([38e51f4](https://github.com/TriPSs/conventional-changelog-action/commit/38e51f47d7298945df398f8d89bf474ff1198df3))
-
-
-
-# [3.12.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.11.0...v3.12.0) (2022-05-26)
-
-
-### Features
-
-* add [skip ci] by default to commit message ([a0bcde8](https://github.com/TriPSs/conventional-changelog-action/commit/a0bcde8dcf6c731817d1142609d778fd4367ae05))
 
 
 
