@@ -1,3 +1,12 @@
+# [3.17.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.16.0...v3.17.0) (2022-11-02)
+
+
+### Features
+
+* Add pre-release support ([14cc315](https://github.com/TriPSs/conventional-changelog-action/commit/14cc315abe788497f54c3eb3c734963ffbf6cc3e))
+
+
+
 # [3.16.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.15.0...v3.16.0) (2022-11-01)
 
 
@@ -36,20 +45,6 @@
 ### Features
 
 * add  option to customize the pushed branch ([2a7cc0e](https://github.com/TriPSs/conventional-changelog-action/commit/2a7cc0e9fbcbe6b93a27411f1e194c331dc98a6b))
-
-
-
-# [3.13.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.12.0...v3.13.0) (2022-05-27)
-
-
-### Bug Fixes
-
-* Use `getBooleanInput` for boolean values ([ae32d56](https://github.com/TriPSs/conventional-changelog-action/commit/ae32d567b6902c5fd23868ef5717c1d5127fe06a)), closes [#161](https://github.com/TriPSs/conventional-changelog-action/issues/161)
-
-
-### Features
-
-* Added `create-summary` option that adds the changelog as Action summary ([38e51f4](https://github.com/TriPSs/conventional-changelog-action/commit/38e51f47d7298945df398f8d89bf474ff1198df3))
 
 
 
