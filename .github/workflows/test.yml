@@ -658,4 +658,108 @@ jobs:
           FILES: 'test-file.json'
           EXPECTED_VERSION: '1.5.0'
 
+  test-pre-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
 
+      - run: npm ci --prod
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: 'v1.4.6-rc.0'
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: 'test-file.json'
+          pre-release: true
+
+      - name: Show file
+        run: |
+          echo "$(<test-file.json)"
+
+      - name: Test output
+        run: node ./test-output.js
+        env:
+          FILES: 'test-file.json'
+          EXPECTED_VERSION: '1.4.6-rc.0'
+
+  test-pre-release-identifier:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: 'v1.4.6-alpha.0'
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: 'test-file.json'
+          pre-release: true
+          pre-release-identifier: 'alpha'
+
+      - name: Show file
+        run: |
+          echo "$(<test-file.json)"
+
+      - name: Test output
+        run: node ./test-output.js
+        env:
+          FILES: 'test-file.json'
+          EXPECTED_VERSION: '1.4.6-alpha.0'
+
+  test-pre-release-to-stable:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: 'v1.5.0'
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: 'test-file-pre-release.json'
+          pre-release: false # This is the default value, but we want to be explicit
+
+      - name: Show file
+        run: |
+          echo "$(<test-file-pre-release.json)"
+
+      - name: Test output
+        run: node ./test-output.js
+        env:
+          FILES: 'test-file-pre-release.json'
+          EXPECTED_VERSION: '1.5.0'

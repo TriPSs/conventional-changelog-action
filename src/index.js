@@ -47,6 +47,7 @@ async function run() {
     const gitPath = core.getInput('git-path')
     const skipCi = core.getBooleanInput('skip-ci')
     const createSummary = core.getBooleanInput('create-summary')
+    const prerelease = core.getBooleanInput('pre-release')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -84,7 +85,7 @@ async function run() {
 
     const config = conventionalConfigFile && requireScript(conventionalConfigFile)
 
-    conventionalRecommendedBump({ preset, tagPrefix, config }, async (error, recommendation) => {
+    conventionalRecommendedBump({ preset, tagPrefix, config, skipUnstable: !prerelease }, async (error, recommendation) => {
       if (error) {
         core.setFailed(error.message)
         return
@@ -146,7 +147,7 @@ async function run() {
       }
 
       // Generate the string changelog
-      const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1, config, gitPath)
+      const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1, config, gitPath, !prerelease)
       core.info('Changelog generated')
       core.info(stringChangelog)
 

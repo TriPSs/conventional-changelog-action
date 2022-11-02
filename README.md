@@ -29,6 +29,8 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `pre-changelog-generation`: Path to the pre-changelog-generation script file. No hook by default.
 - **Optional** `skip-ci`: Adds instruction to Github to not consider the push something to rebuild. Default `true`.
 - **Optional** `create-summary`: Adds the generated changelog as Action Summary. Default `false`.
+- **Optional** `pre-release`: Marks the release as pre-release. Default `false`.
+- **Optional** `pre-release-identifier`: The identifier to use for the pre-release. Default `rc`.
 
 ### Pre-Commit hook
 
