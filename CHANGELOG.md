@@ -1,3 +1,12 @@
+## [3.17.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.0...v3.17.1) (2022-11-09)
+
+
+### Bug Fixes
+
+* Updated `@actions/core` ([e36f42c](https://github.com/TriPSs/conventional-changelog-action/commit/e36f42c737692496073caba5e3f3a473226ce270)), closes [#182](https://github.com/TriPSs/conventional-changelog-action/issues/182)
+
+
+
 # [3.17.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.16.0...v3.17.0) (2022-11-02)
 
 
@@ -31,20 +40,6 @@
 ### Bug Fixes
 
 * Add global unhandledRejection handler ([0600ca1](https://github.com/TriPSs/conventional-changelog-action/commit/0600ca1902042ed6a922d78a40b180eadc546142))
-
-
-
-# [3.14.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.13.0...v3.14.0) (2022-07-08)
-
-
-### Bug Fixes
-
-* remove prefix from git-branch parameter ([ed8c9f5](https://github.com/TriPSs/conventional-changelog-action/commit/ed8c9f5217f4f759142cc4f425583a5530aa3370))
-
-
-### Features
-
-* add  option to customize the pushed branch ([2a7cc0e](https://github.com/TriPSs/conventional-changelog-action/commit/2a7cc0e9fbcbe6b93a27411f1e194c331dc98a6b))
 
 
 
