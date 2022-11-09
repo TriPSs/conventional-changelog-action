@@ -6,6 +6,40 @@ on:
       - releases/*
 
 jobs:
+  test-github-output:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: 'v1.5.0'
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: 'test-file.json'
+
+      - name: Show file
+        run: |
+          echo "$(<test-file.json)"
+
+      - name: Test output
+        run: node ./test-github-output.js
+        env:
+          TAG: ${{ steps.changelog.outputs.tag }}
+          EXPECTED_TAG: '1.5.0'
+
   test-json:
     runs-on: ubuntu-latest
     steps:
