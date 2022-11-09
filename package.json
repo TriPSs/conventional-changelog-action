@@ -25,7 +25,7 @@
   },
   "main": "src/index.js",
   "dependencies": {
-    "@actions/core": "^1.9.1",
+    "@actions/core": "^1.10.0",
     "@actions/exec": "^1.1.1",
     "@iarna/toml": "^2.2.5",
     "conventional-changelog": "^3.1.25",
