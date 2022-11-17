@@ -41,6 +41,7 @@ async function run() {
     const skipVersionFile = core.getBooleanInput('skip-version-file')
     const skipCommit = core.getBooleanInput('skip-commit')
     const skipEmptyRelease = core.getBooleanInput('skip-on-empty')
+    const skipTag = core.getBooleanInput('skip-tag')
     const conventionalConfigFile = core.getInput('config-file-path')
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
     const gitUrl = core.getInput('git-url')
@@ -187,7 +188,10 @@ async function run() {
       }
 
       // Create the new tag
-      await git.createTag(gitTag)
+      if (!skipTag)
+        await git.createTag(gitTag)
+      else
+        core.info('We not going to the tag the GIT changes')
 
       if (gitPush) {
         try {

@@ -23,6 +23,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `skip-on-empty`: Boolean to specify if you want to skip empty release (no-changelog generated). This case occurred when you push `chore` commit with `angular` for example. Default `'true'`.
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
 - **Optional** `skip-commit`: Do not create a release commit. Default `'false'`.
+- **Optional** `skip-tag`: Do not tag the release. Helpful for using action to check if a release is going to be made. Default `'false'`.
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
 - **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
 - **Optional** `config-file-path`: Path to the conventional changelog config file. If set, the preset setting will be ignored
@@ -80,9 +81,11 @@ export function preTagGeneration(tag: string): string {}
 ```
 
 ### Config-File-Path
+
 A config file to define the conventional commit settings. Use it if you need to override values like `issuePrefix` or `issueUrlFormat`. If you set a `config-file-path`, the `preset` setting will be ignored. Therefore use an existing config and override the values you want to adjust.
 
 example:
+
 ```javascript
 'use strict'
 const config = require('conventional-changelog-conventionalcommits');
@@ -92,6 +95,7 @@ module.exports = config({
     "issueUrlFormat": "https://jira.example.com/browse/{{prefix}}{{id}}"
 })
 ```
+
 The specified path can be relative or absolute. If it is relative, then it will be based on the `GITHUB_WORKSPACE` path.
 
 Make sure to install all required packages in the workflow before executing this action.
