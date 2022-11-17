@@ -17,7 +17,7 @@ module.exports = class Git extends BaseVersioning {
         // Get the new version
         this.newVersion = await bumpVersion(
           releaseType,
-          oldVersion,
+          this.oldVersion,
         )
 
         // We are done
