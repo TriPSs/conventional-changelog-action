@@ -38,7 +38,7 @@ module.exports = class Json extends BaseVersioning {
       this.oldVersion,
     )
 
-    core.info(`Bumped file "${this.fileLocation}" from "${oldVersion}" to "${this.newVersion}"`)
+    core.info(`Bumped file "${this.fileLocation}" from "${this.oldVersion}" to "${this.newVersion}"`)
 
     // Update the content with the new version
     objectPath.set(jsonContent, this.versionPath, this.newVersion)
