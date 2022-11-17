@@ -100,6 +100,7 @@ async function run() {
       }
 
       let newVersion
+      let oldVersion
 
       // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
       // skipVersionFile can mean there is no version file and skipCommit can mean that the user
@@ -114,6 +115,7 @@ async function run() {
         )
 
         newVersion = versioning.newVersion
+        oldVersion = versioning.oldVersion
 
       } else {
         const files = versionFile.split(',').map((f) => f.trim())
@@ -129,6 +131,7 @@ async function run() {
         )
 
         newVersion = versioning[0].newVersion
+        oldVersion = versioning[0].oldVersion
       }
 
       let gitTag = `${tagPrefix}${newVersion}`
@@ -157,6 +160,7 @@ async function run() {
 
       if (skipEmptyRelease && cleanChangelog === '') {
         core.info('Generated changelog is empty and skip-on-empty has been activated so we skip this step')
+        core.setOutput('version', oldVersion)
         core.setOutput('skipped', 'true')
         return
       }
