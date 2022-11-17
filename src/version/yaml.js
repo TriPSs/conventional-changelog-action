@@ -30,7 +30,7 @@ module.exports = class Yaml extends BaseVersioning {
       // Get the name of where the version is in
       const versionName = this.versionPath.split('.').pop()
 
-      core.info(`Bumped file "${this.fileLocation}" from "${oldVersion}" to "${this.newVersion}"`)
+      core.info(`Bumped file "${this.fileLocation}" from "${this.oldVersion}" to "${this.newVersion}"`)
 
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
