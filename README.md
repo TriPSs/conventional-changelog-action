@@ -24,7 +24,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
 - **Optional** `skip-commit`: Do not create a release commit. Default `'false'`.
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
-- **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`
+- **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`. If `pre-release`is set to `true` it will default to the configured pre-release format (i.e. `'0.1.0-rc.0'`)
 - **Optional** `config-file-path`: Path to the conventional changelog config file. If set, the preset setting will be ignored
 - **Optional** `pre-changelog-generation`: Path to the pre-changelog-generation script file. No hook by default.
 - **Optional** `skip-ci`: Adds instruction to Github to not consider the push something to rebuild. Default `true`.

@@ -25,7 +25,7 @@ module.exports = async (releaseType, version) => {
       newVersion = version
     } else {
       // default
-      newVersion = '0.1.0'
+      newVersion = (prerelease ? `0.1.0-${identifier}.0` : '0.1.0')
     }
 
     core.info(`The version could not be detected, using fallback version '${newVersion}'.`)
