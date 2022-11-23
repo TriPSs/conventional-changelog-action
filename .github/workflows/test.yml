@@ -260,7 +260,7 @@ jobs:
           skip-commit: 'true'
           git-push: 'false'
 
-  test-git-no-tag:
+  test-skip-tag:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
