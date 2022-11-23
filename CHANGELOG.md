@@ -1,3 +1,14 @@
+## [3.17.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.1...v3.17.2) (2022-11-23)
+
+
+### Bug Fixes
+
+* add testcase for new + pre-release ([fc4c16d](https://github.com/TriPSs/conventional-changelog-action/commit/fc4c16dd9b531599647b491bd1bbb118f6cd24c6))
+* honour pre-release flag for default version ([e63e00c](https://github.com/TriPSs/conventional-changelog-action/commit/e63e00c563bd7191db28f0e8c5308adc2bd840c6))
+* simplify logic fallback version logic, remove default from action.yaml ([ecddc26](https://github.com/TriPSs/conventional-changelog-action/commit/ecddc262291a3d768c04c52d31af23d1cf2e6d84))
+
+
+
 ## [3.17.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.0...v3.17.1) (2022-11-09)
 
 
@@ -31,15 +42,6 @@
 ### Features
 
 * Add `git-path` option ([96b4f2c](https://github.com/TriPSs/conventional-changelog-action/commit/96b4f2ca996f2193165c87e184b8a765102c814c)), closes [#178](https://github.com/TriPSs/conventional-changelog-action/issues/178)
-
-
-
-## [3.14.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.14.0...v3.14.1) (2022-08-31)
-
-
-### Bug Fixes
-
-* Add global unhandledRejection handler ([0600ca1](https://github.com/TriPSs/conventional-changelog-action/commit/0600ca1902042ed6a922d78a40b180eadc546142))
 
 
 
