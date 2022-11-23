@@ -19,11 +19,14 @@ module.exports = async (releaseType, version) => {
   if (version) {
     newVersion = semver.inc(version, (prerelease ? 'prerelease' : releaseType), identifier)
   } else {
-    let version = semver.valid(core.getInput('fallback-version'))
 
-    if (version) {
-      newVersion = version
-    } else {
+    const fallbackVersion = core.getInput('fallback-version')
+
+    if (fallbackVersion) {
+      newVersion = semver.valid(fallbackVersion)
+    }
+
+    if (!newVersion) {
       // default
       newVersion = (prerelease ? `0.1.0-${identifier}.0` : '0.1.0')
     }
