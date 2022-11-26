@@ -286,6 +286,7 @@ jobs:
           EXPECTED_TAG: 'v0.55.8'
           SKIPPED_COMMIT: true
           EXPECTED_NO_PUSH: true
+          SKIPPED_TAG: true
         with:
           github-token: ${{ secrets.github_token }}
           skip-commit: 'true'

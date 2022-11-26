@@ -160,7 +160,7 @@ module.exports = new (class Git {
    */
   testHistory = (branch) => {
     if (ENV === 'dont-use-git') {
-      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH, SKIPPED_PULL, SKIP_CI } = process.env
+      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH, SKIPPED_TAG, SKIPPED_PULL, SKIP_CI } = process.env
 
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
@@ -181,7 +181,9 @@ module.exports = new (class Git {
         }
       }
 
-      expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
+      if(!SKIPPED_TAG) {
+        expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
+      } 
 
       if (!EXPECTED_NO_PUSH) {
         expectedCommands.push(`git push origin ${branch} --follow-tags`)
