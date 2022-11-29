@@ -1,3 +1,18 @@
+# [3.18.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.2...v3.18.0) (2022-11-29)
+
+
+### Bug Fixes
+
+* bad reference ([a19765d](https://github.com/TriPSs/conventional-changelog-action/commit/a19765d093dc22d5007a1574c6db5d40be9ddf97))
+* output current version if there is no new ver ([b1e290f](https://github.com/TriPSs/conventional-changelog-action/commit/b1e290f44d9e4e0a29d536146cf1fb073172cf9d))
+
+
+### Features
+
+* add skip-tag to skip tagging a release ([22e862a](https://github.com/TriPSs/conventional-changelog-action/commit/22e862a0ab69410642c4182cd9ee27a23d8c63a0))
+
+
+
 ## [3.17.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.1...v3.17.2) (2022-11-23)
 
 
@@ -33,15 +48,6 @@
 ### Features
 
 * Update action to node 16 ([08c1b12](https://github.com/TriPSs/conventional-changelog-action/commit/08c1b1237bb2dbed93fa7ecba9c334f094cb6b0b))
-
-
-
-# [3.15.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.14.1...v3.15.0) (2022-09-20)
-
-
-### Features
-
-* Add `git-path` option ([96b4f2c](https://github.com/TriPSs/conventional-changelog-action/commit/96b4f2ca996f2193165c87e184b8a765102c814c)), closes [#178](https://github.com/TriPSs/conventional-changelog-action/issues/178)
 
 
 
