@@ -9,6 +9,7 @@ module.exports = class BaseVersioning {
 
   newVersion = null
 
+  oldVersion = null
   /**
    * Set some basic configurations
    *

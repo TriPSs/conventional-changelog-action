@@ -96,6 +96,11 @@ inputs:
     default: "false"
     required: false
 
+  skip-tag:
+    description: 'Do not tag the release. Helpful for using action to check if a release is going to be made'
+    default: 'false'
+    required: false
+
   pre-commit:
     description: "Path to the pre-commit script file"
     required: false

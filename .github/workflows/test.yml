@@ -295,6 +295,39 @@ jobs:
           skip-commit: "true"
           git-push: "false"
 
+  test-skip-tag:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+
+      - run: git tag | xargs git tag -d
+      - name: Create fake tag
+        run: "git tag -a 'v0.55.8' -m 'v0.55.8'"
+      - run: "git add . && git commit --allow-empty -m 'fix: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: 'v0.55.8'
+          SKIPPED_COMMIT: true
+          EXPECTED_NO_PUSH: true
+          SKIPPED_TAG: true
+        with:
+          github-token: ${{ secrets.github_token }}
+          skip-commit: 'true'
+          skip-tag: 'true'
+          git-push: 'false'
+
   test-yaml:
     runs-on: ubuntu-latest
     steps:

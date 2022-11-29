@@ -12,12 +12,12 @@ module.exports = class Git extends BaseVersioning {
       const prerelease = core.getBooleanInput('pre-release')
 
       gitSemverTags({ tagPrefix, skipUnstable: !prerelease }, async (err, tags) => {
-        const currentVersion = tags.length > 0 ? tags.shift().replace(tagPrefix, '') : null
+        this.oldVersion = tags.length > 0 ? tags.shift().replace(tagPrefix, '') : null
 
         // Get the new version
         this.newVersion = await bumpVersion(
           releaseType,
-          currentVersion,
+          this.oldVersion,
         )
 
         // We are done
