@@ -247,7 +247,7 @@ $ act -j test-json -P ubuntu-latest=catthehacker/ubuntu:full-20.04 --quiet
 # To run all tests
 $ act pull_request -P ubuntu-latest=catthehacker/ubuntu:full-20.04 --quiet
 ```
-catthehacker/ubuntu:full-20.04
+
 ## [License](./LICENSE)
 
 Conventional Changelog Action is [MIT licensed](./LICENSE).
