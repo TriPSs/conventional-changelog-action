@@ -18,6 +18,7 @@ module.exports = class Json extends BaseVersioning {
 
     // Parse the file
     let jsonContent
+    let eol = fileContent.endsWith('\n') ? '\n' : ''
     try {
       jsonContent = JSON.parse(fileContent)
     } catch (error) {
@@ -45,7 +46,7 @@ module.exports = class Json extends BaseVersioning {
 
     // Update the file
     this.update(
-      JSON.stringify(jsonContent, null, 2),
+      JSON.stringify(jsonContent, null, 2) + eol
     )
   }
 
