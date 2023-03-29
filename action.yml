@@ -3,113 +3,133 @@ description: 'Bump version, tag commit and generates changelog with conventional
 author: 'Tycho Bokdam'
 
 runs:
-  using: 'node12'
-  main: 'lib/index.js'
+  using: "node16"
+  main: "src/index.js"
 
 branding:
-  icon: 'edit'
-  color: 'red'
+  icon: "edit"
+  color: "red"
 
 inputs:
   github-token:
-    description: 'Github token'
+    description: "Github token"
+    default: ${{ github.token }}
     required: false
 
   git-message:
-    description: 'Commit message to use'
-    default: 'chore(release): {version}'
+    description: "Commit message to use"
+    default: "chore(release): {version}"
     required: false
 
   git-user-name:
-    description: 'The git user.name to use for the commit'
-    default: 'Conventional Changelog Action'
+    description: "The git user.name to use for the commit"
+    default: "Conventional Changelog Action"
     required: false
 
   git-user-email:
-    description: 'The git user.email to use for the commit'
-    default: 'conventional.changelog.action@github.com'
+    description: "The git user.email to use for the commit"
+    default: "conventional.changelog.action@github.com"
     required: false
 
   git-pull-method:
-    description: 'The git pull method used when pulling all changes from remote'
-    default: '--ff-only'
+    description: "The git pull method used when pulling all changes from remote"
+    default: "--ff-only"
     required: false
 
   git-push:
-    description: 'Should all the git changes be push'
-    default: 'true'
+    description: "Should all the git changes be push"
+    default: "true"
+    required: false
+
+  git-branch:
+    description: "The git branch to be pushed"
+    default: ${{ github.ref }}
+    required: false
+
+  git-release-branch-prefix:
+    description: "The git release branch prefix to be added to release tag"
+    default: release
     required: false
 
   preset:
-    description: 'The preset from Conventional Changelog to use'
-    default: 'angular'
+    description: "The preset from Conventional Changelog to use"
+    default: "angular"
     required: false
 
   tag-prefix:
-    description: 'Prefix that is used for the git tag'
-    default: 'v'
+    description: "Prefix that is used for the git tag"
+    default: "v"
     required: false
 
   output-file:
-    description: 'File to output the changelog to'
-    default: 'CHANGELOG.md'
+    description: "File to output the changelog to"
+    default: "CHANGELOG.md"
     required: false
 
   release-count:
-    description: 'Number of releases to preserve in changelog'
-    default: '5'
+    description: "Number of releases to preserve in changelog"
+    default: "5"
     required: false
 
   version-file:
-    description: 'The path to the file that contains the version to bump (supports comma-separated list of file paths)'
-    default: './package.json'
+    description: "The path to the file that contains the version to bump (supports comma-separated list of file paths)"
+    default: "./package.json"
     required: false
 
   version-path:
-    description: 'The place inside the version file to bump'
-    default: 'version'
+    description: "The place inside the version file to bump"
+    default: "version"
+    required: false
+
+  skip-git-pull:
+    description: "Do not pull the repo before tagging. Ensure you full cloned the repo in the first place to get tags"
+    default: "false"
     required: false
 
   skip-on-empty:
-    description: 'Do nothing when the changelog from the latest release is empty'
-    default: 'true'
+    description: "Do nothing when the changelog from the latest release is empty"
+    default: "true"
     required: false
 
   skip-version-file:
-    description: 'Do not update the version file'
-    default: 'false'
+    description: "Do not update the version file"
+    default: "false"
     required: false
 
   skip-commit:
-    description: 'Do create a release commit'
+    description: "Do create a release commit"
+    default: "false"
+    required: false
+
+  skip-tag:
+    description: 'Do not tag the release. Helpful for using action to check if a release is going to be made'
     default: 'false'
+    required: false
+
+  skip-release-branch:
+    description: 'Do not create release branch for the release. Helpful for using action to check if a release is going to be made'
+    default: 'true'
     required: false
 
   pre-commit:
-    description: 'Path to the pre-commit script file'
+    description: "Path to the pre-commit script file"
     required: false
 
   fallback-version:
-    description: 'The fallback version, if no older one can be detected, or if it is the first one'
-    default: '0.1.0'
+    description: "The fallback version, if no older one can be detected, or if it is the first one"
     required: false
 
   config-file-path:
-    description: 'Path to the conventional changelog config file. If set, the preset setting will be ignored'
+    description: "Path to the conventional changelog config file. If set, the preset setting will be ignored"
     required: false
 
   pre-changelog-generation:
-    description: 'Path to the pre-changelog-generation script file'
+    description: "Path to the pre-changelog-generation script file"
     required: false
 
-  dry-run:
-    description: 'Output latest tag and change log, but do not push changes'
-    default: 'false'
-    required: false
-    
-  skip-tag:
-    description: 'Determines whether or not a new tag is created or not'
-    default: 'false'
+  git-url:
+    description: "Git Url"
+    default: "github.com"
     required: false
 
   force-push:
@@ -117,16 +137,46 @@ inputs:
     default: 'false'
     required: false
 
+  git-path:
+    description: "Path filter for the logs. If set, only commits that match the path filter will be considered"
+    default: ""
+    required: false
+
+  dry-run:
+    description: 'Output latest tag and change log, but do not push changes'
+    default: 'false'
+    required: false
+  
+  skip-ci:
+    description: "Adds [skip ci] to commit message, to avoid triggering a new build"
+    default: "true"
+    required: false
+
+  create-summary:
+    description: "Adds the generated changelog as Action Summary"
+    default: "false"
+    required: false
+
+  pre-release:
+    description: "Marks the release as pre-release"
+    default: "false"
+    required: false
+
+  pre-release-identifier:
+    description: "The identifier to use for pre-releases"
+    default: "rc"
+    required: false
+
 outputs:
   changelog:
-    description: 'The generated changelog for the new version'
+    description: "The generated changelog for the new version"
   clean_changelog:
-    description: 'The generated changelog for the new version without the version name in it'
+    description: "The generated changelog for the new version without the version name in it"
   version:
-    description: 'The new version'
+    description: "The new version"
   old_version:
     description: 'The old version'
   tag:
-    description: 'The name of the generated tag'
+    description: "The name of the generated tag"
   skipped:
-    description: 'boolean to check if this step have been skipped'
+    description: "boolean to check if this step have been skipped"

@@ -17,28 +17,25 @@ module.exports = class Toml extends BaseVersioning {
     // Read the file
     const fileContent = this.read()
     const tomlContent = toml.parse(fileContent)
-
-    // Get the old version
-    const oldVersion = objectPath.get(tomlContent, this.versionPath, null)
-    this.oldVersion = oldVersion
+    this.oldVersion = objectPath.get(tomlContent, this.versionPath, null)
 
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
-      oldVersion,
+      this.oldVersion,
     )
 
     // Update the file
-    if (oldVersion) {
+    if (this.oldVersion) {
       // Get the name of where the version is in
       const versionName = this.versionPath.split('.').pop()
 
-      core.info(`Bumped file "${this.fileLocation}" from "${oldVersion}" to "${this.newVersion}"`)
+      core.info(`Bumped file "${this.fileLocation}" from "${this.oldVersion}" to "${this.newVersion}"`)
 
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
         fileContent.replace(
-          `${versionName} = "${oldVersion}"`,
+          `${versionName} = "${this.oldVersion}"`,
           `${versionName} = "${this.newVersion}"`,
         ),
       )

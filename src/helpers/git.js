@@ -2,9 +2,7 @@ const core = require('@actions/core')
 const exec = require('@actions/exec')
 const assert = require('assert')
 
-const { GITHUB_REPOSITORY, GITHUB_REF, ENV } = process.env
-
-const branch = GITHUB_REF.replace('refs/heads/', '')
+const { GITHUB_REPOSITORY, ENV } = process.env
 
 module.exports = new (class Git {
 
@@ -18,6 +16,7 @@ module.exports = new (class Git {
 
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
+    const gitUrl = core.getInput('git-url')
 
     // if the env is dont-use-git then we mock exec as we are testing a workflow
     if (ENV === 'dont-use-git') {
@@ -38,7 +37,7 @@ module.exports = new (class Git {
 
     // Update the origin
     if (githubToken) {
-      this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
+      this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
     }
   }
 
@@ -130,7 +129,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  push = (forcePush) => {
+  push = (branch, forcePush) => {
     const args = ['push']
     args.push(`origin ${branch}`)
     if (forcePush) {
@@ -192,6 +191,14 @@ module.exports = new (class Git {
   updateOrigin = (repo) => this.exec(`remote set-url origin ${repo}`)
 
   /**
+   * Creates git branch
+   *
+   * @param tag
+   * @return {Promise<>}
+   */
+  createBranch = (branch) => this.exec(`branch ${branch}`)
+
+  /**
    * Creates git tag
    *
    * @param tag
@@ -202,9 +209,9 @@ module.exports = new (class Git {
   /**
    * Validates the commands run
    */
-  testHistory = () => {
+  testHistory = (branch, releaseBranch) => {
     if (ENV === 'dont-use-git') {
-      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH } = process.env
+      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH, SKIPPED_RELEASE_BRANCH, SKIPPED_TAG, SKIPPED_PULL, SKIP_CI } = process.env
 
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
@@ -213,15 +220,33 @@ module.exports = new (class Git {
         'git pull --tags --ff-only',
       ]
 
-      if (!SKIPPED_COMMIT) {
-        expectedCommands.push('git add .')
-        expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+      if (!SKIPPED_PULL) {
+        expectedCommands.push('git pull --tags --ff-only')
       }
 
-      expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
+      if (!SKIPPED_COMMIT) {
+        expectedCommands.push('git add .')
+        if (SKIP_CI === 'false') {
+          expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+
+        } else {
+          expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG} [skip ci]"`)
+        }
+      }
+
+      if(!SKIPPED_RELEASE_BRANCH) {
+        expectedCommands.push(`git branch ${releaseBranch}`)
+      } 
+
+      if(!SKIPPED_TAG) {
+        expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
+      } 
 
       if (!EXPECTED_NO_PUSH) {
         expectedCommands.push(`git push origin ${branch} --follow-tags`)
+        if(!SKIPPED_RELEASE_BRANCH) {
+          expectedCommands.push(`git push origin ${releaseBranch} --follow-tags`)
+        }
       }
 
       assert.deepStrictEqual(

@@ -1,6 +1,6 @@
 {
   "name": "conventional-changelog-action",
-  "version": "3.1.0",
+  "version": "3.18.0",
   "description": "Github Action that generates a changelog with the Conventional Changelog CLI",
   "keywords": [
     "actions",
@@ -21,28 +21,18 @@
   "license": "MIT",
   "author": {
     "name": "Tycho Bokdam",
-    "email": "tycho@palmtreecoding.com"
+    "email": "github@palmtreecoding.com"
   },
-  "main": "lib/index.js",
-  "scripts": {
-    "build": "ncc build src/index.js --minify --out lib",
-    "watch": "ncc build src/index.js --watch"
-  },
+  "main": "src/index.js",
   "dependencies": {
-    "@actions/core": "1.6.0",
-    "@actions/exec": "1.1.0",
+    "@actions/core": "^1.10.0",
+    "@actions/exec": "^1.1.1",
     "@iarna/toml": "^2.2.5",
-    "conventional-changelog": "3.1.24",
-    "conventional-recommended-bump": "6.1.0",
+    "conventional-changelog": "^3.1.25",
+    "conventional-recommended-bump": "^6.1.0",
     "git-semver-tags": "4.1.1",
     "object-path": "^0.11.8",
-    "semver": "^7.3.5",
+    "semver": "^7.3.7",
     "yaml": "^1.10.2"
-  },
-  "devDependencies": {
-    "@commitlint/cli": "13.2.0",
-    "@commitlint/config-conventional": "13.2.0",
-    "@vercel/ncc": "^0.31.1",
-    "husky": "4.3.6"
   }
 }
