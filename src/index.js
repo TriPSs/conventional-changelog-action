@@ -90,7 +90,7 @@ async function run() {
 
     if (!skipGitPull) {
       core.info('Pull to make sure we have the full git history')
-      await git.fetch()
+      await git.fetch(1000)
       await git.pull()
     }
 
