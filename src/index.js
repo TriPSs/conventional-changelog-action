@@ -75,6 +75,7 @@ async function run() {
     core.info(`Using "${forcePush}" as force push`)
     core.info(`Using "${dryRun}" as dry run`)
     core.info(`Using "${skipTag}" as skip tag`)
+    core.info(`Using "${skipReleaseBranch}" as skip release branch`)
     
     if (preCommitFile) {
       core.info(`Using "${preCommitFile}" as pre-commit script`)
@@ -203,6 +204,7 @@ async function run() {
         if (hasChanges) {
           await git.add('.')
           await git.commit(gitCommitMessage.replace('{version}', gitTag))
+          core.info(`Commited changes to git`)
           needsPush = true
         }
       }

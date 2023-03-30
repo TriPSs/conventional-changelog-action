@@ -11,6 +11,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `git-pull-method`: The git pull method used when pulling all changes from remote. Default `--ff-only`
 - **Optional** `git-push`: Push all the GIT changes. Default `true`
 - **Optional** `git-branch`: The branch used to push. Default is the current branch (`${{ github.ref }}`)
+- **Optional** `git-release-branch-prefix`: The branch prefix added to tag for release branch to push. Default is (`release`)
 - **Optional** `git-url`: Git repository domain. Default is `github.com`
 - **Optional** `git-path`: Path filter for the logs. If set, only commits that match the path filter will be considered. By default, we won't use this feature(empty string).
 - **Optional** `preset`: Preset that is used from conventional commits. Default `angular`.
@@ -24,6 +25,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `skip-version-file`: Do not update the version file. Default `'false'`.
 - **Optional** `skip-commit`: Do not create a release commit. Default `'false'`.
 - **Optional** `skip-tag`: Do not tag the release. Helpful for using action to check if a release is going to be made. Default `'false'`.
+- **Optional** `skip-release-branch`: Do not create release branch for the release. Helpful for using action to check if a release is going to be made. Default `'true'`.
 - **Optional** `pre-commit`: Path to the pre-commit script file. No hook by default.
 - **Optional** `fallback-version`: The fallback version, if no older one can be detected, or if it is the first one. Default `'0.1.0'`. If `pre-release`is set to `true` it will default to the configured pre-release format (i.e. `'0.1.0-rc.0'`)
 - **Optional** `config-file-path`: Path to the conventional changelog config file. If set, the preset setting will be ignored
