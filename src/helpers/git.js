@@ -233,7 +233,7 @@ module.exports = new (class Git {
         }
       }
 
-      if(!SKIPPED_RELEASE_BRANCH) {
+      if(SKIPPED_RELEASE_BRANCH != "" && !SKIPPED_RELEASE_BRANCH) {
         expectedCommands.push(`git branch ${releaseBranch}`)
       } 
 
@@ -243,7 +243,7 @@ module.exports = new (class Git {
 
       if (!EXPECTED_NO_PUSH) {
         expectedCommands.push(`git push origin ${branch} --follow-tags`)
-        if(!SKIPPED_RELEASE_BRANCH) {
+        if(SKIPPED_RELEASE_BRANCH != "" && !SKIPPED_RELEASE_BRANCH) {
           expectedCommands.push(`git push origin ${releaseBranch} --follow-tags`)
         }
       }
