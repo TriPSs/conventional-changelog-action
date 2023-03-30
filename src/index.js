@@ -182,6 +182,7 @@ async function run() {
       if (outputFile !== 'false' && !dryRun) {
         // Generate the changelog
         await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config, gitPath)
+        core.info(`Generated file change log at: ${outputFile}`)
       }
 
       let needsPush = false
@@ -201,10 +202,11 @@ async function run() {
         }
 
         await git.add('.')
+        await git.commit(gitCommitMessage.replace('{version}', gitTag))
+        core.info(`Commited changes to git`)
+
         let hasChanges = await git.hasChanges()
         if (hasChanges) {
-          await git.commit(gitCommitMessage.replace('{version}', gitTag))
-          core.info(`Commited changes to git`)
           needsPush = true
         }
       }
