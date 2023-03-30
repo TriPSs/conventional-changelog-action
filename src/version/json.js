@@ -32,7 +32,6 @@ module.exports = class Json extends BaseVersioning {
 
     // Get the old version
     this.oldVersion = objectPath.get(jsonContent, this.versionPath, null)
-    this.oldVersion = oldVersion
 
     // Get the new version
     this.newVersion = await bumpVersion(
@@ -50,6 +49,4 @@ module.exports = class Json extends BaseVersioning {
       JSON.stringify(jsonContent, null, 2) + eol
     )
   }
-
 }
-
