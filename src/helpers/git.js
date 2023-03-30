@@ -219,7 +219,7 @@ module.exports = new (class Git {
       ]
 
       if (!SKIPPED_PULL) {
-        expectedCommands.push('git fetch --depth 1000')
+        //expectedCommands.push('git fetch --depth 1000')
         expectedCommands.push('git pull --tags --ff-only')
       }
 
