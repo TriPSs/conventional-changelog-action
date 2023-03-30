@@ -217,7 +217,6 @@ module.exports = new (class Git {
         'git config user.name "Conventional Changelog Action"',
         'git config user.email "conventional.changelog.action@github.com"',
         'git fetch --depth 1000',
-        'git pull --tags --ff-only',
       ]
 
       if (!SKIPPED_PULL) {
