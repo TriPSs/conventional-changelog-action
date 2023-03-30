@@ -129,13 +129,15 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  push = (branch, forcePush) => {
+  push = (branch, pushTags, forcePush) => {
     const args = ['push']
     args.push(`origin ${branch}`)
     if (forcePush) {
       args.push(`--force-with-lease`)
     }
-    args.push(`--follow-tags`)
+    if (pushTags) {
+      args.push(`--follow-tags`)
+    }
 
     this.exec(args.join(' '))
   }

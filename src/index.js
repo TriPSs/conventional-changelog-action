@@ -232,9 +232,9 @@ async function run() {
       if (!dryRun && gitPush && needsPush) {
         try {
           core.info('Push all changes')
-          await git.push(gitBranch, forcePush)
+          await git.push(gitBranch, true, forcePush)
           if (!skipReleaseBranch){
-            await git.push(gitReleaseBranch, forcePush)
+            await git.push(gitReleaseBranch, false, forcePush)
           }
         } catch (error) {
           console.error(error)
