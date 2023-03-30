@@ -225,8 +225,8 @@ module.exports = new (class Git {
         expectedCommands.push('git pull --tags --ff-only')
       }
 
+      expectedCommands.push('git add .')
       if (!SKIPPED_COMMIT) {
-        expectedCommands.push('git add .')
         if (SKIP_CI === 'false') {
           expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
 
@@ -244,9 +244,11 @@ module.exports = new (class Git {
       } 
 
       if (!EXPECTED_NO_PUSH) {
-        expectedCommands.push(`git push origin ${branch} --follow-tags`)
         if(!(SKIPPED_RELEASE_BRANCH == "" || SKIPPED_RELEASE_BRANCH == null) && !SKIPPED_RELEASE_BRANCH) {
+          expectedCommands.push(`git push origin ${branch}`)
           expectedCommands.push(`git push origin ${releaseBranch} --follow-tags`)
+        } else {
+          expectedCommands.push(`git push origin ${branch} --follow-tags`)
         }
       }
 

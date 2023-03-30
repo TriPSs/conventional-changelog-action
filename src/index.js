@@ -200,9 +200,9 @@ async function run() {
           }
         }
 
+        await git.add('.')
         let hasChanges = await git.hasChanges()
         if (hasChanges) {
-          await git.add('.')
           await git.commit(gitCommitMessage.replace('{version}', gitTag))
           core.info(`Commited changes to git`)
           needsPush = true
