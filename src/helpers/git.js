@@ -246,15 +246,15 @@ module.exports = new (class Git {
 
       if (!EXPECTED_NO_PUSH) {
         expectedCommands.push(`git push origin ${branch}`)
-
-        if(!SKIPPED_TAG) {
-          expectedCommands.push(`git push origin ${EXPECTED_TAG}`)
-        }
-  
-        if(!(SKIPPED_RELEASE_BRANCH == "" || SKIPPED_RELEASE_BRANCH == null) && !SKIPPED_RELEASE_BRANCH) {
-          expectedCommands.push(`git push origin ${releaseBranch}`)
-        } 
       }
+
+      if(!SKIPPED_TAG) {
+        expectedCommands.push(`git push origin ${EXPECTED_TAG}`)
+      }
+
+      if(!(SKIPPED_RELEASE_BRANCH == "" || SKIPPED_RELEASE_BRANCH == null) && !SKIPPED_RELEASE_BRANCH) {
+        expectedCommands.push(`git push origin ${releaseBranch}`)
+      }       
 
       assert.deepStrictEqual(
         this.commandsRun,
