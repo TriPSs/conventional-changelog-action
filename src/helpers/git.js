@@ -122,7 +122,7 @@ module.exports = new (class Git {
    */
   fetch = (depth) => {
     if (depth == "" || depth == null) {
-      this.exec(`fetch`)
+      this.exec(`fetch --depth 1`)
     } else {
       this.exec(`fetch --depth ${depth}`)
     }
@@ -221,7 +221,7 @@ module.exports = new (class Git {
       ]
 
       if (!SKIPPED_PULL) {
-        expectedCommands.push('git fetch')
+        expectedCommands.push('git fetch --depth 1')
         expectedCommands.push('git pull --tags --ff-only')
       }
 
