@@ -39,6 +39,7 @@ async function run() {
     const versionFile = core.getInput('version-file')
     const versionPath = core.getInput('version-path')
     const skipGitPull = core.getBooleanInput('skip-git-pull')
+    const gitPullDepth = core.getInput('git-pull-depth')
     const skipVersionFile = core.getBooleanInput('skip-version-file')
     const skipCommit = core.getBooleanInput('skip-commit')
     const skipEmptyRelease = core.getBooleanInput('skip-on-empty')
@@ -76,6 +77,8 @@ async function run() {
     core.info(`Using "${dryRun}" as dry run`)
     core.info(`Using "${skipTag}" as skip tag`)
     core.info(`Using "${skipReleaseBranch}" as skip release branch`)
+    core.info(`Using "${skipGitPull}" as skip git pull`)
+    core.info(`Using "${gitPullDepth}" as git pull depth`)
     
     if (preCommitFile) {
       core.info(`Using "${preCommitFile}" as pre-commit script`)
@@ -90,7 +93,7 @@ async function run() {
 
     if (!skipGitPull) {
       core.info('Pull to make sure we have the full git history')
-      await git.fetch(1000)
+      await git.fetch(gitPullDepth)
       await git.pull()
     }
 
@@ -252,7 +255,6 @@ async function run() {
           } else {
             core.info('We not going to push GIT changes to release branch')
           }
-
         } catch (error) {
           console.error(error)
           core.setFailed(error)
