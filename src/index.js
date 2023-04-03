@@ -231,20 +231,35 @@ async function run() {
         core.info('We not going to the tag the GIT changes')
       }
 
-      if (!dryRun && gitPush && needsPush) {
+      if (!dryRun && needsPush) {
         try {
           core.info('Push all changes')
-          await git.push(gitBranch, skipReleaseBranch, forcePush)
-          if (!skipReleaseBranch){
-            await git.push(gitReleaseBranch, !skipReleaseBranch, forcePush)
+
+          if (gitPush) {
+            await git.push(gitBranch, forcePush)
+          } else {
+            core.info('We not going to push GIT changes to current branch')
           }
+
+          if (!skipTag) {
+            await git.push(gitTag, forcePush)
+          } else {
+            core.info('We not going to push GIT changes to tag')
+          }
+
+          if (!skipReleaseBranch){
+            await git.push(gitReleaseBranch, forcePush)
+          } else {
+            core.info('We not going to push GIT changes to release branch')
+          }
+
         } catch (error) {
           console.error(error)
           core.setFailed(error)
           return
         }
       } else {
-        core.info('We not going to push the GIT changes')
+        core.info('We not going to push any GIT changes')
       }
 
       // Set outputs so other actions (for example actions/create-release) can use it
