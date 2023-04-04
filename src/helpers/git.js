@@ -193,7 +193,7 @@ module.exports = new (class Git {
   updateGitHubOrigin = async (githubToken, gitUrl) => {
     if (githubToken) {
       const username = `x-access-token`
-      await this.addGithubTokenAuthorization(username, githubToken)
+      //await this.addGithubTokenAuthorization(username, githubToken)
       return await this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
     } else {
       return await this.exec(`remote set-url origin https://${gitUrl}`)
