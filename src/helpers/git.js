@@ -237,7 +237,7 @@ module.exports = new (class Git {
 
     const options = {
       ignoreReturnCode : true,
-      failOnStdErr: true,
+      failOnStdErr: false,
       listeners: {
         stdout: (data) => {
           execOutput += data.toString()
@@ -245,7 +245,8 @@ module.exports = new (class Git {
       },
     }
 
-    const exitCode = await exec.exec(`git config ${globalConfig ? '--global' : '--local'} --name-only --get-regexp ${this.regexEscape(configKey)}`, null, options)
+    const escapeConfigKey = this.regexEscape(configKey)
+    const exitCode = await exec.exec(`git config ${globalConfig ? '--global' : '--local'} --name-only --get-regexp ${escapeConfigKey}`, null, options)
 
     if (execOutput.trim()){
       throw `Unable to determine git status: ${execOutput.trim()}`
