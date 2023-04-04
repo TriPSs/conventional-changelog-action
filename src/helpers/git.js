@@ -25,7 +25,7 @@ module.exports = new (class Git {
 
         console.log(`Skipping "${fullCommand}" because of test env`)
 
-        if (!fullCommand.includes(`git remote set-url origin`) && !fullCommand.includes(`git --local -c "http.https://github.com/.extraheader="`)) {
+        if (!fullCommand.includes(`git remote set-url origin`) && !fullCommand.includes(`git -c "http.https://github.com/.extraheader="`)) {
           this.commandsRun.push(fullCommand)
         }
       }
@@ -194,7 +194,7 @@ module.exports = new (class Git {
     if (githubToken) {
       const username = `x-access-token`
       const credentials = Buffer.from(`${username}:${githubToken}`).toString('base64')
-      await this.exec(`--local -c "http.https://github.com/.extraheader=" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${credentials}" push`)
+      await this.exec(`-c "http.https://github.com/.extraheader=" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${credentials}" push`)
       return this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
     } else {
       return this.exec(`remote set-url origin https://${gitUrl}`)
