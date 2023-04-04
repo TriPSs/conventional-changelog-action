@@ -245,7 +245,7 @@ module.exports = new (class Git {
       },
     }
 
-    const exitCode = await exec.exec(`git config ${globalConfig ? '--global' : '--local'} --name-only --get-regexp ${regexEscape(configKey)}`, null, options)
+    const exitCode = await exec.exec(`git config ${globalConfig ? '--global' : '--local'} --name-only --get-regexp ${this.regexEscape(configKey)}`, null, options)
 
     if (execOutput.trim()){
       throw `Unable to determine git status: ${execOutput.trim()}`
