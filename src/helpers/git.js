@@ -83,7 +83,7 @@ module.exports = new (class Git {
    * @param file
    * @returns {*}
    */
-  add = (file) => this.exec(`add ${file}`)
+  add = (file) => this.exec(`add "${file}"`)
 
   /**
    * Commit all changes
@@ -193,13 +193,75 @@ module.exports = new (class Git {
   updateGitHubOrigin = async (githubToken, gitUrl) => {
     if (githubToken) {
       const username = `x-access-token`
-      const credentials = Buffer.from(`${username}:${githubToken}`).toString('base64')
-      await this.exec(`-c "http.https://github.com/.extraheader=" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${credentials}" push`)
+      const credentials = Buffer.from(`${username}:${githubToken}`, `utf8`).toString('base64')
+      core.setSecret(credentials)
+
+      const configKey = `http.https://github.com/.extraheader`
+      const configValue = `AUTHORIZATION: basic ${credentials}`
+      if (await this.configExists(configKey, false)){
+        await this.configUnset(configKey, false)
+      }
+      await this.configSet(configKey, configValue, false, true)
       return this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
     } else {
       return this.exec(`remote set-url origin https://${gitUrl}`)
     }
   }
+  
+  /**
+   * Set git config
+   *
+   * @param configKey
+   * @param globalConfig
+   * @return {Promise<>}
+   */
+  configSet = (configKey, configValue, globalConfig, add) => this.exec(`config ${globalConfig ? '--global' : '--local'}${add ? ' --add': ''} ${configKey} "${configValue}"`)
+  
+  /**
+   * Escape regex for use in git command line
+   *
+   * @param value
+   * @return {string}
+   */
+  regexEscape = (value) => value.replace(/[^a-zA-Z0-9_]/g, x => { return `\\${x}` })
+
+  /**
+   * Check if git config exists
+   *
+   * @param configKey
+   * @param globalConfig
+   * @return {Promise<>}
+   */
+  configExists = async(configKey, globalConfig) => {
+    let execOutput = ''
+
+    const options = {
+      ignoreReturnCode : true,
+      failOnStdErr: true,
+      listeners: {
+        stdout: (data) => {
+          execOutput += data.toString()
+        },
+      },
+    }
+
+    const exitCode = await exec.exec(`git config ${globalConfig ? '--global' : '--local'} --name-only --get-regexp ${regexEscape(configKey)}`, null, options)
+
+    if (execOutput.trim()){
+      throw `Unable to determine git status: ${execOutput.trim()}`
+    }
+
+    return exitCode == 0
+  } 
+
+  /**
+   * Check if git config exists
+   *
+   * @param configKey
+   * @param globalConfig
+   * @return {Promise<>}
+   */
+  configUnset = (configKey, globalConfig) => this.exec(`config ${globalConfig ? '--global' : '--local'} --unset-all ${configKey}`)
 
   /**
    * Creates git branch
