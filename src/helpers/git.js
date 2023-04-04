@@ -122,9 +122,9 @@ module.exports = new (class Git {
    */
   fetch = (depth) => {
     if (depth == "" || depth == null) {
-      this.exec(`fetch --depth 1`)
+      return this.exec(`fetch --depth 1`)
     } else {
-      this.exec(`fetch --depth ${depth}`)
+      return this.exec(`fetch --depth ${depth}`)
     }
   }
 
@@ -139,7 +139,7 @@ module.exports = new (class Git {
     if (forcePush) {
       args.push(`--force-with-lease`)
     }
-    this.exec(args.join(' '))
+    return this.exec(args.join(' '))
   }
 
   /**
@@ -190,14 +190,14 @@ module.exports = new (class Git {
    * @param repo
    * @return {Promise<>}
    */
-  updateGitHubOrigin = (githubToken, gitUrl) => {
+  updateGitHubOrigin = async (githubToken, gitUrl) => {
     if (githubToken) {
       const username = `x-access-token`
       const credentials = Buffer.from(`${username}:${githubToken}`).toString('base64')
-      this.exec(`-c 'http.https://github.com/.extraheader=' -c 'http.https://github.com/.extraheader=AUTHORIZATION: basic ${credentials}' push`)
-      this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
+      await this.exec(`--local -c "http.https://github.com/.extraheader=" -c "http.https://github.com/.extraheader=AUTHORIZATION: basic ${credentials}" push`)
+      return this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
     } else {
-      this.exec(`remote set-url origin https://${gitUrl}`)
+      return this.exec(`remote set-url origin https://${gitUrl}`)
     }
   }
 
