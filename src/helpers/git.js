@@ -190,15 +190,15 @@ module.exports = new (class Git {
    * @param repo
    * @return {Promise<>}
    */
-  updateGitHubOrigin = (token, gitUrl) => {
-    if (token) {
-      url = `https://x-access-token:${token}@${gitUrl}`
-      const credentials = Buffer.from(`x-access-token:${token}`).toString('base64')
+  updateGitHubOrigin = (githubToken, gitUrl) => {
+    if (githubToken) {
+      const username = `x-access-token`
+      const credentials = Buffer.from(`${username}:${githubToken}`).toString('base64')
       this.exec(`-c 'http.https://github.com/.extraheader=' -c 'http.https://github.com/.extraheader=AUTHORIZATION: basic ${credentials}' push`)
+      this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
     } else {
-      url = `https://${gitUrl}`
+      this.exec(`remote set-url origin https://${gitUrl}`)
     }
-    this.exec(`remote set-url origin ${url}`)
   }
 
   /**
