@@ -193,7 +193,7 @@ module.exports = new (class Git {
   updateGitHubOrigin = async (githubToken, gitUrl) => {
     if (githubToken) {
       const username = `x-access-token`
-      //await this.addGithubTokenAuthorization(username, githubToken)
+      await this.addGithubTokenAuthorization(username, githubToken)
       return await this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
     } else {
       return await this.exec(`remote set-url origin https://${gitUrl}`)
@@ -206,19 +206,24 @@ module.exports = new (class Git {
 
     const configKey = `http.https://github.com/.extraheader`
     const configValue = `AUTHORIZATION: basic ${credentials}`
-    if (await this.configExists(configKey, false)){
+    const globalConfig = false
+    const add = true
+    core.info(`before checking configKey`)
+    if (await this.configExists(configKey, globalConfig)){
+      core.info(`entering loop`)
       core.warning(`Replacing authorization header ${configKey}`)
-      await this.configUnset(configKey, false)
+      await this.configUnset(configKey, globalConfig)
+      core.info(`after config set`)
     }
-    await this.configSet(configKey, configValue, false, true)
+    await this.configSet(configKey, configValue, globalConfig, add)
   }
 
   removeGithubTokenAuthorization = async()=> {
     const configKey = `http.https://github.com/.extraheader`
-    
-    if (await this.configExists(configKey, false)){
+    const globalConfig = false
+    if (await this.configExists(configKey, globalConfig)){
       core.warning(`Removing authorization header ${configKey}`)
-      await this.configUnset(configKey, false)
+      await this.configUnset(configKey, globalConfig)
     }
   }
   
