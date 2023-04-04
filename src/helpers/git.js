@@ -25,7 +25,7 @@ module.exports = new (class Git {
 
         console.log(`Skipping "${fullCommand}" because of test env`)
 
-        if (!fullCommand.includes(`git remote set-url origin`) && !fullCommand.includes(`git -c "http.https://github.com/.extraheader="`)) {
+        if (!fullCommand.includes(`git remote set-url origin`) && !fullCommand.includes(`git config --local --add http.https://github.com/.extraheader`)) {
           this.commandsRun.push(fullCommand)
         }
       }
