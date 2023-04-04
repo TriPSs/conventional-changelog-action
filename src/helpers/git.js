@@ -83,7 +83,7 @@ module.exports = new (class Git {
    * @param file
    * @returns {*}
    */
-  add = (file) => this.exec(`add "${file}"`)
+  add = (file) => this.exec(`add ${file}`)
 
   /**
    * Commit all changes
