@@ -37,7 +37,7 @@ module.exports = new (class Git {
 
     // Update the origin
     if (githubToken) {
-      this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
+      this.updateGitHubOrigin(githubToken, `${gitUrl}/${GITHUB_REPOSITORY}.git`)
     }
   }
 
@@ -190,7 +190,16 @@ module.exports = new (class Git {
    * @param repo
    * @return {Promise<>}
    */
-  updateOrigin = (repo) => this.exec(`remote set-url origin ${repo}`)
+  updateGitHubOrigin = (token, gitUrl) => {
+    if (token) {
+      url = `https://x-access-token:${token}@${gitUrl}`
+      const credentials = Buffer.from(`x-access-token:${token}`).toString('base64')
+      this.exec(`-c 'http.https://github.com/.extraheader=' -c 'http.https://github.com/.extraheader=AUTHORIZATION: basic ${credentials}' push`)
+    } else {
+      url = `https://${gitUrl}`
+    }
+    this.exec(`remote set-url origin ${url}`)
+  }
 
   /**
    * Creates git branch
