@@ -190,17 +190,17 @@ module.exports = new (class Git {
    * @param repo
    * @return {Promise<>}
    */
-  updateGitHubOrigin = async (githubToken, gitUrl) => {
+  updateGitHubOrigin = (githubToken, gitUrl) => {
     if (githubToken) {
       const username = `x-access-token`
-      await this.addGithubTokenAuthorization(username, githubToken)
-      return await this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
+      this.addGithubTokenAuthorization(username, githubToken)
+      return this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
     } else {
-      return await this.exec(`remote set-url origin https://${gitUrl}`)
+      return this.exec(`remote set-url origin https://${gitUrl}`)
     }
   }
 
-  addGithubTokenAuthorization = async (username, githubToken) => {
+  addGithubTokenAuthorization = (username, githubToken) => {
     const credentials = Buffer.from(`${username}:${githubToken}`, `utf8`).toString('base64')
     core.setSecret(credentials)
 
@@ -209,23 +209,22 @@ module.exports = new (class Git {
     const globalConfig = false
     const add = true
     core.info(`before checking configKey`)
-    const configExists = await this.configExists(configKey, globalConfig)
+    const configExists = this.configExists(configKey, globalConfig)
     core.info(`entering loop`)
     if (configExists){
-      
       core.warning(`Replacing authorization header ${configKey}`)
-      await this.configUnset(configKey, globalConfig)
+      this.configUnset(configKey, globalConfig)
       core.info(`after config set`)
     }
-    await this.configSet(configKey, configValue, globalConfig, add)
+    this.configSet(configKey, configValue, globalConfig, add)
   }
 
   removeGithubTokenAuthorization = async()=> {
     const configKey = `http.https://github.com/.extraheader`
     const globalConfig = false
-    if (await this.configExists(configKey, globalConfig)){
+    if (this.configExists(configKey, globalConfig)){
       core.warning(`Removing authorization header ${configKey}`)
-      await this.configUnset(configKey, globalConfig)
+      this.configUnset(configKey, globalConfig)
     }
   }
   
@@ -253,7 +252,7 @@ module.exports = new (class Git {
    * @param globalConfig
    * @return {Promise<>}
    */
-  configExists = async(configKey, globalConfig) => {
+  configExists = (configKey, globalConfig) => {
     let execOutput = ''
 
     const options = {
@@ -267,7 +266,7 @@ module.exports = new (class Git {
     }
 
     const escapeConfigKey = this.regexEscape(configKey)
-    const exitCode = await exec.exec(`git config ${globalConfig ? '--global' : '--local'} --name-only --get-regexp ${escapeConfigKey}`, null, options)
+    const exitCode = exec.exec(`git config ${globalConfig ? '--global' : '--local'} --name-only --get-regexp ${escapeConfigKey}`, null, options)
 
     if (execOutput.trim()){
       throw `Unable to determine git status: ${execOutput.trim()}`
