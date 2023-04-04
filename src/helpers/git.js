@@ -298,7 +298,7 @@ module.exports = new (class Git {
    * @param tag
    * @return {Promise<>}
    */
-  createTag = (tag) => this.exec(`tag -a ${tag} -m "${tag}"`)
+  createTag = (tag) => this.exec(`tag -af ${tag} -m "${tag}"`)
 
   /**
    * Validates the commands run
@@ -333,7 +333,7 @@ module.exports = new (class Git {
       } 
 
       if(!SKIPPED_TAG) {
-        expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
+        expectedCommands.push(`git tag -af ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
       } 
 
       if (!EXPECTED_NO_PUSH) {
