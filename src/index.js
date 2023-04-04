@@ -204,9 +204,11 @@ async function run() {
           }
         }
 
-        await git.add('.')
-        await git.commit(gitCommitMessage.replace('{version}', gitTag))
-        core.info(`Commited changes to git`)
+        if (outputFile !== 'false' && !dryRun) {
+          await git.add(outputFile)
+          await git.commit(gitCommitMessage.replace('{version}', gitTag))
+          core.info(`Commited changes to git`)
+        }
 
         let hasChanges = await git.hasChanges()
         if (hasChanges) {
