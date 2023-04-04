@@ -209,8 +209,10 @@ module.exports = new (class Git {
     const globalConfig = false
     const add = true
     core.info(`before checking configKey`)
-    if (await this.configExists(configKey, globalConfig)){
-      core.info(`entering loop`)
+    const configExists = await this.configExists(configKey, globalConfig)
+    core.info(`entering loop`)
+    if (configExists){
+      
       core.warning(`Replacing authorization header ${configKey}`)
       await this.configUnset(configKey, globalConfig)
       core.info(`after config set`)
