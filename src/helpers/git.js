@@ -9,7 +9,7 @@ module.exports = new (class Git {
   commandsRun = []
 
   constructor() {
-    return (async() => {
+    let asyncConstructor = new Promise((async() => {
       const githubToken = core.getInput('github-token')
 
       // Make the Github token secret
@@ -44,7 +44,9 @@ module.exports = new (class Git {
       // Constructors return `this` implicitly, but this is an IIFE, so
       // return `this` explicitly (else we'd return an empty object).
       return this
-    })();
+    })).resolve()
+
+    return asyncConstructor
   }
 
   /**
