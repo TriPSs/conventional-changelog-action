@@ -207,7 +207,10 @@ module.exports = new (class Git {
     core.warning(`After checking key ${configKey}`)
     if (configExists){
       core.warning(`Removing authorization header ${configKey}`)
+
+      core.warning(`Before deleting key ${configKey}`)
       await this.configUnset(configKey, globalConfig)
+      core.warning(`After deleting key ${configKey}`)
     }
 
     const credentials = Buffer.from(`${username}:${githubToken}`, `utf8`).toString('base64')
