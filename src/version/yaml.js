@@ -48,6 +48,8 @@ module.exports = class Yaml extends BaseVersioning {
         ),
       )
     } else {
+      core.info(`Bumped file "${this.fileLocation}" with version "${this.newVersion}"`)
+
       // Update the content with the new version
       objectPath.set(yamlContent, this.versionPath, this.newVersion)
       this.update(yaml.stringify(yamlContent))
