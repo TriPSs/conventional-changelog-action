@@ -21,26 +21,12 @@ jobs:
         uses: ./
         with:
           github-token: ${{ secrets.github_token }}
+          create-summary: true
           skip-on-empty: 'false'
-
-      - name: Get release information
-        env:
-          CLEAN_CHANGELOG: ${{ steps.changelog.outputs.clean_changelog }}
-          CHANGELOG: ${{ steps.changelog.outputs.changelog }}
-          VERSION: ${{ steps.changelog.outputs.version }}
-          OLDVERSION: ${{ steps.changelog.outputs.old_version }}
-          TAG: ${{ steps.changelog.outputs.tag }}
-          SKIPPED: ${{ steps.changelog.outputs.skipped }}
-        run: |
-          echo "clean_changelog: $CLEAN_CHANGELOG"
-          echo "changelog: $CHANGELOG"
-          echo "version: $VERSION"
-          echo "old_version: $OLDVERSION"
-          echo "tag: $TAG"
-          echo "skipped: $SKIPPED"
 
       - name: Create Release
         uses: actions/create-release@v1
+        if: steps.changelog.outputs.skipped != 'true'
         env:
           GITHUB_TOKEN: ${{ secrets.github_token }}
         with:

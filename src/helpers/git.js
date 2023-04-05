@@ -2,22 +2,21 @@ const core = require('@actions/core')
 const exec = require('@actions/exec')
 const assert = require('assert')
 
-const { GITHUB_REPOSITORY, GITHUB_REF, ENV } = process.env
-
-const branch = GITHUB_REF.replace('refs/heads/', '')
+const { GITHUB_REPOSITORY, ENV } = process.env
 
 module.exports = new (class Git {
 
   commandsRun = []
 
   constructor() {
-    const githubToken = core.getInput('github-token', { required: true })
+    const githubToken = core.getInput('github-token')
 
     // Make the Github token secret
     core.setSecret(githubToken)
 
     const gitUserName = core.getInput('git-user-name')
     const gitUserEmail = core.getInput('git-user-email')
+    const gitUrl = core.getInput('git-url')
 
     // if the env is dont-use-git then we mock exec as we are testing a workflow
     if (ENV === 'dont-use-git') {
@@ -26,7 +25,7 @@ module.exports = new (class Git {
 
         console.log(`Skipping "${fullCommand}" because of test env`)
 
-        if (!fullCommand.includes('git remote set-url origin')) {
+        if (!fullCommand.includes(`git remote set-url origin`) && !fullCommand.includes(`git config --local --add http.https://github.com/.extraheader`)) {
           this.commandsRun.push(fullCommand)
         }
       }
@@ -37,7 +36,9 @@ module.exports = new (class Git {
     this.config('user.email', gitUserEmail)
 
     // Update the origin
-    this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
+    if (githubToken) {
+      this.updateGitHubOrigin(githubToken, `${gitUrl}/${GITHUB_REPOSITORY}.git`)
+    }
   }
 
   /**
@@ -46,7 +47,7 @@ module.exports = new (class Git {
    * @param command
    * @return {Promise<>}
    */
-  exec = (command) => new Promise(async(resolve, reject) => {
+  exec = (command) => new Promise(async (resolve, reject) => {
     let execOutput = ''
 
     const options = {
@@ -100,7 +101,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  pull = async() => {
+  pull = async () => {
     const args = ['pull']
 
     // Check if the repo is unshallow
@@ -119,24 +120,26 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  fetch = () => (
-    this.exec(`fetch --depth 1000`)
-  )
+  fetch = (depth) => {
+    if (depth == "" || depth == null) {
+      return this.exec(`fetch --depth 1`)
+    } else {
+      return this.exec(`fetch --depth ${depth}`)
+    }
+  }
 
   /**
    * Push all changes
    *
    * @return {Promise<>}
    */
-  push = (forcePush) => {
+  push = (branch, forcePush) => {
     const args = ['push']
     args.push(`origin ${branch}`)
     if (forcePush) {
       args.push(`--force-with-lease`)
     }
-    args.push(`--follow-tags`)
-
-    this.exec(args.join(' '))
+    return this.exec(args.join(' '))
   }
 
   /**
@@ -144,7 +147,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  isShallow = async() => {
+  isShallow = async () => {
     if (ENV === 'dont-use-git') {
       return false
     }
@@ -187,7 +190,107 @@ module.exports = new (class Git {
    * @param repo
    * @return {Promise<>}
    */
-  updateOrigin = (repo) => this.exec(`remote set-url origin ${repo}`)
+  updateGitHubOrigin = (githubToken, gitUrl) => {
+    if (githubToken) {
+      const username = `x-access-token`
+      this.addGithubTokenAuthorization(username, githubToken)
+      return this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
+    } else {
+      return this.exec(`remote set-url origin https://${gitUrl}`)
+    }
+  }
+
+  addGithubTokenAuthorization = (username, githubToken) => {
+    const credentials = Buffer.from(`${username}:${githubToken}`, `utf8`).toString('base64')
+    core.setSecret(credentials)
+
+    const configKey = `http.https://github.com/.extraheader`
+    const configValue = `AUTHORIZATION: basic ${credentials}`
+    const globalConfig = false
+    const add = true
+    core.info(`before checking configKey`)
+    const configExists = this.configExists(configKey, globalConfig)
+    core.info(`entering loop`)
+    if (configExists){
+      core.warning(`Replacing authorization header ${configKey}`)
+      this.configUnset(configKey, globalConfig)
+      core.info(`after config set`)
+    }
+    this.configSet(configKey, configValue, globalConfig, add)
+  }
+
+  removeGithubTokenAuthorization = async()=> {
+    const configKey = `http.https://github.com/.extraheader`
+    const globalConfig = false
+    if (this.configExists(configKey, globalConfig)){
+      core.warning(`Removing authorization header ${configKey}`)
+      this.configUnset(configKey, globalConfig)
+    }
+  }
+  
+  /**
+   * Set git config
+   *
+   * @param configKey
+   * @param globalConfig
+   * @return {Promise<>}
+   */
+  configSet = (configKey, configValue, globalConfig, add) => this.exec(`config ${globalConfig ? '--global' : '--local'}${add ? ' --add': ''} ${configKey} "${configValue}"`)
+  
+  /**
+   * Escape regex for use in git command line
+   *
+   * @param value
+   * @return {string}
+   */
+  regexEscape = (value) => value.replace(/[^a-zA-Z0-9_]/g, x => { return `\\${x}` })
+
+  /**
+   * Check if git config exists
+   *
+   * @param configKey
+   * @param globalConfig
+   * @return {Promise<>}
+   */
+  configExists = (configKey, globalConfig) => {
+    let execOutput = ''
+
+    const options = {
+      ignoreReturnCode : true,
+      failOnStdErr: false,
+      listeners: {
+        stdout: (data) => {
+          execOutput += data.toString()
+        },
+      },
+    }
+
+    const escapeConfigKey = this.regexEscape(configKey)
+    const exitCode = exec.exec(`git config ${globalConfig ? '--global' : '--local'} --name-only --get-regexp ${escapeConfigKey}`, null, options)
+
+    if (execOutput.trim()){
+      throw `Unable to determine git status: ${execOutput.trim()}`
+    }
+
+    return exitCode == 0
+  } 
+
+  /**
+   * Check if git config exists
+   *
+   * @param configKey
+   * @param globalConfig
+   * @return {Promise<>}
+   */
+  configUnset = (configKey, globalConfig) => this.exec(`config ${globalConfig ? '--global' : '--local'} --unset-all ${configKey}`)
+
+  /**
+   * Creates git branch
+   *
+   * @param tag
+   * @return {Promise<>}
+   */
+  createBranch = (branch) => this.exec(`branch ${branch}`)
 
   /**
    * Creates git tag
@@ -195,29 +298,55 @@ module.exports = new (class Git {
    * @param tag
    * @return {Promise<>}
    */
-  createTag = (tag) => this.exec(`tag -a ${tag} -m "${tag}"`)
+  createTag = (tag) => this.exec(`tag -af ${tag} -m "${tag}"`)
 
   /**
    * Validates the commands run
    */
-  testHistory = () => {
+  testHistory = (branch, releaseBranch) => {
     if (ENV === 'dont-use-git') {
-      const { EXPECTED_TAG, SKIPPED_COMMIT } = process.env
+      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH, SKIPPED_RELEASE_BRANCH, SKIPPED_TAG, SKIPPED_PULL, SKIP_CI } = process.env
 
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
         'git config user.email "conventional.changelog.action@github.com"',
-        'git fetch --depth 1000',
-        'git pull --tags --ff-only',
       ]
+
+      if (!SKIPPED_PULL) {
+        expectedCommands.push('git fetch --depth 1')
+        expectedCommands.push('git pull --tags --ff-only')
+      }
 
       if (!SKIPPED_COMMIT) {
         expectedCommands.push('git add .')
-        expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+
+        if (SKIP_CI === 'false') {
+          expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+
+        } else {
+          expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG} [skip ci]"`)
+        }
       }
 
-      expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
-      expectedCommands.push(`git push origin ${branch} --follow-tags`)
+      if(!(SKIPPED_RELEASE_BRANCH == "" || SKIPPED_RELEASE_BRANCH == null) && !SKIPPED_RELEASE_BRANCH) {
+        expectedCommands.push(`git branch ${releaseBranch}`)
+      } 
+
+      if(!SKIPPED_TAG) {
+        expectedCommands.push(`git tag -af ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
+      } 
+
+      if (!EXPECTED_NO_PUSH) {
+        expectedCommands.push(`git push origin ${branch}`)
+      }
+
+      if(!SKIPPED_TAG) {
+        expectedCommands.push(`git push origin ${EXPECTED_TAG}`)
+      }
+
+      if(!(SKIPPED_RELEASE_BRANCH == "" || SKIPPED_RELEASE_BRANCH == null) && !SKIPPED_RELEASE_BRANCH) {
+        expectedCommands.push(`git push origin ${releaseBranch}`)
+      }       
 
       assert.deepStrictEqual(
         this.commandsRun,

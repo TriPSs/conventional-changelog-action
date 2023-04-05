@@ -1,34 +1,53 @@
-## [3.8.5](https://github.com/TriPSs/conventional-changelog-action/compare/v3.9.0...v3.8.5) (2021-03-09)
+# [3.18.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.2...v3.18.0) (2022-11-29)
 
 
 ### Bug Fixes
 
-* **only-push-when-needed:** check stderr and run when doing testing ([85900c3](https://github.com/TriPSs/conventional-changelog-action/commit/85900c39187ecf75872823f2ab536dc3e430d8f9))
-* **only-push-when-needed:** do not throw when exit code is not 0 ([f91bd09](https://github.com/TriPSs/conventional-changelog-action/commit/f91bd0951ab49f9a01bf7b7f4bac01c1b2427446))
-* **only-push-when-needed:** Git writes non errors to stderr ([fdb7d5c](https://github.com/TriPSs/conventional-changelog-action/commit/fdb7d5c3590f1cc884fff08f1f82e9209e973363))
-* **only-push-when-needed:** Git writes non errors to stderr ([bf3d982](https://github.com/TriPSs/conventional-changelog-action/commit/bf3d982685bec8b13ae7b631d0f31bd49d2ad0d5))
+* bad reference ([a19765d](https://github.com/TriPSs/conventional-changelog-action/commit/a19765d093dc22d5007a1574c6db5d40be9ddf97))
+* output current version if there is no new ver ([b1e290f](https://github.com/TriPSs/conventional-changelog-action/commit/b1e290f44d9e4e0a29d536146cf1fb073172cf9d))
 
 
 ### Features
 
-* **only-push-when-needed:** Only commit when there are changes and only push when there are changes ([1f0b412](https://github.com/TriPSs/conventional-changelog-action/commit/1f0b4123ca4c90d96e50fdccd02338f0b6936d34))
+* add skip-tag to skip tagging a release ([22e862a](https://github.com/TriPSs/conventional-changelog-action/commit/22e862a0ab69410642c4182cd9ee27a23d8c63a0))
 
 
 
-## [3.8.4](https://github.com/TriPSs/conventional-changelog-action/compare/v3.8.3...v3.8.4) (2021-03-09)
+## [3.17.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.1...v3.17.2) (2022-11-23)
 
 
 ### Bug Fixes
 
-* **forcepush:** add missing inputs and output ([3c106e7](https://github.com/TriPSs/conventional-changelog-action/commit/3c106e7c7cd3cf891e773a5079d5100ad1681a68))
+* add testcase for new + pre-release ([fc4c16d](https://github.com/TriPSs/conventional-changelog-action/commit/fc4c16dd9b531599647b491bd1bbb118f6cd24c6))
+* honour pre-release flag for default version ([e63e00c](https://github.com/TriPSs/conventional-changelog-action/commit/e63e00c563bd7191db28f0e8c5308adc2bd840c6))
+* simplify logic fallback version logic, remove default from action.yaml ([ecddc26](https://github.com/TriPSs/conventional-changelog-action/commit/ecddc262291a3d768c04c52d31af23d1cf2e6d84))
 
 
 
-## [3.8.3](https://github.com/TriPSs/conventional-changelog-action/compare/v3.8.2...v3.8.3) (2021-03-09)
+## [3.17.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.0...v3.17.1) (2022-11-09)
+
+
+### Bug Fixes
+
+* Updated `@actions/core` ([e36f42c](https://github.com/TriPSs/conventional-changelog-action/commit/e36f42c737692496073caba5e3f3a473226ce270)), closes [#182](https://github.com/TriPSs/conventional-changelog-action/issues/182)
 
 
 
-## [3.8.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.8.1...v3.8.2) (2021-03-09)
+# [3.17.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.16.0...v3.17.0) (2022-11-02)
+
+
+### Features
+
+* Add pre-release support ([14cc315](https://github.com/TriPSs/conventional-changelog-action/commit/14cc315abe788497f54c3eb3c734963ffbf6cc3e))
+
+
+
+# [3.16.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.15.0...v3.16.0) (2022-11-01)
+
+
+### Features
+
+* Update action to node 16 ([08c1b12](https://github.com/TriPSs/conventional-changelog-action/commit/08c1b1237bb2dbed93fa7ecba9c334f094cb6b0b))
 
 
 
