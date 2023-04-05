@@ -202,7 +202,9 @@ module.exports = new (class Git {
     const username = `x-access-token`
     const configKey = `http.https://github.com/.extraheader`
     const globalConfig = false
+    core.warning(`Before checking key ${configKey}`)
     const configExists = await this.configExists(configKey, globalConfig)
+    core.warning(`After checking key ${configKey}`)
     if (configExists){
       core.warning(`Removing authorization header ${configKey}`)
       await this.configUnset(configKey, globalConfig)
