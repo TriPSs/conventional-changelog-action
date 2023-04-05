@@ -9,7 +9,7 @@ module.exports = new (class Git {
   commandsRun = []
 
   constructor() {
-    return (async() => {
+    (async() => {
       const githubToken = core.getInput('github-token')
 
       // Make the Github token secret
