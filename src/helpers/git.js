@@ -8,7 +8,7 @@ module.exports = new (class Git {
 
   commandsRun = []
 
-  constructor() {
+  init = async() => {
     const githubToken = core.getInput('github-token')
 
     // Make the Github token secret
@@ -32,16 +32,14 @@ module.exports = new (class Git {
     }
 
     // Set config
-    this.config('user.name', gitUserName)
-    this.config('user.email', gitUserEmail)
+    await this.config('user.name', gitUserName)
+    await this.config('user.email', gitUserEmail)
 
     // Update the origin
     if (githubToken) {
-      this.updateGitHubOrigin(githubToken, `${gitUrl}/${GITHUB_REPOSITORY}.git`)
-      this.addGithubTokenAuthorization(username, githubToken)
+      await this.updateGitHubOrigin(githubToken, `${gitUrl}/${GITHUB_REPOSITORY}.git`)
+      await this.addGithubTokenAuthorization(username, githubToken)
     }
-
-    return this
   }
 
   /**
