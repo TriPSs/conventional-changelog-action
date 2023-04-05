@@ -38,7 +38,7 @@ module.exports = new (class Git {
     // Update the origin
     if (githubToken) {
       await this.updateGitHubOrigin(githubToken, `${gitUrl}/${GITHUB_REPOSITORY}.git`)
-      await this.addGithubTokenAuthorization(username, githubToken)
+      await this.addGithubTokenAuthorization(githubToken)
     }
   }
 
@@ -198,7 +198,8 @@ module.exports = new (class Git {
     }
   }
 
-  addGithubTokenAuthorization = async(username, githubToken) => {
+  addGithubTokenAuthorization = async(githubToken) => {
+    const username = `x-access-token`
     const configKey = `http.https://github.com/.extraheader`
     const globalConfig = false
     const configExists = this.configExists(configKey, globalConfig)
