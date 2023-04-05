@@ -285,7 +285,7 @@ async function run() {
 
       try {
         // If we are running in test mode we use this to validate everything still runs
-        git.testHistory(gitBranch, gitReleaseBranch)
+        await git.testHistory(gitBranch, gitReleaseBranch)
       } catch (error) {
         console.error(error)
         core.setFailed(error)
