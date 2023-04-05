@@ -9,40 +9,39 @@ module.exports = new (class Git {
   commandsRun = []
 
   constructor() {
-    let asyncConstructor = Promise.resolve((async() => {
-      const githubToken = core.getInput('github-token')
+    const githubToken = core.getInput('github-token')
 
-      // Make the Github token secret
-      core.setSecret(githubToken)
+    // Make the Github token secret
+    core.setSecret(githubToken)
 
-      const gitUserName = core.getInput('git-user-name')
-      const gitUserEmail = core.getInput('git-user-email')
-      const gitUrl = core.getInput('git-url')
+    const gitUserName = core.getInput('git-user-name')
+    const gitUserEmail = core.getInput('git-user-email')
+    const gitUrl = core.getInput('git-url')
 
-      // if the env is dont-use-git then we mock exec as we are testing a workflow
-      if (ENV === 'dont-use-git') {
-        this.exec = (command) => {
-          const fullCommand = `git ${command}`
+    // if the env is dont-use-git then we mock exec as we are testing a workflow
+    if (ENV === 'dont-use-git') {
+      this.exec = (command) => {
+        const fullCommand = `git ${command}`
 
-          console.log(`Skipping "${fullCommand}" because of test env`)
+        console.log(`Skipping "${fullCommand}" because of test env`)
 
-          if (!fullCommand.includes(`git remote set-url origin`) && !fullCommand.includes(`git config --local --add http.https://github.com/.extraheader`)) {
-            this.commandsRun.push(fullCommand)
-          }
+        if (!fullCommand.includes(`git remote set-url origin`) && !fullCommand.includes(`git config --local --add http.https://github.com/.extraheader`)) {
+          this.commandsRun.push(fullCommand)
         }
       }
+    }
 
-      // Set config
-      await this.config('user.name', gitUserName)
-      await this.config('user.email', gitUserEmail)
+    // Set config
+    this.config('user.name', gitUserName)
+    this.config('user.email', gitUserEmail)
 
-      // Update the origin
-      if (githubToken) {
-        await this.updateGitHubOrigin(githubToken, `${gitUrl}/${GITHUB_REPOSITORY}.git`)
-      }
-    })());
+    // Update the origin
+    if (githubToken) {
+      this.updateGitHubOrigin(githubToken, `${gitUrl}/${GITHUB_REPOSITORY}.git`)
+      this.addGithubTokenAuthorization(username, githubToken)
+    }
 
-    return this;
+    return this
   }
 
   /**
@@ -195,7 +194,6 @@ module.exports = new (class Git {
   updateGitHubOrigin = async(githubToken, gitUrl) => {
     if (githubToken) {
       const username = `x-access-token`
-      await this.addGithubTokenAuthorization(username, githubToken)
       return this.exec(`remote set-url origin https://${username}:${githubToken}@${gitUrl}`)
     } else {
       return this.exec(`remote set-url origin https://${gitUrl}`)
