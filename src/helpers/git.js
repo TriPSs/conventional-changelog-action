@@ -307,6 +307,7 @@ module.exports = new (class Git {
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
         'git config user.email "conventional.changelog.action@github.com"',
+        'git config --local --unset-all http.https://github.com/.extraheader',
       ]
 
       if (!SKIPPED_PULL) {
