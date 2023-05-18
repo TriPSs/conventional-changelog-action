@@ -241,34 +241,34 @@ If you'd like to contribute to this project, all you need to do is clone and ins
 $ yarn install
 
 # To run / test json versioning
-$ act -j test-json -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j test-json -s github_token=fake-token
 
 # To run / test git versioning
-$ act -j test-git -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j test-git -s github_token=fake-token
 
 # To run / test git fallback versioning
-$ act -j test-git-fallback -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j test-git-fallback -s github_token=fake-token
 
 # To run / test yaml versioning
-$ act -j test-yaml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j test-yaml -s github_token=fake-token
 
 # To run / test toml versioning
-$ act -j test-toml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j test-toml -s github_token=fake-token
 
 # To run / test empty / new files test
-$ act -j test-[json/toml/yaml]-[empty/new] -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j test-[json/toml/yaml]-[empty/new] -s github_token=fake-token
 
 # To run pre-commit test
-$ act -j test-pre-commit -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j test-pre-commit -s github_token=fake-token
 
 # To run / multiple files test
-$ act -j multiple-files -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j multiple-files -s github_token=fake-token
 
 # To run / config file path test
-$ act -j test-config-file-path -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j test-config-file-path -s github_token=fake-token
 
 # To run pre-changelog-generation test
-$ act -j test-pre-changelog-generation -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+$ act -j test-pre-changelog-generation -s github_token=fake-token
 ```
 
 ## [License](./LICENSE)
