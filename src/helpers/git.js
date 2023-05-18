@@ -14,30 +14,33 @@ module.exports = new (class Git {
     // Make the Github token secret
     core.setSecret(githubToken)
 
-    const gitUserName = core.getInput('git-user-name')
-    const gitUserEmail = core.getInput('git-user-email')
-    const gitUrl = core.getInput('git-url')
-
     // if the env is dont-use-git then we mock exec as we are testing a workflow
     if (ENV === 'dont-use-git') {
       this.exec = (command) => {
         const fullCommand = `git ${command}`
-
+        
         console.log(`Skipping "${fullCommand}" because of test env`)
-
+        
         if (!fullCommand.includes('git remote set-url origin')) {
           this.commandsRun.push(fullCommand)
         }
       }
     }
+  }
+
+  init = async () => {
+    const gitUserName = core.getInput('git-user-name')
+    const gitUserEmail = core.getInput('git-user-email')
+    const gitUrl = core.getInput('git-url')
+    const githubToken = core.getInput('github-token')
 
     // Set config
-    this.config('user.name', gitUserName)
-    this.config('user.email', gitUserEmail)
+    await this.config('user.name', gitUserName)
+    await this.config('user.email', gitUserEmail)
 
     // Update the origin
     if (githubToken) {
-      this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
+      await this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
     }
   }
 

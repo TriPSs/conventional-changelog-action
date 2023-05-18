@@ -79,6 +79,8 @@ async function run() {
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
     core.info(`Skipping the update of the version file is "${skipVersionFile ? 'enabled' : 'disabled'}"`)
 
+    await git.init()
+
     if (!skipGitPull) {
       core.info('Pull to make sure we have the full git history')
       await git.pull()
