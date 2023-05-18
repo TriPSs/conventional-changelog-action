@@ -14,35 +14,34 @@ module.exports = new (class Git {
     // Make the Github token secret
     core.setSecret(githubToken)
 
-    const gitUserName = core.getInput('git-user-name')
-    const gitUserEmail = core.getInput('git-user-email')
-    const gitUrl = core.getInput('git-url')
-
     // if the env is dont-use-git then we mock exec as we are testing a workflow
     if (ENV === 'dont-use-git') {
       this.exec = (command) => {
         const fullCommand = `git ${command}`
-
+        
         console.log(`Skipping "${fullCommand}" because of test env`)
-
+        
         if (!fullCommand.includes('git remote set-url origin')) {
           this.commandsRun.push(fullCommand)
         }
       }
     }
+  }
 
-    // use a self-invoking async function to await promises inside a constructor
-    // this avoids git config lock errors which are triggered when multiple `git config` commands are run
-    (async () => {
-      // Set config
-      await this.config('user.name', gitUserName)
-      await this.config('user.email', gitUserEmail)
+  init = async () => {
+    const gitUserName = core.getInput('git-user-name')
+    const gitUserEmail = core.getInput('git-user-email')
+    const gitUrl = core.getInput('git-url')
+    const githubToken = core.getInput('github-token')
 
-      // Update the origin
-      if (githubToken) {
-        await this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
-      }
-    })()
+    // Set config
+    await this.config('user.name', gitUserName)
+    await this.config('user.email', gitUserEmail)
+
+    // Update the origin
+    if (githubToken) {
+      await this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
+    }
   }
 
   /**
