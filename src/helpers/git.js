@@ -31,14 +31,18 @@ module.exports = new (class Git {
       }
     }
 
-    // Set config
-    this.config('user.name', gitUserName)
-    this.config('user.email', gitUserEmail)
+    // use a self-invoking async function to await promises inside a constructor
+    // this avoids git config lock errors which are triggered when multiple `git config` commands are run
+    (async () => {
+      // Set config
+      await this.config('user.name', gitUserName)
+      await this.config('user.email', gitUserEmail)
 
-    // Update the origin
-    if (githubToken) {
-      this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
-    }
+      // Update the origin
+      if (githubToken) {
+        await this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
+      }
+    })()
   }
 
   /**
