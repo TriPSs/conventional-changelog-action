@@ -234,41 +234,18 @@ Use a deploy key
 
 If you'd like to contribute to this project, all you need to do is clone and install [act](https://github.com/nektos/act) this project and run:
 
-> Make sure that `main: 'src/index.js'` is updated to `main: '../src/index.js'` inside the `action.yml`
 > Note: The image used is 18 gb!
 
 ```shell
 $ yarn install
 
-# To run / test json versioning
-$ act -j test-json -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+# To run / test one specific job
+$ act -j <workflow job name> -P ubuntu-latest=catthehacker/ubuntu:full-20.04 --quiet
+# Example
+$ act -j test-json -P ubuntu-latest=catthehacker/ubuntu:full-20.04 --quiet
 
-# To run / test git versioning
-$ act -j test-git -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
-
-# To run / test git fallback versioning
-$ act -j test-git-fallback -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
-
-# To run / test yaml versioning
-$ act -j test-yaml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
-
-# To run / test toml versioning
-$ act -j test-toml -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
-
-# To run / test empty / new files test
-$ act -j test-[json/toml/yaml]-[empty/new] -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
-
-# To run pre-commit test
-$ act -j test-pre-commit -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
-
-# To run / multiple files test
-$ act -j multiple-files -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
-
-# To run / config file path test
-$ act -j test-config-file-path -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
-
-# To run pre-changelog-generation test
-$ act -j test-pre-changelog-generation -P ubuntu-latest=nektos/act-environments-ubuntu:18.04 -s github_token=fake-token
+# To run all tests
+$ act pull_request -P ubuntu-latest=catthehacker/ubuntu:full-20.04 --quiet
 ```
 
 ## [License](./LICENSE)
