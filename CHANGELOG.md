@@ -1,3 +1,12 @@
+## [3.18.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.18.0...v3.18.1) (2023-05-18)
+
+
+### Bug Fixes
+
+* execute git config commands synchronously ([1607ac7](https://github.com/TriPSs/conventional-changelog-action/commit/1607ac70d5942487fb67e1d412d57868d8decca9))
+
+
+
 # [3.18.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.2...v3.18.0) (2022-11-29)
 
 
@@ -39,15 +48,6 @@
 ### Features
 
 * Add pre-release support ([14cc315](https://github.com/TriPSs/conventional-changelog-action/commit/14cc315abe788497f54c3eb3c734963ffbf6cc3e))
-
-
-
-# [3.16.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.15.0...v3.16.0) (2022-11-01)
-
-
-### Features
-
-* Update action to node 16 ([08c1b12](https://github.com/TriPSs/conventional-changelog-action/commit/08c1b1237bb2dbed93fa7ecba9c334f094cb6b0b))
 
 
 
