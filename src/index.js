@@ -201,8 +201,13 @@ async function run() {
 
       if (gitPush) {
         try {
-          core.info('Push all changes')
-          await git.push(gitBranch)
+          if (!skipCommit) {
+            core.info('Push all changes')
+            await git.push(gitBranch)
+          } else {
+            core.info('Push tags')
+            await git.pushTags()
+          }
 
         } catch (error) {
           console.error(error)

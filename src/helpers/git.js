@@ -127,6 +127,10 @@ module.exports = new (class Git {
     this.exec(`push origin ${branch} --follow-tags`)
   )
 
+  pushTags = () => (
+    this.exec('push origin --tags')
+  )
+
   /**
    * Check if the repo is shallow
    *
