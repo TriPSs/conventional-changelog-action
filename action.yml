@@ -56,13 +56,17 @@ inputs:
     default: "v"
     required: false
 
+  input-file:
+    description: "Read the changelog from this file. This will prepend the newly generated changelogs to the file's content"
+    required: false
+
   output-file:
     description: "File to output the changelog to"
     default: "CHANGELOG.md"
     required: false
 
   release-count:
-    description: "Number of releases to preserve in changelog"
+    description: "Number of releases to preserve in changelog. Default `5`, use `0` to regenerate all. This input has no effect if input-file is used"
     default: "5"
     required: false
 

@@ -46,6 +46,7 @@ async function run() {
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
     const gitUrl = core.getInput('git-url')
     const gitPath = core.getInput('git-path')
+    const infile = core.getInput('input-file')
     const skipCi = core.getBooleanInput('skip-ci')
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
@@ -70,6 +71,10 @@ async function run() {
 
     if (preCommitFile) {
       core.info(`Using "${preCommitFile}" as pre-commit script`)
+    }
+
+    if (infile) {
+      core.info(`Using "${infile}" as input file`)
     }
 
     if (preChangelogGenerationFile) {
@@ -172,7 +177,7 @@ async function run() {
       // If output file === 'false' we don't write it to file
       if (outputFile !== 'false') {
         // Generate the changelog
-        await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config, gitPath)
+        await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config, gitPath, infile)
       }
 
       if (!skipCommit) {
