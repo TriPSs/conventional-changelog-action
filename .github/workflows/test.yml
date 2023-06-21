@@ -864,3 +864,36 @@ jobs:
         env:
           FILES: "test-file-pre-release.json"
           EXPECTED_VERSION: "1.5.0"
+
+  test-input-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: "dont-use-git"
+          EXPECTED_TAG: "v6.5.0"
+        with:
+          input-file: "./test-input-file.md"
+          github-token: ${{ secrets.github_token }}
+          version-file: "./test-file-empty.toml"
+          version-path: "package.version"
+          fallback-version: "6.5.0"
+
+      - name: Test output
+        run: node ./test-file-content.js
+        env:
+          OUTPUT_FILE: "CHANGELOG.md"
+          EXPECTED_FILE: "test-input-file.md"
