@@ -7,7 +7,6 @@ on:
 jobs:
   run-tag-latest:
     runs-on: ubuntu-latest
-    if: ${{ !env.ACT }}
     steps:
       - uses: actions/checkout@v2
 
