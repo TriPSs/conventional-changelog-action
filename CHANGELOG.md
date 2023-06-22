@@ -1,3 +1,12 @@
+# [3.19.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.18.1...v3.19.0) (2023-06-22)
+
+
+### Features
+
+* Add 'infile' option ([a858fad](https://github.com/TriPSs/conventional-changelog-action/commit/a858fade68261d33b8c91977bbe3c77f1d39521d))
+
+
+
 ## [3.18.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.18.0...v3.18.1) (2023-05-18)
 
 
@@ -39,15 +48,6 @@
 ### Bug Fixes
 
 * Updated `@actions/core` ([e36f42c](https://github.com/TriPSs/conventional-changelog-action/commit/e36f42c737692496073caba5e3f3a473226ce270)), closes [#182](https://github.com/TriPSs/conventional-changelog-action/issues/182)
-
-
-
-# [3.17.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.16.0...v3.17.0) (2022-11-02)
-
-
-### Features
-
-* Add pre-release support ([14cc315](https://github.com/TriPSs/conventional-changelog-action/commit/14cc315abe788497f54c3eb3c734963ffbf6cc3e))
 
 
 
