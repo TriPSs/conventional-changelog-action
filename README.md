@@ -114,11 +114,18 @@ Make sure to install all required packages in the workflow before executing this
 Uses all the defaults
 
 ```yaml
+permissions:
+  contents: write
+
 - name: Conventional Changelog Action
   uses: TriPSs/conventional-changelog-action@v3
   with:
     github-token: ${{ secrets.github_token }}
 ```
+
+Write permissions are required in order to enable `git push` when a new version is generated. In some configurations, the
+default `secrets.github_token` may not have the correct permissions. You can check your default permissions by looking at
+"Set up job" section of your GitHub action run log.
 
 Overwrite everything
 
