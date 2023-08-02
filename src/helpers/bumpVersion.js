@@ -18,11 +18,13 @@ module.exports = async (releaseType, version) => {
   const prereleaseBumpsMinor = core.getBooleanInput('pre-release-bumps-minor')
 
   if (version) {
+    newVersion = semver.inc(version, (prerelease ? 'prerelease' : releaseType), identifier)
+
     if (prereleaseBumpsMinor) {
-      newVersion = semver.inc(version, (prerelease ? 'preminor' : releaseType), identifier)
-    } else {
-      newVersion = semver.inc(version, (prerelease ? 'prerelease' : releaseType), identifier)
+      newVersion.patch--
+      newVersion = semver.inc(newVersion, "minor")
     }
+
   } else {
 
     const fallbackVersion = core.getInput('fallback-version')
