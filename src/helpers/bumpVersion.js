@@ -21,7 +21,6 @@ module.exports = async (releaseType, version) => {
 
     if (prereleaseBumpsMinor) {
       if (semver.prerelease(version) === null) {
-        version = semver.inc(version, 'minor')
         version += `-${identifier}.0`
       }
     }
