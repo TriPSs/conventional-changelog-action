@@ -17,6 +17,8 @@ module.exports = async (releaseType, version) => {
   const identifier = core.getInput('pre-release-identifier')
   const prereleaseBumpsMinor = core.getBooleanInput('pre-release-bumps-minor')
 
+  core.info(`Bumping from version '${version}'.`)
+
   if (version) {
 
     if (prereleaseBumpsMinor) {
@@ -24,6 +26,7 @@ module.exports = async (releaseType, version) => {
         version = semver.inc(version, 'preminor')
         version += `-${identifier}.0`
       }
+      core.info(`Pre-release bumps minor base '${version}'.`)
     }
 
     newVersion = semver.inc(version, (prerelease ? 'prerelease' : releaseType), identifier)
