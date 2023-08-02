@@ -22,7 +22,7 @@ module.exports = async (releaseType, version) => {
 
     if (prereleaseBumpsMinor) {
       newVersion.patch--
-      newVersion = semver.inc(newVersion, "minor")
+      newVersion.minor++
     }
 
   } else {
