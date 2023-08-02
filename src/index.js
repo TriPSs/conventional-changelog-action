@@ -51,7 +51,6 @@ async function run() {
     const skipCi = core.getBooleanInput('skip-ci')
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
-    const prereleaseBumpsMinor = core.getBooleanInput('pre-release-bumps-minor')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -103,10 +102,6 @@ async function run() {
 
       releaseType = recommendation.releaseType
       core.info(`Recommended release type: ${releaseType}`)
-
-      if (prereleaseBumpsMinor) {
-        releaseType = 'minor'
-      }
 
       // If we have a reason also log it
       if (recommendation.reason) {

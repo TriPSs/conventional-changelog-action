@@ -20,10 +20,9 @@ module.exports = async (releaseType, version) => {
   if (version) {
     newVersion = semver.inc(version, (prerelease ? 'prerelease' : releaseType), identifier)
 
-    // if (prereleaseBumpsMinor) {
-    //   newVersion.patch--
-    //   newVersion.minor++
-    // }
+    if (prereleaseBumpsMinor) {
+      newVersion = `9.9.9-rc2`
+    }
 
   } else {
 
