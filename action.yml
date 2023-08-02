@@ -156,6 +156,11 @@ inputs:
     default: "rc"
     required: false
 
+  pre-release-bumps-minor:
+    description: "Instead of patch, the default pre-release tags bumps stable minor"
+    default: "false"
+    required: false
+
 outputs:
   changelog:
     description: "The generated changelog for the new version"
