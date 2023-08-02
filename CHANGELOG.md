@@ -1,3 +1,17 @@
+# [4.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.19.0...v4.0.0) (2023-08-02)
+
+
+### chore
+
+* Updated deps ([0c8b645](https://github.com/TriPSs/conventional-changelog-action/commit/0c8b64523693b1868ab3e85385e70d3702849680))
+
+
+### BREAKING CHANGES
+
+* Updated `conventional-changelog` to v4 and `conventional-recommended-bump` to v7
+
+
+
 # [3.19.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.18.1...v3.19.0) (2023-06-22)
 
 
@@ -39,15 +53,6 @@
 * add testcase for new + pre-release ([fc4c16d](https://github.com/TriPSs/conventional-changelog-action/commit/fc4c16dd9b531599647b491bd1bbb118f6cd24c6))
 * honour pre-release flag for default version ([e63e00c](https://github.com/TriPSs/conventional-changelog-action/commit/e63e00c563bd7191db28f0e8c5308adc2bd840c6))
 * simplify logic fallback version logic, remove default from action.yaml ([ecddc26](https://github.com/TriPSs/conventional-changelog-action/commit/ecddc262291a3d768c04c52d31af23d1cf2e6d84))
-
-
-
-## [3.17.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.0...v3.17.1) (2022-11-09)
-
-
-### Bug Fixes
-
-* Updated `@actions/core` ([e36f42c](https://github.com/TriPSs/conventional-changelog-action/commit/e36f42c737692496073caba5e3f3a473226ce270)), closes [#182](https://github.com/TriPSs/conventional-changelog-action/issues/182)
 
 
 

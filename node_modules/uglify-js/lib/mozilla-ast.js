@@ -192,6 +192,19 @@
                 value: from_moz(M.value),
             });
         },
+        StaticBlock: function(M) {
+            var start = my_start_token(M);
+            var end = my_end_token(M);
+            return new AST_ClassInit({
+                start: start,
+                end: end,
+                value: new AST_ClassInitBlock({
+                    start: start,
+                    end: end,
+                    body: normalize_directives(M.body.map(from_moz)),
+                }),
+            });
+        },
         ForOfStatement: function(M) {
             return new (M.await ? AST_ForAwaitOf : AST_ForOf)({
                 start: my_start_token(M),
@@ -303,13 +316,22 @@
             });
         },
         ExportAllDeclaration: function(M) {
-            var alias = M.exported ? read_name(M.exported) : "*";
+            var start = my_start_token(M);
+            var end = my_end_token(M);
             return new AST_ExportForeign({
-                start: my_start_token(M),
-                end: my_end_token(M),
-                aliases: [ alias ],
-                keys: [ "*" ],
-                path: M.source.value,
+                start: start,
+                end: end,
+                aliases: [ M.exported ? from_moz_alias(M.exported) : new AST_String({
+                    start: start,
+                    value: "*",
+                    end: end,
+                }) ],
+                keys: [ new AST_String({
+                    start: start,
+                    value: "*",
+                    end: end,
+                }) ],
+                path: from_moz(M.source),
             });
         },
         ExportDefaultDeclaration: function(M) {
@@ -346,15 +368,15 @@
             if (M.source) {
                 var aliases = [], keys = [];
                 M.specifiers.forEach(function(prop) {
-                    aliases.push(read_name(prop.exported));
-                    keys.push(read_name(prop.local));
+                    aliases.push(from_moz_alias(prop.exported));
+                    keys.push(from_moz_alias(prop.local));
                 });
                 return new AST_ExportForeign({
                     start: my_start_token(M),
                     end: my_end_token(M),
                     aliases: aliases,
                     keys: keys,
-                    path: M.source.value,
+                    path: from_moz(M.source),
                 });
             }
             return new AST_ExportReferences({
@@ -362,38 +384,48 @@
                 end: my_end_token(M),
                 properties: M.specifiers.map(function(prop) {
                     var sym = new AST_SymbolExport(from_moz(prop.local));
-                    sym.alias = read_name(prop.exported);
+                    sym.alias = from_moz_alias(prop.exported);
                     return sym;
                 }),
             });
         },
         ImportDeclaration: function(M) {
+            var start = my_start_token(M);
+            var end = my_end_token(M);
             var all = null, def = null, props = null;
             M.specifiers.forEach(function(prop) {
                 var sym = new AST_SymbolImport(from_moz(prop.local));
                 switch (prop.type) {
                   case "ImportDefaultSpecifier":
                     def = sym;
-                    def.key = "";
+                    def.key = new AST_String({
+                        start: start,
+                        value: "",
+                        end: end,
+                    });
                     break;
                   case "ImportNamespaceSpecifier":
                     all = sym;
-                    all.key = "*";
+                    all.key = new AST_String({
+                        start: start,
+                        value: "*",
+                        end: end,
+                    });
                     break;
                   default:
-                    sym.key = prop.imported.name || syn.name;
+                    sym.key = from_moz_alias(prop.imported);
                     if (!props) props = [];
                     props.push(sym);
                     break;
                 }
             });
             return new AST_Import({
-                start: my_start_token(M),
-                end: my_end_token(M),
+                start: start,
+                end: end,
                 all: all,
                 default: def,
                 properties: props,
-                path: M.source.value,
+                path: from_moz(M.source),
             });
         },
         ImportExpression: function(M) {
@@ -714,6 +746,10 @@
         };
     });
 
+    def_to_moz(AST_ClassInit, function To_Moz_StaticBlock(M) {
+        return to_moz_scope("StaticBlock", M.value);
+    });
+
     function To_Moz_ForOfStatement(is_await) {
         return function(M) {
             return {
@@ -780,38 +816,26 @@
     });
 
     def_to_moz(AST_ExportForeign, function To_Moz_ExportAllDeclaration_ExportNamedDeclaration(M) {
-        if (M.keys[0] == "*") return {
+        if (M.keys[0].value == "*") return {
             type: "ExportAllDeclaration",
-            exported: M.aliases[0] == "*" ? null : {
-                type: "Identifier",
-                name: M.aliases[0],
-            },
-            source: {
-                type: "Literal",
-                value: M.path,
-            },
+            exported: M.aliases[0].value == "*" ? null : to_moz_alias(M.aliases[0]),
+            source: to_moz(M.path),
         };
         var specifiers = [];
         for (var i = 0; i < M.aliases.length; i++) {
-            specifiers.push({
+            specifiers.push(set_moz_loc({
+                start: M.keys[i].start,
+                end: M.aliases[i].end,
+            }, {
                 type: "ExportSpecifier",
-                exported: {
-                    type: "Identifier",
-                    name: M.aliases[i],
-                },
-                local: {
-                    type: "Identifier",
-                    name: M.keys[i],
-                },
-            });
+                local: to_moz_alias(M.keys[i]),
+                exported: to_moz_alias(M.aliases[i]),
+            }));
         }
         return {
             type: "ExportNamedDeclaration",
             specifiers: specifiers,
-            source: {
-                type: "Literal",
-                value: M.path,
-            },
+            source: to_moz(M.path),
         };
     });
 
@@ -819,44 +843,41 @@
         return {
             type: "ExportNamedDeclaration",
             specifiers: M.properties.map(function(prop) {
-                return {
+                return set_moz_loc({
+                    start: prop.start,
+                    end: prop.alias.end,
+                }, {
                     type: "ExportSpecifier",
                     local: to_moz(prop),
-                    exported: {
-                        type: "Identifier",
-                        name: prop.alias,
-                    },
-                };
+                    exported: to_moz_alias(prop.alias),
+                });
             }),
         };
     });
 
     def_to_moz(AST_Import, function To_Moz_ImportDeclaration(M) {
         var specifiers = M.properties ? M.properties.map(function(prop) {
-            return {
+            return set_moz_loc({
+                start: prop.key.start,
+                end: prop.end,
+            }, {
                 type: "ImportSpecifier",
                 local: to_moz(prop),
-                imported: {
-                    type: "Identifier",
-                    name: prop.key,
-                },
-            };
+                imported: to_moz_alias(prop.key),
+            });
         }) : [];
-        if (M.all) specifiers.unshift({
+        if (M.all) specifiers.unshift(set_moz_loc(M.all, {
             type: "ImportNamespaceSpecifier",
             local: to_moz(M.all),
-        });
-        if (M.default) specifiers.unshift({
+        }));
+        if (M.default) specifiers.unshift(set_moz_loc(M.default, {
             type: "ImportDefaultSpecifier",
             local: to_moz(M.default),
-        });
+        }));
         return {
             type: "ImportDeclaration",
             specifiers: specifiers,
-            source: {
-                type: "Literal",
-                value: M.path,
-            },
+            source: to_moz(M.path),
         };
     });
 
@@ -1005,7 +1026,7 @@
     });
 
     def_to_moz(AST_RegExp, function To_Moz_RegExpLiteral(M) {
-        var flags = M.value.toString().match(/[gimuy]*$/)[0];
+        var flags = M.value.toString().match(/\/([gimuy]*)$/)[1];
         var value = "/" + M.value.raw_source + "/" + flags;
         return {
             type: "Literal",
@@ -1013,8 +1034,8 @@
             raw: value,
             regex: {
                 pattern: M.value.raw_source,
-                flags: flags
-            }
+                flags: flags,
+            },
         };
     });
 
@@ -1203,6 +1224,14 @@
         return node;
     }
 
+    function from_moz_alias(moz) {
+        return new AST_String({
+            start: my_start_token(moz),
+            value: read_name(moz),
+            end: my_end_token(moz),
+        });
+    }
+
     AST_Node.from_mozilla_ast = function(node) {
         var save_stack = FROM_MOZ_STACK;
         FROM_MOZ_STACK = [];
@@ -1252,6 +1281,13 @@
 
     function to_moz(node) {
         return node != null ? node.to_mozilla_ast() : null;
+    }
+
+    function to_moz_alias(alias) {
+        return is_identifier_string(alias.value) ? set_moz_loc(alias, {
+            type: "Identifier",
+            name: alias.value,
+        }) : to_moz(alias);
     }
 
     function to_moz_block(node) {

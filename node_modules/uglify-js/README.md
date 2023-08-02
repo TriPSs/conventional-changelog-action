@@ -54,8 +54,6 @@ a double dash to prevent input files being used as option arguments:
                                                 modules and Userscripts that may
                                                 be anonymous function wrapped (IIFE)
                                                 by the .user.js engine `caller`.
-                                `expression`  Parse a single expression, rather than
-                                              a program (for parsing JSON).
                                 `spidermonkey`  Assume input files are SpiderMonkey
                                                 AST format (as JSON).
     -c, --compress [options]    Enable compressor/specify compressor options:
@@ -111,12 +109,16 @@ a double dash to prevent input files being used as option arguments:
     -d, --define <expr>[=value] Global definitions.
     -e, --enclose [arg[:value]] Embed everything in a big function, with configurable
                                 argument(s) & value(s).
+    --expression                Parse a single expression, rather than a program
+                                (for parsing JSON).
     --ie                        Support non-standard Internet Explorer.
                                 Equivalent to setting `ie: true` in `minify()`
                                 for `compress`, `mangle` and `output` options.
                                 By default UglifyJS will not try to be IE-proof.
+    --keep-fargs                Do not mangle/drop function arguments.
     --keep-fnames               Do not mangle/drop function names.  Useful for
                                 code relying on Function.prototype.name.
+    --module                    Process input as ES module (implies --toplevel)
     --name-cache <file>         File to hold mangled name mappings.
     --self                      Build UglifyJS as a library (implies --wrap UglifyJS)
     --source-map [options]      Enable source map/specify source map options:
@@ -145,7 +147,7 @@ a double dash to prevent input files being used as option arguments:
     --warn                      Print warning messages.
     --webkit                    Support non-standard Safari/Webkit.
                                 Equivalent to setting `webkit: true` in `minify()`
-                                for `mangle` and `output` options.
+                                for `compress`, `mangle` and `output` options.
                                 By default UglifyJS will not try to be Safari-proof.
     --wrap <name>               Embed everything in a big function, making the
                                 “exports” and “global” variables available. You
@@ -325,7 +327,7 @@ unquoted style (`o.foo`). Example:
 // stuff.js
 var o = {
     "foo": 1,
-    bar: 3
+    bar: 3,
 };
 o.foo += o.bar;
 console.log(o.foo);
@@ -335,6 +337,16 @@ $ uglifyjs stuff.js --mangle-props keep_quoted -c -m
 ```
 ```javascript
 var o={foo:1,o:3};o.foo+=o.o,console.log(o.foo);
+```
+
+If the minified output will be processed again by UglifyJS, consider specifying
+`keep_quoted_props` so the same property names are preserved:
+
+```bash
+$ uglifyjs stuff.js --mangle-props keep_quoted -c -m -O keep_quoted_props
+```
+```javascript
+var o={"foo":1,o:3};o.foo+=o.o,console.log(o.foo);
 ```
 
 ### Debugging property name mangling
@@ -502,7 +514,12 @@ if (result.error) throw result.error;
 - `compress` (default: `{}`) — pass `false` to skip compressing entirely.
   Pass an object to specify custom [compress options](#compress-options).
 
+- `expression` (default: `false`) — parse as a single expression, e.g. JSON.
+
 - `ie` (default: `false`) — enable workarounds for Internet Explorer bugs.
+
+- `keep_fargs` (default: `false`) — pass `true` to prevent discarding or mangling
+  of function arguments.
 
 - `keep_fnames` (default: `false`) — pass `true` to prevent discarding or mangling
   of function names.  Useful for code relying on `Function.prototype.name`.
@@ -512,6 +529,10 @@ if (result.error) throw result.error;
 
   - `mangle.properties` (default: `false`) — a subcategory of the mangle option.
     Pass an object to specify custom [mangle property options](#mangle-properties-options).
+
+- `module` (default: `false`) — set to `true` if you wish to process input as
+  ES module, i.e. implicit `"use strict";` and support for top-level `await`,
+  alongside with `toplevel` enabled.
 
 - `nameCache` (default: `null`) — pass an empty object `{}` or a previously
   used `nameCache` object if you wish to cache mangled variable and
@@ -624,7 +645,11 @@ to be `false` and all symbol names will be omitted.
 
 - `bare_returns` (default: `false`) — support top level `return` statements
 
-- `html5_comments` (default: `true`)
+- `html5_comments` (default: `true`) — process HTML comment as workaround for
+  browsers which do not recognize `<script>` tags
+
+- `module` (default: `false`) — set to `true` if you wish to process input as
+  ES module, i.e. implicit `"use strict";` and support for top-level `await`.
 
 - `shebang` (default: `true`) — support `#!command` as the first line
 
@@ -707,7 +732,8 @@ to be `false` and all symbol names will be omitted.
   - `1` — inline simple functions
   - `2` — inline functions with arguments
   - `3` — inline functions with arguments and variables
-  - `true` — same as `3`
+  - `4` — inline functions with arguments, variables and statements
+  - `true` — same as `4`
 
 - `join_vars` (default: `true`) — join consecutive `var` statements
 
@@ -723,8 +749,11 @@ to be `false` and all symbol names will be omitted.
 
 - `merge_vars` (default: `true`) — combine and reuse variables.
 
+- `module` (default: `false`) — set to `true` if you wish to process input as
+  ES module, i.e. implicit `"use strict";` alongside with `toplevel` enabled.
+
 - `negate_iife` (default: `true`) — negate "Immediately-Called Function Expressions"
-  where the return value is discarded, to avoid the parens that the
+  where the return value is discarded, to avoid the parentheses that the
   code generator would insert.
 
 - `objects` (default: `true`) — compact duplicate keys in object literals.
@@ -799,8 +828,9 @@ to be `false` and all symbol names will be omitted.
 
 - `unsafe` (default: `false`) — apply "unsafe" transformations (discussion below)
 
-- `unsafe_comps` (default: `false`) — compress expressions like `a <= b` assuming
-  none of the operands can be (coerced to) `NaN`.
+- `unsafe_comps` (default: `false`) — assume operands cannot be (coerced to) `NaN`
+  in numeric comparisons, e.g. `a <= b`. In addition, expressions involving `in`
+  or `instanceof` would never throw.
 
 - `unsafe_Function` (default: `false`) — compress and mangle `Function(args, code)`
   when both `args` and `code` are string literals.
@@ -821,7 +851,7 @@ to be `false` and all symbol names will be omitted.
 - `unused` (default: `true`) — drop unreferenced functions and variables (simple
   direct variable assignments do not count as references unless set to `"keep_assign"`)
 
-- `varify` (default: `true`) — convert block-scoped declaractions into `var`
+- `varify` (default: `true`) — convert block-scoped declarations into `var`
   whenever safe to do so
 
 - `yields` (default: `true`) — apply optimizations to `yield` expressions
@@ -861,11 +891,17 @@ UglifyJS.minify(code, { mangle: { toplevel: true } }).code;
 
 ### Mangle properties options
 
-- `builtins` (default: `false`) — Use `true` to allow the mangling of builtin
-  DOM properties. Not recommended to override this setting.
+- `builtins` (default: `false`) — Use `true` to allow the mangling of built-in
+  properties of JavaScript API. Not recommended to override this setting.
 
 - `debug` (default: `false`) — Mangle names with the original name still present.
   Pass an empty string `""` to enable, or a non-empty string to set the debug suffix.
+
+- `domprops` (default: `false`) — Use `true` to allow the mangling of properties
+  commonly found in Document Object Model. Not recommended to override this setting.
+
+- `keep_fargs` (default: `false`) — Use `true` to prevent mangling of function
+  arguments.
 
 - `keep_quoted` (default: `false`) — Only mangle unquoted property names.
 
@@ -907,11 +943,16 @@ can pass additional arguments that control the code output:
   }
   ```
 
+- `extendscript` (default: `false`) — enable workarounds for Adobe ExtendScript
+  bugs
+
 - `galio` (default: `false`) — enable workarounds for ANT Galio bugs
 
-- `indent_level` (default: `4`)
+- `indent_level` (default: `4`) — indent by specified number of spaces or the
+  exact whitespace sequence supplied, e.g. `"\t"`.
 
-- `indent_start` (default: `0`) — prefix all lines by that many spaces
+- `indent_start` (default: `0`) — prefix all lines by whitespace sequence
+  specified in the same format as `indent_level`.
 
 - `inline_script` (default: `true`) — escape HTML comments and the slash in
   occurrences of `</script>` in strings
@@ -1199,6 +1240,17 @@ To allow for better optimizations, the compiler makes various assumptions:
 - Object properties can be added, removed and modified (not prevented with
   `Object.defineProperty()`, `Object.defineProperties()`, `Object.freeze()`,
   `Object.preventExtensions()` or `Object.seal()`).
+- If array destructuring is present, index-like properties in `Array.prototype`
+  have not been overridden:
+  ```javascript
+  Object.prototype[0] = 42;
+  var [ a ] = [];
+  var { 0: b } = {};
+  // 42 undefined
+  console.log([][0], a);
+  // 42 42
+  console.log({}[0], b);
+  ```
 - Earlier versions of JavaScript will throw `SyntaxError` with the following:
   ```javascript
   ({
@@ -1310,10 +1362,8 @@ To allow for better optimizations, the compiler makes various assumptions:
 - Later versions of JavaScript will throw `SyntaxError` with the following:
   ```javascript
   var await;
-  async function f() {
-      class A {
-          static p = await;
-      }
+  class A {
+      static p = await;
   }
   // SyntaxError: Unexpected reserved word
   ```
@@ -1325,7 +1375,7 @@ To allow for better optimizations, the compiler makes various assumptions:
   // SyntaxError: The left-hand side of a for-of loop may not be 'async'.
   ```
   UglifyJS may modify the input which in turn may suppress those errors.
-- Later versions of Chrome and Node.js will give incorrect results with the
+- Some versions of Chrome and Node.js will give incorrect results with the
   following:
   ```javascript
   console.log({
@@ -1334,9 +1384,15 @@ To allow for better optimizations, the compiler makes various assumptions:
           return "FAIL";
       },
       [42]: "PASS",
+  }[42], {
+      ...console,
+      get 42() {
+          return "FAIL";
+      },
+      42: "PASS",
   }[42]);
-  // Expected: "PASS"
-  // Actual:   "FAIL"
+  // Expected: "PASS PASS"
+  // Actual:   "PASS FAIL"
   ```
   UglifyJS may modify the input which in turn may suppress those errors.
 - Earlier versions of JavaScript will throw `TypeError` with the following:
@@ -1350,5 +1406,73 @@ To allow for better optimizations, the compiler makes various assumptions:
       }
   })();
   // TypeError: const 'a' has already been declared
+  ```
+  UglifyJS may modify the input which in turn may suppress those errors.
+- Later versions of Chrome and Node.js will give incorrect results with the
+  following:
+  ```javascript
+  try {
+      class A {
+          static 42;
+          static get 42() {}
+      }
+      console.log("PASS");
+  } catch (e) {
+      console.log("FAIL");
+  }
+  // Expected: "PASS"
+  // Actual:   "FAIL"
+  ```
+  UglifyJS may modify the input which in turn may suppress those errors.
+- Some versions of Chrome and Node.js will give incorrect results with the
+  following:
+  ```javascript
+  (async function(a) {
+      (function() {
+          var b = await => console.log("PASS");
+          b();
+      })();
+  })().catch(console.error);
+  // Expected: "PASS"
+  // Actual:   SyntaxError: Unexpected reserved word
+  ```
+  UglifyJS may modify the input which in turn may suppress those errors.
+- Later versions of Chrome and Node.js will give incorrect results with the
+  following:
+  ```javascript
+  try {
+      f();
+      function f() {
+          throw 42;
+      }
+  } catch (e) {
+      console.log(typeof f, e);
+  }
+  // Expected: "function 42"
+  // Actual:   "undefined 42"
+  ```
+  UglifyJS may modify the input which in turn may suppress those errors.
+- Later versions of JavaScript will throw `SyntaxError` with the following:
+  ```javascript
+  "use strict";
+  console.log(function f() {
+      return f = "PASS";
+  }());
+  // Expected: "PASS"
+  // Actual:   TypeError: invalid assignment to const 'f'
+  ```
+  UglifyJS may modify the input which in turn may suppress those errors.
+- Adobe ExtendScript will give incorrect results with the following:
+  ```javascript
+  alert(true ? "PASS" : false ? "FAIL" : null);
+  // Expected: "PASS"
+  // Actual:   "FAIL"
+  ```
+  UglifyJS may modify the input which in turn may suppress those errors.
+- Adobe ExtendScript will give incorrect results with the following:
+  ```javascript
+  alert(42 ? null ? "FAIL" : "PASS" : "FAIL");
+  // Expected: "PASS"
+  // Actual:   SyntaxError: Expected: :
   ```
   UglifyJS may modify the input which in turn may suppress those errors.

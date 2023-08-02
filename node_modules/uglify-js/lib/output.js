@@ -55,6 +55,7 @@ function OutputStream(options) {
         beautify         : false,
         braces           : false,
         comments         : false,
+        extendscript     : false,
         galio            : false,
         ie               : false,
         indent_level     : 4,
@@ -75,7 +76,7 @@ function OutputStream(options) {
         wrap_iife        : false,
     }, true);
 
-    // Convert comment option to RegExp if neccessary and set up comments filter
+    // Convert comment option to RegExp if necessary and set up comments filter
     var comment_filter = return_false; // Default case, throw all comments away
     if (options.comments) {
         var comments = options.comments;
@@ -101,10 +102,18 @@ function OutputStream(options) {
         }
     }
 
+    function make_indent(value) {
+        if (typeof value == "number") return new Array(value + 1).join(" ");
+        if (!value) return "";
+        if (!/^\s*$/.test(value)) throw new Error("unsupported indentation: " + JSON.stringify("" + value));
+        return value;
+    }
+
     var current_col = 0;
     var current_line = 1;
-    var current_pos = 0;
-    var indentation = options.indent_start;
+    var current_indent = make_indent(options.indent_start);
+    var full_indent = make_indent(options.indent_level);
+    var half_indent = full_indent.length + 1 >> 1;
     var last;
     var line_end = 0;
     var line_fixed = true;
@@ -115,17 +124,17 @@ function OutputStream(options) {
     var might_need_semicolon;
     var need_newline_indented = false;
     var need_space = false;
-    var newline_insert = -1;
+    var output;
     var stack;
-    var OUTPUT;
+    var stored = "";
 
     function reset() {
         last = "";
         might_need_space = false;
         might_need_semicolon = false;
         stack = [];
-        var str = OUTPUT;
-        OUTPUT = "";
+        var str = output;
+        output = "";
         return str;
     }
 
@@ -227,32 +236,39 @@ function OutputStream(options) {
     } : noop;
 
     function insert_newlines(count) {
-        var index = OUTPUT.lastIndexOf("\n");
-        if (line_end < index) line_end = index;
-        var left = OUTPUT.slice(0, line_end);
-        var right = OUTPUT.slice(line_end);
-        adjust_mappings(count, right.length - current_col);
+        stored += output.slice(0, line_end);
+        output = output.slice(line_end);
+        var new_col = output.length;
+        adjust_mappings(count, new_col - current_col);
         current_line += count;
-        current_pos += count;
-        current_col = right.length;
-        OUTPUT = left;
-        while (count--) OUTPUT += "\n";
-        OUTPUT += right;
+        current_col = new_col;
+        while (count--) stored += "\n";
     }
 
-    var fix_line = options.max_line_len ? function() {
+    var fix_line = options.max_line_len ? function(flush) {
         if (line_fixed) {
             if (current_col > options.max_line_len) {
                 AST_Node.warn("Output exceeds {max_line_len} characters", options);
             }
             return;
         }
-        if (current_col > options.max_line_len) insert_newlines(1);
-        line_fixed = true;
-        flush_mappings();
+        if (current_col > options.max_line_len) {
+            insert_newlines(1);
+            line_fixed = true;
+        }
+        if (line_fixed || flush) flush_mappings();
     } : noop;
 
-    var requireSemicolonChars = makePredicate("( [ + * / - , .");
+    var require_semicolon = makePredicate("( [ + * / - , .");
+
+    function require_space(prev, ch, str) {
+        return is_identifier_char(prev) && (is_identifier_char(ch) || ch == "\\")
+            || (ch == "/" && ch == prev)
+            || ((ch == "+" || ch == "-") && ch == last)
+            || last == "--" && ch == ">"
+            || last == "!" && str == "--"
+            || prev == "/" && (str == "in" || str == "instanceof");
+    }
 
     var print = options.beautify
         || options.comments
@@ -276,45 +292,39 @@ function OutputStream(options) {
                 space();
             }
         }
-        newline_insert = -1;
         var prev = last.slice(-1);
         if (might_need_semicolon) {
             might_need_semicolon = false;
-
-            if (prev == ":" && ch == "}" || (!ch || ";}".indexOf(ch) < 0) && prev != ";") {
-                if (options.semicolons || requireSemicolonChars[ch]) {
-                    OUTPUT += ";";
+            if (prev == ":" && ch == "}" || prev != ";" && (!ch || ";}".indexOf(ch) < 0)) {
+                var need_semicolon = require_semicolon[ch];
+                if (need_semicolon || options.semicolons) {
+                    output += ";";
                     current_col++;
-                    current_pos++;
+                    if (!line_fixed) {
+                        fix_line();
+                        if (line_fixed && !need_semicolon && output == ";") {
+                            output = "";
+                            current_col = 0;
+                        }
+                    }
+                    if (line_end == output.length - 1) line_end++;
                 } else {
                     fix_line();
-                    OUTPUT += "\n";
-                    current_pos++;
+                    output += "\n";
                     current_line++;
                     current_col = 0;
-
-                    if (/^\s+$/.test(str)) {
-                        // reset the semicolon flag, since we didn't print one
-                        // now and might still have to later
-                        might_need_semicolon = true;
-                    }
+                    // reset the semicolon flag, since we didn't print one
+                    // now and might still have to later
+                    if (/^\s+$/.test(str)) might_need_semicolon = true;
                 }
-
-                if (!options.beautify)
-                    might_need_space = false;
+                if (!options.beautify) might_need_space = false;
             }
         }
 
         if (might_need_space) {
-            if (is_identifier_char(prev) && (is_identifier_char(ch) || ch == "\\")
-                || (ch == "/" && ch == prev)
-                || ((ch == "+" || ch == "-") && ch == last)
-                || str == "--" && last == "!"
-                || str == "in" && prev == "/"
-                || last == "--" && ch == ">") {
-                OUTPUT += " ";
+            if (require_space(prev, ch, str)) {
+                output += " ";
                 current_col++;
-                current_pos++;
             }
             if (prev != "<" || str != "!") might_need_space = false;
         }
@@ -324,14 +334,13 @@ function OutputStream(options) {
                 token: mapping_token,
                 name: mapping_name,
                 line: current_line,
-                col: current_col
+                col: current_col,
             });
             mapping_token = false;
             if (line_fixed) flush_mappings();
         }
 
-        OUTPUT += str;
-        current_pos += str.length;
+        output += str;
         var a = str.split(/\r?\n/), n = a.length - 1;
         current_line += n;
         current_col += a[0].length;
@@ -346,22 +355,15 @@ function OutputStream(options) {
         if (might_need_semicolon) {
             might_need_semicolon = false;
             if (prev == ":" && ch == "}" || (!ch || ";}".indexOf(ch) < 0) && prev != ";") {
-                OUTPUT += ";";
+                output += ";";
                 might_need_space = false;
             }
         }
         if (might_need_space) {
-            if (is_identifier_char(prev) && (is_identifier_char(ch) || ch == "\\")
-                || (ch == "/" && ch == prev)
-                || ((ch == "+" || ch == "-") && ch == last)
-                || str == "--" && last == "!"
-                || str == "in" && prev == "/"
-                || last == "--" && ch == ">") {
-                OUTPUT += " ";
-            }
+            if (require_space(prev, ch, str)) output += " ";
             if (prev != "<" || str != "!") might_need_space = false;
         }
-        OUTPUT += str;
+        output += str;
         last = str;
     };
 
@@ -373,30 +375,25 @@ function OutputStream(options) {
 
     var indent = options.beautify ? function(half) {
         if (need_newline_indented) print("\n");
-        print(repeat_string(" ", half ? indentation - (options.indent_level >> 1) : indentation));
+        print(half ? current_indent.slice(0, -half_indent) : current_indent);
     } : noop;
 
     var with_indent = options.beautify ? function(cont) {
-        var save_indentation = indentation;
-        indentation += options.indent_level;
+        var save_indentation = current_indent;
+        current_indent += full_indent;
         cont();
-        indentation = save_indentation;
+        current_indent = save_indentation;
     } : function(cont) { cont() };
 
     var may_add_newline = options.max_line_len || options.preserve_line ? function() {
         fix_line();
-        line_end = OUTPUT.length;
+        line_end = output.length;
         line_fixed = false;
     } : noop;
 
     var newline = options.beautify ? function() {
-        if (newline_insert < 0) return print("\n");
-        if (OUTPUT[newline_insert] != "\n") {
-            OUTPUT = OUTPUT.slice(0, newline_insert) + "\n" + OUTPUT.slice(newline_insert);
-            current_pos++;
-            current_line++;
-        }
-        newline_insert++;
+        print("\n");
+        line_end = output.length;
     } : may_add_newline;
 
     var semicolon = options.beautify ? function() {
@@ -410,10 +407,11 @@ function OutputStream(options) {
         print(";");
     }
 
-    function with_block(cont) {
+    function with_block(cont, end) {
         print("{");
         newline();
         with_indent(cont);
+        add_mapping(end);
         indent();
         print("}");
     }
@@ -452,13 +450,12 @@ function OutputStream(options) {
     } : noop;
 
     function get() {
-        if (!line_fixed) fix_line();
-        return OUTPUT;
+        if (!line_fixed) fix_line(true);
+        return stored + output;
     }
 
     function has_nlb() {
-        var index = OUTPUT.lastIndexOf("\n");
-        return /^ *$/.test(OUTPUT.slice(index + 1));
+        return /(^|\n) *$/.test(output);
     }
 
     function pad_comment(token, force) {
@@ -515,15 +512,13 @@ function OutputStream(options) {
             scan.walk(tw);
         }
 
-        if (current_pos == 0) {
+        if (current_line == 1 && current_col == 0) {
             if (comments.length > 0 && options.shebang && comments[0].type == "comment5") {
                 print("#!" + comments.shift().value + "\n");
                 indent();
             }
             var preamble = options.preamble;
-            if (preamble) {
-                print(preamble.replace(/\r\n?|[\n\u2028\u2029]|\s*$/g, "\n"));
-            }
+            if (preamble) print(preamble.replace(/\r\n?|\u2028|\u2029|(^|\S)\s*$/g, "$1\n"));
         }
 
         comments = comments.filter(comment_filter, node);
@@ -561,20 +556,18 @@ function OutputStream(options) {
             return !/comment[134]/.test(c.type);
         }))) return;
         comments._dumped = self;
-        var insert = OUTPUT.length;
         comments.filter(comment_filter, node).forEach(function(comment, index) {
             pad_comment(comment, index || !tail);
             print_comment(comment);
         });
-        if (OUTPUT.length > insert) newline_insert = insert;
     }
 
     return {
         get             : get,
         reset           : reset,
         indent          : indent,
-        should_break    : options.width ? function() {
-            return current_col - indentation >= options.width;
+        should_break    : options.beautify && options.width ? function() {
+            return current_col >= options.width;
         } : return_false,
         has_parens      : function() { return last.slice(-1) == "(" },
         newline         : newline,
@@ -708,6 +701,7 @@ function OutputStream(options) {
         if (p instanceof AST_Class) return true;
         // (x++)[y]
         // (typeof x).y
+        // https://github.com/mishoo/UglifyJS/issues/115
         if (p instanceof AST_PropAccess) return p.expression === this;
         // (~x)`foo`
         if (p instanceof AST_Template) return p.tag === this;
@@ -883,7 +877,9 @@ function OutputStream(options) {
         return needs_parens_assign_cond(this, output);
     });
     PARENS(AST_Conditional, function(output) {
-        return needs_parens_assign_cond(this, output);
+        return needs_parens_assign_cond(this, output)
+            // https://github.com/mishoo/UglifyJS/issues/1144
+            || output.option("extendscript") && output.parent() instanceof AST_Conditional;
     });
     PARENS(AST_Yield, function(output) {
         return needs_parens_assign_cond(this, output);
@@ -962,7 +958,7 @@ function OutputStream(options) {
         if (self.body.length > 0) {
             output.with_block(function() {
                 display_body(self.body, false, output, allow_directives);
-            });
+            }, self.end);
         } else print_braced_empty(self, output);
     }
     DEFPRINT(AST_BlockStatement, function(output) {
@@ -1001,7 +997,7 @@ function OutputStream(options) {
                 if (self.init instanceof AST_Definitions) {
                     self.init.print(output);
                 } else {
-                    parenthesize_for_noin(self.init, output, true);
+                    parenthesize_for_no_in(self.init, output, true);
                 }
                 output.print(";");
                 output.space();
@@ -1070,6 +1066,14 @@ function OutputStream(options) {
         }
         output.semicolon();
     });
+    function print_alias(alias, output) {
+        var value = alias.value;
+        if (value == "*" || is_identifier_string(value)) {
+            output.print_name(value);
+        } else {
+            output.print_string(value, alias.quote);
+        }
+    }
     DEFPRINT(AST_ExportForeign, function(output) {
         var self = this;
         output.print("export");
@@ -1077,7 +1081,7 @@ function OutputStream(options) {
         var len = self.keys.length;
         if (len == 0) {
             print_braced_empty(self, output);
-        } else if (self.keys[0] == "*") {
+        } else if (self.keys[0].value == "*") {
             print_entry(0);
         } else output.with_block(function() {
             output.indent();
@@ -1089,22 +1093,22 @@ function OutputStream(options) {
                 print_entry(i);
             }
             output.newline();
-        });
+        }, self.end);
         output.space();
         output.print("from");
         output.space();
-        output.print_string(self.path, self.quote);
+        self.path.print(output);
         output.semicolon();
 
         function print_entry(index) {
             var alias = self.aliases[index];
             var key = self.keys[index];
-            output.print_name(key);
-            if (alias != key) {
+            print_alias(key, output);
+            if (alias.value != key.value) {
                 output.space();
                 output.print("as");
                 output.space();
-                output.print_name(alias);
+                print_alias(alias, output);
             }
         }
     });
@@ -1133,7 +1137,7 @@ function OutputStream(options) {
             output.print("from");
             output.space();
         }
-        output.print_string(self.path, self.quote);
+        self.path.print(output);
         output.semicolon();
     });
 
@@ -1152,8 +1156,9 @@ function OutputStream(options) {
         });
     }
     function print_arrow(self, output) {
-        if (self.argnames.length == 1 && self.argnames[0] instanceof AST_SymbolFunarg && !self.rest) {
-            self.argnames[0].print(output);
+        var argname = self.argnames.length == 1 && !self.rest && self.argnames[0];
+        if (argname instanceof AST_SymbolFunarg && argname.name != "yield") {
+            argname.print(output);
         } else {
             print_funargs(self, output);
         }
@@ -1262,6 +1267,11 @@ function OutputStream(options) {
         }
         print_method(self, output);
     });
+    DEFPRINT(AST_ClassInit, function(output) {
+        output.print("static");
+        output.space();
+        print_braced(this.value, output);
+    });
 
     /* -----[ jumps ]----- */
     function print_jump(kind, prop) {
@@ -1347,7 +1357,7 @@ function OutputStream(options) {
                 if (i < last && branch.body.length > 0)
                     output.newline();
             });
-        });
+        }, self.end);
     });
     function print_branch_body(self, output) {
         output.newline();
@@ -1403,7 +1413,7 @@ function OutputStream(options) {
         print_braced(this, output);
     });
 
-    function print_definitinos(type) {
+    function print_definitions(type) {
         return function(output) {
             var self = this;
             output.print(type);
@@ -1416,15 +1426,15 @@ function OutputStream(options) {
             if (!(p instanceof AST_IterationStatement && p.init === self)) output.semicolon();
         };
     }
-    DEFPRINT(AST_Const, print_definitinos("const"));
-    DEFPRINT(AST_Let, print_definitinos("let"));
-    DEFPRINT(AST_Var, print_definitinos("var"));
+    DEFPRINT(AST_Const, print_definitions("const"));
+    DEFPRINT(AST_Let, print_definitions("let"));
+    DEFPRINT(AST_Var, print_definitions("var"));
 
-    function parenthesize_for_noin(node, output, noin) {
+    function parenthesize_for_no_in(node, output, no_in) {
         var parens = false;
         // need to take some precautions here:
         //    https://github.com/mishoo/UglifyJS/issues/60
-        if (noin) node.walk(new TreeWalker(function(node) {
+        if (no_in) node.walk(new TreeWalker(function(node) {
             if (parens) return true;
             if (node instanceof AST_Binary && node.operator == "in") return parens = true;
             if (node instanceof AST_Scope && !(is_arrow(node) && node.value)) return true;
@@ -1440,8 +1450,8 @@ function OutputStream(options) {
             output.print("=");
             output.space();
             var p = output.parent(1);
-            var noin = p instanceof AST_For || p instanceof AST_ForEnumeration;
-            parenthesize_for_noin(self.value, output, noin);
+            var no_in = p instanceof AST_For || p instanceof AST_ForEnumeration;
+            parenthesize_for_no_in(self.value, output, no_in);
         }
     });
 
@@ -1464,17 +1474,15 @@ function OutputStream(options) {
             parent = output.parent(level++);
             if (parent instanceof AST_Call && parent.expression === node) return;
         } while (parent instanceof AST_PropAccess && parent.expression === node);
-        output.print(typeof self.pure == "string" ? "/*" + self.pure + "*/" : "/*@__PURE__*/");
+        output.print("/*@__PURE__*/");
     }
     function print_call_args(self, output) {
-        if (self.expression instanceof AST_Call || self.expression instanceof AST_Lambda) {
-            output.add_mapping(self.start);
-        }
         output.with_parens(function() {
             self.args.forEach(function(expr, i) {
                 if (i) output.comma();
                 expr.print(output);
             });
+            output.add_mapping(self.end);
         });
     }
     DEFPRINT(AST_Call, function(output) {
@@ -1509,11 +1517,12 @@ function OutputStream(options) {
         var expr = self.expression;
         expr.print(output);
         var prop = self.property;
-        if (output.option("ie") && RESERVED_WORDS[prop]) {
-            output.print(self.optional ? "?.[" : "[");
-            output.add_mapping(self.end);
-            output.print_string(prop);
-            output.print("]");
+        if (output.option("ie") && RESERVED_WORDS[prop] || self.quoted && output.option("keep_quoted_props")) {
+            if (self.optional) output.print("?.");
+            output.with_square(function() {
+                output.add_mapping(self.end);
+                output.print_string(prop);
+            });
         } else {
             if (expr instanceof AST_Number && !/[ex.)]/i.test(output.last())) output.print(".");
             output.print(self.optional ? "?." : ".");
@@ -1525,9 +1534,10 @@ function OutputStream(options) {
     DEFPRINT(AST_Sub, function(output) {
         var self = this;
         self.expression.print(output);
-        output.print(self.optional ? "?.[" : "[");
-        self.property.print(output);
-        output.print("]");
+        if (self.optional) output.print("?.");
+        output.with_square(function() {
+            self.property.print(output);
+        });
     });
     DEFPRINT(AST_Spread, function(output) {
         output.print("...");
@@ -1546,8 +1556,10 @@ function OutputStream(options) {
         exp.print(output);
     });
     DEFPRINT(AST_UnaryPostfix, function(output) {
-        this.expression.print(output);
-        output.print(this.operator);
+        var self = this;
+        self.expression.print(output);
+        output.add_mapping(self.end);
+        output.print(self.operator);
     });
     DEFPRINT(AST_Binary, function(output) {
         var self = this;
@@ -1640,7 +1652,8 @@ function OutputStream(options) {
         value.print(output);
     });
     DEFPRINT(AST_DestructuredObject, function(output) {
-        var props = this.properties, len = props.length, rest = this.rest;
+        var self = this;
+        var props = self.properties, len = props.length, rest = self.rest;
         if (len || rest) output.with_block(function() {
             props.forEach(function(prop, i) {
                 if (i) {
@@ -1660,8 +1673,8 @@ function OutputStream(options) {
                 rest.print(output);
             }
             output.newline();
-        });
-        else print_braced_empty(this, output);
+        }, self.end);
+        else print_braced_empty(self, output);
     });
     function print_properties(self, output, no_comma) {
         var props = self.properties;
@@ -1675,7 +1688,7 @@ function OutputStream(options) {
                 prop.print(output);
             });
             output.newline();
-        });
+        }, self.end);
         else print_braced_empty(self, output);
     }
     DEFPRINT(AST_Object, function(output) {
@@ -1737,19 +1750,19 @@ function OutputStream(options) {
         var name = get_symbol_name(self);
         output.print_name(name);
         var alias = self.alias;
-        if (alias != name) {
+        if (alias.value != name) {
             output.space();
             output.print("as");
             output.space();
-            output.print_name(alias);
+            print_alias(alias, output);
         }
     });
     DEFPRINT(AST_SymbolImport, function(output) {
         var self = this;
         var name = get_symbol_name(self);
         var key = self.key;
-        if (key && key != name) {
-            output.print_name(key);
+        if (key.value && key.value != name) {
+            print_alias(key, output);
             output.space();
             output.print("as");
             output.space();
@@ -1819,9 +1832,6 @@ function OutputStream(options) {
               case "\u2029": return "\\u2029";
             }
         }));
-        var p = output.parent();
-        if (p instanceof AST_Binary && /^in/.test(p.operator) && p.left === this)
-            output.print(" ");
     });
 
     function force_statement(stat, output) {
@@ -1869,8 +1879,8 @@ function OutputStream(options) {
             len = match[0].length;
             digits = str.slice(len);
             candidates.push(digits + "e-" + (digits.length + len - 1));
-        } else if (match = /0+$/.exec(str)) {
-            len = match[0].length;
+        } else if (match = /[^0]0+$/.exec(str)) {
+            len = match[0].length - 1;
             candidates.push(str.slice(0, -len) + "e" + len);
         } else if (match = /^(\d)\.(\d+)e(-?\d+)$/.exec(str)) {
             candidates.push(match[1] + match[2] + "e" + (match[3] - match[2].length));
@@ -1888,7 +1898,7 @@ function OutputStream(options) {
             output.indent();
             stmt.print(output);
             output.newline();
-        });
+        }, stmt.end);
     }
 
     /* -----[ source map generators ]----- */
@@ -1911,22 +1921,27 @@ function OutputStream(options) {
     // or if we should add even more.
     DEFMAP([
         AST_Array,
+        AST_Await,
         AST_BlockStatement,
         AST_Catch,
         AST_Constant,
         AST_Debugger,
         AST_Definitions,
         AST_Destructured,
+        AST_Directive,
         AST_Finally,
         AST_Jump,
         AST_Lambda,
         AST_New,
         AST_Object,
+        AST_Spread,
         AST_StatementWithBody,
         AST_Symbol,
         AST_Switch,
         AST_SwitchBranch,
         AST_Try,
+        AST_UnaryPrefix,
+        AST_Yield,
     ], function(output) {
         output.add_mapping(this.start);
     });

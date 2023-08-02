@@ -43,10 +43,11 @@
 
 "use strict";
 
-var builtins = function() {
-    var names = [];
-    // NaN will be included due to Number.NaN
+function get_builtins() {
+    var names = new Dictionary();
+    // constants
     [
+        "NaN",
         "null",
         "true",
         "false",
@@ -54,37 +55,85 @@ var builtins = function() {
         "-Infinity",
         "undefined",
     ].forEach(add);
+    // global functions
     [
-        Array,
-        Boolean,
-        Date,
-        Error,
-        Function,
-        Math,
-        Number,
-        Object,
-        RegExp,
-        String,
-    ].forEach(function(ctor) {
+        "encodeURI",
+        "encodeURIComponent",
+        "escape",
+        "eval",
+        "decodeURI",
+        "decodeURIComponent",
+        "isFinite",
+        "isNaN",
+        "parseFloat",
+        "parseInt",
+        "unescape",
+    ].forEach(add);
+    // global constructors & objects
+    var global = Function("return this")();
+    [
+        "Array",
+        "ArrayBuffer",
+        "Atomics",
+        "BigInt",
+        "Boolean",
+        "console",
+        "DataView",
+        "Date",
+        "Error",
+        "Function",
+        "Int8Array",
+        "Intl",
+        "JSON",
+        "Map",
+        "Math",
+        "Number",
+        "Object",
+        "Promise",
+        "Proxy",
+        "Reflect",
+        "RegExp",
+        "Set",
+        "String",
+        "Symbol",
+        "WebAssembly",
+    ].forEach(function(name) {
+        add(name);
+        var ctor = global[name];
+        if (!ctor) return;
         Object.getOwnPropertyNames(ctor).map(add);
-        if (ctor.prototype) {
+        if (typeof ctor != "function") return;
+        if (ctor.__proto__) Object.getOwnPropertyNames(ctor.__proto__).map(add);
+        if (ctor.prototype) Object.getOwnPropertyNames(ctor.prototype).map(add);
+        try {
             Object.getOwnPropertyNames(new ctor()).map(add);
-            Object.getOwnPropertyNames(ctor.prototype).map(add);
+        } catch (e) {
+            try {
+                Object.getOwnPropertyNames(ctor()).map(add);
+            } catch (e) {}
         }
     });
-    return makePredicate(names);
+    return (get_builtins = function() {
+        return names.clone();
+    })();
 
     function add(name) {
-        names.push(name);
+        names.set(name, true);
     }
-}();
+}
 
 function reserve_quoted_keys(ast, reserved) {
     ast.walk(new TreeWalker(function(node) {
-        if (node instanceof AST_ClassProperty) {
-            if (node.start && node.start.quote) add(node.key);
-        } else if (node instanceof AST_ObjectProperty) {
-            if (node.start && node.start.quote) add(node.key);
+        if (node instanceof AST_ClassProperty
+            || node instanceof AST_DestructuredKeyVal
+            || node instanceof AST_ObjectProperty) {
+            if (node.key instanceof AST_Node) {
+                addStrings(node.key, add);
+            } else if (node.start && node.start.quote) {
+                add(node.key);
+            }
+        } else if (node instanceof AST_Dot) {
+            if (node.quoted) add(node.property);
         } else if (node instanceof AST_Sub) {
             addStrings(node.property, add);
         }
@@ -111,14 +160,18 @@ function mangle_properties(ast, options) {
         builtins: false,
         cache: null,
         debug: false,
+        domprops: false,
         keep_quoted: false,
         regex: null,
         reserved: null,
     }, true);
 
-    var reserved = Object.create(options.builtins ? null : builtins);
+    var reserved = options.builtins ? new Dictionary() : get_builtins();
+    if (!options.domprops && typeof domprops !== "undefined") domprops.forEach(function(name) {
+        reserved.set(name, true);
+    });
     if (Array.isArray(options.reserved)) options.reserved.forEach(function(name) {
-        reserved[name] = true;
+        reserved.set(name, true);
     });
 
     var cname = -1;
@@ -126,7 +179,7 @@ function mangle_properties(ast, options) {
     if (options.cache) {
         cache = options.cache.props;
         cache.each(function(name) {
-            reserved[name] = true;
+            reserved.set(name, true);
         });
     } else {
         cache = new Dictionary();
@@ -135,20 +188,18 @@ function mangle_properties(ast, options) {
     var regex = options.regex;
 
     // note debug is either false (disabled), or a string of the debug suffix to use (enabled).
-    // note debug may be enabled as an empty string, which is falsey. Also treat passing 'true'
+    // note debug may be enabled as an empty string, which is falsy. Also treat passing 'true'
     // the same as passing an empty string.
     var debug = options.debug !== false;
     var debug_suffix;
     if (debug) debug_suffix = options.debug === true ? "" : options.debug;
 
-    var names_to_mangle = Object.create(null);
-    var unmangleable = Object.create(reserved);
+    var names_to_mangle = new Dictionary();
+    var unmangleable = reserved.clone();
 
     // step 1: find candidates to mangle
     ast.walk(new TreeWalker(function(node) {
-        if (node instanceof AST_Binary) {
-            if (node.operator == "in") addStrings(node.left, add);
-        } else if (node.TYPE == "Call") {
+        if (node.TYPE == "Call") {
             var exp = node.expression;
             if (exp instanceof AST_Dot) switch (exp.property) {
               case "defineProperty":
@@ -165,14 +216,18 @@ function mangle_properties(ast, options) {
                 addStrings(node.args[0], add);
                 break;
             }
-        } else if (node instanceof AST_ClassProperty) {
-            if (typeof node.key == "string") add(node.key);
+        } else if (node instanceof AST_ClassProperty
+            || node instanceof AST_DestructuredKeyVal
+            || node instanceof AST_ObjectProperty) {
+            if (node.key instanceof AST_Node) {
+                addStrings(node.key, add);
+            } else {
+                add(node.key);
+            }
         } else if (node instanceof AST_Dot) {
-            add(node.property);
-        } else if (node instanceof AST_ObjectProperty) {
-            if (typeof node.key == "string") add(node.key);
+            if (is_lhs(node, this.parent())) add(node.property);
         } else if (node instanceof AST_Sub) {
-            addStrings(node.property, add);
+            if (is_lhs(node, this.parent())) addStrings(node.property, add);
         }
     }));
 
@@ -197,12 +252,16 @@ function mangle_properties(ast, options) {
                 mangleStrings(node.args[0]);
                 break;
             }
-        } else if (node instanceof AST_ClassProperty) {
-            if (typeof node.key == "string") node.key = mangle(node.key);
+        } else if (node instanceof AST_ClassProperty
+            || node instanceof AST_DestructuredKeyVal
+            || node instanceof AST_ObjectProperty) {
+            if (node.key instanceof AST_Node) {
+                mangleStrings(node.key);
+            } else {
+                node.key = mangle(node.key);
+            }
         } else if (node instanceof AST_Dot) {
             node.property = mangle(node.property);
-        } else if (node instanceof AST_ObjectProperty) {
-            if (typeof node.key == "string") node.key = mangle(node.key);
         } else if (node instanceof AST_Sub) {
             if (!options.keep_quoted) mangleStrings(node.property);
         }
@@ -211,20 +270,26 @@ function mangle_properties(ast, options) {
     // only function declarations after this line
 
     function can_mangle(name) {
-        if (unmangleable[name]) return false;
+        if (unmangleable.has(name)) return false;
         if (/^-?[0-9]+(\.[0-9]+)?(e[+-][0-9]+)?$/.test(name)) return false;
         return true;
     }
 
     function should_mangle(name) {
-        if (reserved[name]) return false;
-        if (regex && !regex.test(name)) return false;
-        return cache.has(name) || names_to_mangle[name];
+        if (reserved.has(name)) {
+            AST_Node.info("Preserving reserved property {this}", name);
+            return false;
+        }
+        if (regex && !regex.test(name)) {
+            AST_Node.info("Preserving excluded property {this}", name);
+            return false;
+        }
+        return cache.has(name) || names_to_mangle.has(name);
     }
 
     function add(name) {
-        if (can_mangle(name)) names_to_mangle[name] = true;
-        if (!should_mangle(name)) unmangleable[name] = true;
+        if (can_mangle(name)) names_to_mangle.set(name, true);
+        if (!should_mangle(name)) unmangleable.set(name, true);
     }
 
     function mangle(name) {
@@ -243,12 +308,16 @@ function mangle_properties(ast, options) {
             if (/^#/.test(name)) mangled = "#" + mangled;
             cache.set(name, mangled);
         }
+        AST_Node.info("Mapping property {name} to {mangled}", {
+            mangled: mangled,
+            name: name,
+        });
         return mangled;
     }
 
     function mangleStrings(node) {
         if (node instanceof AST_Sequence) {
-            mangleStrings(node.expressions.tail_node());
+            mangleStrings(node.tail_node());
         } else if (node instanceof AST_String) {
             node.value = mangle(node.value);
         } else if (node instanceof AST_Conditional) {
