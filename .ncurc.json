@@ -1,0 +1,7 @@
+{
+  "upgrade": true,
+  "interactive": true,
+  "root": true,
+  "packageManager": "yarn",
+  "format": ["group", "repo"]
+}
