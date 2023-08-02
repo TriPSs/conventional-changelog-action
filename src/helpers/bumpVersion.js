@@ -23,9 +23,9 @@ module.exports = async (releaseType, version) => {
       newVersion = semver.inc(version, 'minor')
     }
 
-    newVersion = semver.inc(version, (prerelease ? 'prerelease' : releaseType), identifier)
+    newVersion = semver.inc(newVersion, (prerelease ? 'prerelease' : releaseType), identifier)
     newVersion.patch--
-    
+
   } else {
 
     const fallbackVersion = core.getInput('fallback-version')
