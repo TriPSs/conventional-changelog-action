@@ -67,6 +67,11 @@ The downstream might look something like this:
 
 Returns a transform stream.
 
+### conventionalChangelogWriter.parseArray(commits, [context, [options]])
+
+Rather than returning a transform stream for parsing commits,
+parses the array of commits provided generating a CHANGELOG entry.
+
 #### context
 
 Variables that will be interpolated to the template. This object contains, but not limits to the following fields.
@@ -164,15 +169,11 @@ Type: `function`, `string` or `array`
 
 A compare function used to sort commit groups. If it's a string or array, it sorts on the property(ies) by `localeCompare`. Will not sort if this is a falsy value.
 
-The string can be a dot path to a nested object property.
-
 ##### commitsSort
 
 Type: `function`, `string` or `array` Default: `'header'`
 
 A compare function used to sort commits. If it's a string or array, it sorts on the property(ies) by `localeCompare`. Will not sort if this is a falsy value.
-
-The string can be a dot path to a nested object property.
 
 ##### noteGroupsSort
 
@@ -180,15 +181,11 @@ Type: `function`, `string` or `array` Default: `'title'`
 
 A compare function used to sort note groups. If it's a string or array, it sorts on the property(ies) by `localeCompare`. Will not sort if this is a falsy value.
 
-The string can be a dot path to a nested object property.
-
 ##### notesSort
 
 Type: `function`, `string` or `array` Default: `'text'`
 
 A compare function used to sort note groups. If it's a string or array, it sorts on the property(ies) by `localeCompare`. Will not sort if this is a falsy value.
-
-The string can be a dot path to a nested object property.
 
 ##### generateOn
 
@@ -261,6 +258,7 @@ Type: `boolean` Default: `false`
 If this value is `true`, instead of emitting strings of changelog, it emits objects containing the details the block.
 
 *NOTE:* The downstream must be in object mode if this is `true`.
+*NOTE:* This is only supported when using streaming mode.
 
 ##### ignoreReverted
 
@@ -273,6 +271,8 @@ If `true`, reverted commits will be ignored.
 Type: `boolean` Default: `true`
 
 If `true`, the stream will flush out the last bit of commits (could be empty) to changelog.
+
+*NOTE:* This is only supported when using streaming mode.
 
 ##### mainTemplate
 

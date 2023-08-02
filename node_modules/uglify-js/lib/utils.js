@@ -238,21 +238,27 @@ function HOP(obj, prop) {
 // return true if the node at the top of the stack (that means the
 // innermost node in the current output) is lexically the first in
 // a statement.
-function first_in_statement(stack) {
+function first_in_statement(stack, arrow, export_default) {
     var node = stack.parent(-1);
     for (var i = 0, p; p = stack.parent(i++); node = p) {
-        if (p.TYPE == "Call") {
-            if (p.expression === node) continue;
+        if (is_arrow(p)) {
+            return arrow && p.value === node;
         } else if (p instanceof AST_Binary) {
             if (p.left === node) continue;
+        } else if (p.TYPE == "Call") {
+            if (p.expression === node) continue;
         } else if (p instanceof AST_Conditional) {
             if (p.condition === node) continue;
+        } else if (p instanceof AST_ExportDefault) {
+            return export_default;
         } else if (p instanceof AST_PropAccess) {
             if (p.expression === node) continue;
         } else if (p instanceof AST_Sequence) {
             if (p.expressions[0] === node) continue;
-        } else if (p instanceof AST_Statement) {
-            return p.body === node;
+        } else if (p instanceof AST_SimpleStatement) {
+            return true;
+        } else if (p instanceof AST_Template) {
+            if (p.tag === node) continue;
         } else if (p instanceof AST_UnaryPostfix) {
             if (p.expression === node) continue;
         }

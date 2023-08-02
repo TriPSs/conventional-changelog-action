@@ -2,42 +2,46 @@ const core = require('@actions/core')
 const exec = require('@actions/exec')
 const assert = require('assert')
 
-const { GITHUB_REPOSITORY, GITHUB_REF, ENV } = process.env
-
-const branch = GITHUB_REF.replace('refs/heads/', '')
+const { GITHUB_REPOSITORY, ENV } = process.env
 
 module.exports = new (class Git {
 
   commandsRun = []
 
   constructor() {
-    const githubToken = core.getInput('github-token', { required: true })
+    const githubToken = core.getInput('github-token')
 
     // Make the Github token secret
     core.setSecret(githubToken)
-
-    const gitUserName = core.getInput('git-user-name')
-    const gitUserEmail = core.getInput('git-user-email')
 
     // if the env is dont-use-git then we mock exec as we are testing a workflow
     if (ENV === 'dont-use-git') {
       this.exec = (command) => {
         const fullCommand = `git ${command}`
-
+        
         console.log(`Skipping "${fullCommand}" because of test env`)
-
+        
         if (!fullCommand.includes('git remote set-url origin')) {
           this.commandsRun.push(fullCommand)
         }
       }
     }
+  }
+
+  init = async () => {
+    const gitUserName = core.getInput('git-user-name')
+    const gitUserEmail = core.getInput('git-user-email')
+    const gitUrl = core.getInput('git-url')
+    const githubToken = core.getInput('github-token')
 
     // Set config
-    this.config('user.name', gitUserName)
-    this.config('user.email', gitUserEmail)
+    await this.config('user.name', gitUserName)
+    await this.config('user.email', gitUserEmail)
 
     // Update the origin
-    this.updateOrigin(`https://x-access-token:${githubToken}@github.com/${GITHUB_REPOSITORY}.git`)
+    if (githubToken) {
+      await this.updateOrigin(`https://x-access-token:${githubToken}@${gitUrl}/${GITHUB_REPOSITORY}.git`)
+    }
   }
 
   /**
@@ -46,7 +50,7 @@ module.exports = new (class Git {
    * @param command
    * @return {Promise<>}
    */
-  exec = (command) => new Promise(async(resolve, reject) => {
+  exec = (command) => new Promise(async (resolve, reject) => {
     let execOutput = ''
 
     const options = {
@@ -100,7 +104,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  pull = async() => {
+  pull = async () => {
     const args = ['pull']
 
     // Check if the repo is unshallow
@@ -119,7 +123,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  push = () => (
+  push = (branch) => (
     this.exec(`push origin ${branch} --follow-tags`)
   )
 
@@ -128,7 +132,7 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  isShallow = async() => {
+  isShallow = async () => {
     if (ENV === 'dont-use-git') {
       return false
     }
@@ -157,23 +161,36 @@ module.exports = new (class Git {
   /**
    * Validates the commands run
    */
-  testHistory = () => {
+  testHistory = (branch) => {
     if (ENV === 'dont-use-git') {
-      const { EXPECTED_TAG, SKIPPED_COMMIT } = process.env
+      const { EXPECTED_TAG, SKIPPED_COMMIT, EXPECTED_NO_PUSH, SKIPPED_TAG, SKIPPED_PULL, SKIP_CI } = process.env
 
       const expectedCommands = [
         'git config user.name "Conventional Changelog Action"',
         'git config user.email "conventional.changelog.action@github.com"',
-        'git pull --tags --ff-only',
       ]
+
+      if (!SKIPPED_PULL) {
+        expectedCommands.push('git pull --tags --ff-only')
+      }
 
       if (!SKIPPED_COMMIT) {
         expectedCommands.push('git add .')
-        expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+        if (SKIP_CI === 'false') {
+          expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG}"`)
+
+        } else {
+          expectedCommands.push(`git commit -m "chore(release): ${EXPECTED_TAG} [skip ci]"`)
+        }
       }
 
-      expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
-      expectedCommands.push(`git push origin ${branch} --follow-tags`)
+      if(!SKIPPED_TAG) {
+        expectedCommands.push(`git tag -a ${EXPECTED_TAG} -m "${EXPECTED_TAG}"`)
+      } 
+
+      if (!EXPECTED_NO_PUSH) {
+        expectedCommands.push(`git push origin ${branch} --follow-tags`)
+      }
 
       assert.deepStrictEqual(
         this.commandsRun,
