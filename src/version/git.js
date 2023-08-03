@@ -17,7 +17,7 @@ module.exports = class Git extends BaseVersioning {
         this.oldVersion = tags.length > 0 ? tags.shift().replace(tagPrefix, '') : null
 
         if (this.oldVersion !== null && semver.prerelease(this.oldVersion) !== null) {
-          stableOldVersion = this.oldVersion.split('-')[0]
+          let stableOldVersion = this.oldVersion.split('-')[0]
           if (tags.includes(stableOldVersion)) {
             this.oldVersion = stableOldVersion
           }
