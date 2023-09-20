@@ -2,6 +2,7 @@ const Json = require('./json')
 const Git = require('./git')
 const Yaml = require('./yaml')
 const Toml = require('./toml')
+const Mix = require('./mix')
 
 module.exports = (fileExtension) => {
   switch (fileExtension.toLowerCase()) {
@@ -17,6 +18,9 @@ module.exports = (fileExtension) => {
 
     case 'git':
       return new Git()
+
+    case 'exs':
+      return new Mix()
 
     default:
       return null
