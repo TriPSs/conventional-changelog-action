@@ -1,3 +1,12 @@
+# [4.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v4.0.0...v4.1.0) (2023-09-21)
+
+
+### Features
+
+* elixir support ([e669b12](https://github.com/TriPSs/conventional-changelog-action/commit/e669b12b9395bcb967ca5674c03ed7d6364ce675))
+
+
+
 # [4.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.19.0...v4.0.0) (2023-08-02)
 
 
@@ -42,17 +51,6 @@
 ### Features
 
 * add skip-tag to skip tagging a release ([22e862a](https://github.com/TriPSs/conventional-changelog-action/commit/22e862a0ab69410642c4182cd9ee27a23d8c63a0))
-
-
-
-## [3.17.2](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.1...v3.17.2) (2022-11-23)
-
-
-### Bug Fixes
-
-* add testcase for new + pre-release ([fc4c16d](https://github.com/TriPSs/conventional-changelog-action/commit/fc4c16dd9b531599647b491bd1bbb118f6cd24c6))
-* honour pre-release flag for default version ([e63e00c](https://github.com/TriPSs/conventional-changelog-action/commit/e63e00c563bd7191db28f0e8c5308adc2bd840c6))
-* simplify logic fallback version logic, remove default from action.yaml ([ecddc26](https://github.com/TriPSs/conventional-changelog-action/commit/ecddc262291a3d768c04c52d31af23d1cf2e6d84))
 
 
 
