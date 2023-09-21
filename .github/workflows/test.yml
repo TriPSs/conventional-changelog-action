@@ -472,6 +472,40 @@ jobs:
           EXPECTED_VERSION: "0.1.0"
           EXPECTED_VERSION_PATH: "package.version"
 
+  test-mix:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: "dont-use-git"
+          EXPECTED_TAG: "v0.10.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "mix.exs"
+
+      - name: Show file
+        run: |
+          echo "$(<mix.exs)"
+
+      - name: Test output
+        run: node ./test-output.js
+        env:
+          FILES: "mix.exs"
+          EXPECTED_VERSION: "0.10.0"
+
   test-toml:
     runs-on: ubuntu-latest
     steps:

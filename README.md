@@ -141,7 +141,7 @@ Overwrite everything
     tag-prefix: 'v'
     output-file: 'MY_CUSTOM_CHANGELOG.md'
     release-count: '10'
-    version-file: './my_custom_version_file.json' // or .yml, .yaml, .toml
+    version-file: './my_custom_version_file.json' // or .yml, .yaml, .toml, mix.exs
     version-path: 'path.to.version'
     skip-on-empty: 'false'
     skip-version-file: 'false'
