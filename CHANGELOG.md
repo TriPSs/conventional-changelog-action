@@ -1,3 +1,13 @@
+## [4.1.1](https://github.com/TriPSs/conventional-changelog-action/compare/v4.1.0...v4.1.1) (2023-09-25)
+
+
+### Bug Fixes
+
+* **#234:** do not set empty github-token as secret ([16957fa](https://github.com/TriPSs/conventional-changelog-action/commit/16957fa56f7333a3cb494b260c53708481eb5197)), closes [#234](https://github.com/TriPSs/conventional-changelog-action/issues/234)
+* **#234:** extend information how to use Deploy Key to trigger on push tag workflows ([0674827](https://github.com/TriPSs/conventional-changelog-action/commit/0674827a3df59dd5cf698c35ccbb9441865fb504)), closes [#234](https://github.com/TriPSs/conventional-changelog-action/issues/234)
+
+
+
 # [4.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v4.0.0...v4.1.0) (2023-09-21)
 
 
@@ -36,21 +46,6 @@
 ### Bug Fixes
 
 * execute git config commands synchronously ([1607ac7](https://github.com/TriPSs/conventional-changelog-action/commit/1607ac70d5942487fb67e1d412d57868d8decca9))
-
-
-
-# [3.18.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.17.2...v3.18.0) (2022-11-29)
-
-
-### Bug Fixes
-
-* bad reference ([a19765d](https://github.com/TriPSs/conventional-changelog-action/commit/a19765d093dc22d5007a1574c6db5d40be9ddf97))
-* output current version if there is no new ver ([b1e290f](https://github.com/TriPSs/conventional-changelog-action/commit/b1e290f44d9e4e0a29d536146cf1fb073172cf9d))
-
-
-### Features
-
-* add skip-tag to skip tagging a release ([22e862a](https://github.com/TriPSs/conventional-changelog-action/commit/22e862a0ab69410642c4182cd9ee27a23d8c63a0))
 
 
 
