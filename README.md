@@ -228,14 +228,19 @@ Github releases
 
 Use a deploy key
 
+If you want to trigger another GitHub action based on pushed tag, you can use Deploy Key,
+To make full use of the Deploy Key, you must set the value of github-token input to empty string.
+
 ```yaml
 - name: Checkout GitHub Action
-  uses: actions/checkout@v2
+  uses: actions/checkout@v3
   with:
     ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
 - name: Conventional Changelog Action
   id: changelog
-  uses: TriPSs/conventional-changelog-action@v3
+  uses: TriPSs/conventional-changelog-action@v4
+  with:
+    github-token: ""
 ```
 
 ## Development

@@ -12,7 +12,10 @@ module.exports = new (class Git {
     const githubToken = core.getInput('github-token')
 
     // Make the Github token secret
-    core.setSecret(githubToken)
+    if(githubToken) {
+      core.setSecret(githubToken)
+    }
+
 
     // if the env is dont-use-git then we mock exec as we are testing a workflow
     if (ENV === 'dont-use-git') {
