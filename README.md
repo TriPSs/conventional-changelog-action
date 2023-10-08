@@ -13,12 +13,12 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `git-branch`: The branch used to push. Default is the current branch (`${{ github.ref }}`)
 - **Optional** `git-url`: Git repository domain. Default is `github.com`
 - **Optional** `git-path`: Path filter for the logs. If set, only commits that match the path filter will be considered. By default, we won't use this feature(empty string).
-- **Optional** `preset`: Preset that is used from conventional commits. Default `angular`.
+- **Optional** `preset`: Preset that is used from conventional commits. Default is `angular` ([learn more about presents here](https://github.com/TriPSs/conventional-changelog-action/issues/223))
 - **Optional** `tag-prefix`: Prefix for the git tags. Default `v`.
 - **Optional** `input-file`: Read the changelog from this file. This will prepend the newly generated changelogs to the file's content.
 - **Optional** `output-file`: File to output the changelog to. Default `CHANGELOG.md`, when providing `'false'` no file will be generated / updated.
 - **Optional** `release-count`: Number of releases to preserve in changelog. Default `5`, use `0` to regenerate all. This input has no effect if `input-file` is used.
-- **Optional** `version-file`: The path to the file that contains the version to bump (supports comma-separated list of file paths). Default `./package.json`.
+- **Optional** `version-file`: The path to the file that contains the version to bump (supports comma-separated list of file paths). Default `./package.json`. Other supported formats are `mix.exs`, `.toml`, `.yml`, `.yaml`, and `.json`.
 - **Optional** `version-path`: The place inside the version file to bump. Default `version`.
 - **Optional** `skip-git-pull`: Do not pull the repo before tagging. Ensure you full cloned the repo in the first place to get tags. Default `'false'`.
 - **Optional** `skip-on-empty`: Boolean to specify if you want to skip empty release (no-changelog generated). This case occurred when you push `chore` commit with `angular` for example. Default `'true'`.
