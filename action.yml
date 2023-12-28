@@ -3,8 +3,8 @@ description: "Bump version, tag commit and generates changelog with conventional
 author: "Tycho Bokdam"
 
 runs:
-  using: "node16"
-  main: "src/index.js"
+  using: "node20"
+  main: "dist/index.js"
 
 branding:
   icon: "edit"
