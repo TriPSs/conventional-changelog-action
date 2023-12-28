@@ -169,6 +169,7 @@ async function run() {
 
     if (skipEmptyRelease && cleanChangelog === '') {
       core.info('Generated changelog is empty and skip-on-empty has been activated so we skip this step')
+      core.setOutput('old_version', oldVersion)
       core.setOutput('version', oldVersion)
       core.setOutput('skipped', 'true')
       return
@@ -228,6 +229,7 @@ async function run() {
     core.setOutput('changelog', stringChangelog)
     core.setOutput('clean_changelog', cleanChangelog)
     core.setOutput('version', newVersion)
+    core.setOutput('old_version', oldVersion)
     core.setOutput('tag', gitTag)
     core.setOutput('skipped', 'false')
 
