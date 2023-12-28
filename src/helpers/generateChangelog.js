@@ -1,6 +1,7 @@
 const fs = require('fs')
-const { Readable } = require('stream');
+const { Readable } = require('stream')
 const conventionalChangelog = require('conventional-changelog')
+const { loadPreset } = require('./load-preset')
 
 /**
  * Generates a changelog stream with the given arguments
@@ -14,8 +15,8 @@ const conventionalChangelog = require('conventional-changelog')
  * @param skipUnstable
  * @returns {*}
  */
-const getChangelogStream = (tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => conventionalChangelog({
-    preset,
+const getChangelogStream = async(tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => conventionalChangelog({
+    preset: await loadPreset(preset),
     releaseCount: parseInt(releaseCount, 10),
     tagPrefix,
     config,
@@ -23,7 +24,7 @@ const getChangelogStream = (tagPrefix, preset, version, releaseCount, config, gi
   },
   {
     version,
-    currentTag: `${tagPrefix}${version}`,
+    currentTag: `${tagPrefix}${version}`
   },
   {
     path: gitPath === '' || gitPath === null ? undefined : gitPath
@@ -46,8 +47,8 @@ module.exports = getChangelogStream
  * @param skipUnstable
  * @returns {Promise<string>}
  */
-module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => new Promise((resolve, reject) => {
-  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable)
+module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => new Promise(async(resolve) => {
+  const changelogStream = await getChangelogStream(tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable)
 
   let changelog = ''
 
@@ -71,8 +72,9 @@ module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCou
  * @param infile
  * @returns {Promise<>}
  */
-module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, releaseCount, config, gitPath, infile) => new Promise((resolve) => {
-  const changelogStream = getChangelogStream(tagPrefix, preset, version, infile ? 1 : releaseCount, config, gitPath)
+module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, releaseCount, config, gitPath, infile) => new Promise(async(resolve) => {
+  const changelogStream = await getChangelogStream(tagPrefix, preset, version, infile ? 1
+    : releaseCount, config, gitPath)
 
   // The default changelog output to be streamed first
   const readStreams = [changelogStream]
@@ -80,33 +82,33 @@ module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, re
   // If an input-file is provided and release count is not 0
   if (infile) {
     // The infile is read synchronously to avoid repeatedly reading newly written content while it is being written
-    const buffer = fs.readFileSync(infile);
-    const readableStream = Readable.from(buffer);
+    const buffer = fs.readFileSync(infile)
+    const readableStream = Readable.from(buffer)
     // We add the stream as the next item for later pipe
     readStreams.push(readableStream)
   }
 
   const writeStream = fs.createWriteStream(fileName)
 
-  let currentIndex = 0;
+  let currentIndex = 0
 
   function pipeNextStream() {
     if (currentIndex < readStreams.length) {
-      const currentStream = readStreams[currentIndex];
+      const currentStream = readStreams[currentIndex]
 
-      currentStream.pipe(writeStream, { end: false });
+      currentStream.pipe(writeStream, { end: false })
 
       currentStream.once('end', () => {
-        currentIndex++;
-        pipeNextStream();
-      });
+        currentIndex++
+        pipeNextStream()
+      })
     } else {
       // All stream pipes have completed
-      writeStream.end();
-      resolve();
+      writeStream.end()
+      resolve()
     }
   }
 
-  pipeNextStream();
+  pipeNextStream()
 
 })

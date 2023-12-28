@@ -32,6 +32,7 @@
     "@actions/exec": "^1.1.1",
     "@iarna/toml": "^2.2.5",
     "conventional-changelog": "^5.1.0",
+    "conventional-changelog-angular": "^7.0.0",
     "conventional-recommended-bump": "^9.0.0",
     "git-semver-tags": "7.0.1",
     "object-path": "^0.11.8",

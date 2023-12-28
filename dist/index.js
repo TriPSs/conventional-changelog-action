@@ -5331,6 +5331,301 @@ module.exports = addStream;
 
 /***/ }),
 
+/***/ 2242:
+/***/ ((module) => {
+
+"use strict";
+
+module.exports = function(val) {
+  return Array.isArray(val) ? val : [val];
+};
+
+
+/***/ }),
+
+/***/ 7582:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+var arrayify = __nccwpck_require__(2242);
+var dotPropGet = (__nccwpck_require__(6352).get);
+
+function compareFunc(prop) {
+  return function(a, b) {
+    var ret = 0;
+
+    arrayify(prop).some(function(el) {
+      var x;
+      var y;
+
+      if (typeof el === 'function') {
+        x = el(a);
+        y = el(b);
+      } else if (typeof el === 'string') {
+        x = dotPropGet(a, el);
+        y = dotPropGet(b, el);
+      } else {
+        x = a;
+        y = b;
+      }
+
+      if (x === y) {
+        ret = 0;
+        return;
+      }
+
+      if (typeof x === 'string' && typeof y === 'string') {
+        ret = x.localeCompare(y);
+        return ret !== 0;
+      }
+
+      ret = x < y ? -1 : 1;
+      return true;
+    });
+
+    return ret;
+  };
+}
+
+module.exports = compareFunc;
+
+
+/***/ }),
+
+/***/ 998:
+/***/ ((module) => {
+
+"use strict";
+
+
+function createConventionalChangelogOpts (parserOpts, writerOpts) {
+  return {
+    parserOpts,
+    writerOpts
+  }
+}
+
+module.exports.createConventionalChangelogOpts = createConventionalChangelogOpts
+
+
+/***/ }),
+
+/***/ 9084:
+/***/ ((module) => {
+
+"use strict";
+
+
+function createConventionalRecommendedBumpOpts (parserOpts) {
+  return {
+    parserOpts,
+
+    whatBump (commits) {
+      let level = 2
+      let breakings = 0
+      let features = 0
+
+      commits.forEach(commit => {
+        if (commit.notes.length > 0) {
+          breakings += commit.notes.length
+          level = 0
+        } else if (commit.type === 'feat') {
+          features += 1
+          if (level === 2) {
+            level = 1
+          }
+        }
+      })
+
+      return {
+        level,
+        reason: breakings === 1
+          ? `There is ${breakings} BREAKING CHANGE and ${features} features`
+          : `There are ${breakings} BREAKING CHANGES and ${features} features`
+      }
+    }
+  }
+}
+
+module.exports.createConventionalRecommendedBumpOpts = createConventionalRecommendedBumpOpts
+
+
+/***/ }),
+
+/***/ 6401:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const { createParserOpts } = __nccwpck_require__(5431)
+const { createWriterOpts } = __nccwpck_require__(4613)
+const { createConventionalChangelogOpts } = __nccwpck_require__(998)
+const { createConventionalRecommendedBumpOpts } = __nccwpck_require__(9084)
+
+async function createPreset () {
+  const parserOpts = createParserOpts()
+  const writerOpts = await createWriterOpts()
+  const recommendedBumpOpts = createConventionalRecommendedBumpOpts(parserOpts)
+  const conventionalChangelog = createConventionalChangelogOpts(parserOpts, writerOpts)
+
+  return {
+    parserOpts,
+    writerOpts,
+    recommendedBumpOpts,
+    conventionalChangelog
+  }
+}
+
+module.exports = createPreset
+
+
+/***/ }),
+
+/***/ 5431:
+/***/ ((module) => {
+
+"use strict";
+
+
+function createParserOpts () {
+  return {
+    headerPattern: /^(\w*)(?:\((.*)\))?: (.*)$/,
+    headerCorrespondence: [
+      'type',
+      'scope',
+      'subject'
+    ],
+    noteKeywords: ['BREAKING CHANGE'],
+    revertPattern: /^(?:Revert|revert:)\s"?([\s\S]+?)"?\s*This reverts commit (\w*)\./i,
+    revertCorrespondence: ['header', 'hash']
+  }
+}
+
+module.exports.createParserOpts = createParserOpts
+
+
+/***/ }),
+
+/***/ 4613:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const compareFunc = __nccwpck_require__(7582)
+const { readFile } = (__nccwpck_require__(7147).promises)
+const { resolve } = __nccwpck_require__(1017)
+
+async function createWriterOpts () {
+  const [template, header, commit, footer] = await Promise.all([
+    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
+  ])
+  const writerOpts = getWriterOpts()
+
+  writerOpts.mainTemplate = template
+  writerOpts.headerPartial = header
+  writerOpts.commitPartial = commit
+  writerOpts.footerPartial = footer
+
+  return writerOpts
+}
+
+module.exports.createWriterOpts = createWriterOpts
+
+function getWriterOpts () {
+  return {
+    transform: (commit, context) => {
+      let discard = true
+      const issues = []
+
+      commit.notes.forEach(note => {
+        note.title = 'BREAKING CHANGES'
+        discard = false
+      })
+
+      if (commit.type === 'feat') {
+        commit.type = 'Features'
+      } else if (commit.type === 'fix') {
+        commit.type = 'Bug Fixes'
+      } else if (commit.type === 'perf') {
+        commit.type = 'Performance Improvements'
+      } else if (commit.type === 'revert' || commit.revert) {
+        commit.type = 'Reverts'
+      } else if (discard) {
+        return
+      } else if (commit.type === 'docs') {
+        commit.type = 'Documentation'
+      } else if (commit.type === 'style') {
+        commit.type = 'Styles'
+      } else if (commit.type === 'refactor') {
+        commit.type = 'Code Refactoring'
+      } else if (commit.type === 'test') {
+        commit.type = 'Tests'
+      } else if (commit.type === 'build') {
+        commit.type = 'Build System'
+      } else if (commit.type === 'ci') {
+        commit.type = 'Continuous Integration'
+      }
+
+      if (commit.scope === '*') {
+        commit.scope = ''
+      }
+
+      if (typeof commit.hash === 'string') {
+        commit.shortHash = commit.hash.substring(0, 7)
+      }
+
+      if (typeof commit.subject === 'string') {
+        let url = context.repository
+          ? `${context.host}/${context.owner}/${context.repository}`
+          : context.repoUrl
+        if (url) {
+          url = `${url}/issues/`
+          // Issue URLs.
+          commit.subject = commit.subject.replace(/#([0-9]+)/g, (_, issue) => {
+            issues.push(issue)
+            return `[#${issue}](${url}${issue})`
+          })
+        }
+        if (context.host) {
+          // User URLs.
+          commit.subject = commit.subject.replace(/\B@([a-z0-9](?:-?[a-z0-9/]){0,38})/g, (_, username) => {
+            if (username.includes('/')) {
+              return `@${username}`
+            }
+
+            return `[@${username}](${context.host}/${username})`
+          })
+        }
+      }
+
+      // remove references that already appear in the subject
+      commit.references = commit.references.filter(reference => {
+        if (issues.indexOf(reference.issue) === -1) {
+          return true
+        }
+
+        return false
+      })
+
+      return commit
+    },
+    groupBy: 'type',
+    commitGroupsSort: 'title',
+    commitsSort: ['scope', 'subject'],
+    noteGroupsSort: 'title',
+    notesSort: compareFunc
+  }
+}
+
+
+/***/ }),
+
 /***/ 9854:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -6058,10 +6353,10 @@ async function conventionalChangelogWriterInit (context, options) {
     commitPartial,
     footerPartial
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
   ])
 
   options = {
@@ -7279,6 +7574,156 @@ async function conventionalRecommendedBump (optionsArgument, parserOptsArgument)
 }
 
 module.exports = conventionalRecommendedBump
+
+
+/***/ }),
+
+/***/ 6352:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+const isObj = __nccwpck_require__(6303);
+
+const disallowedKeys = [
+	'__proto__',
+	'prototype',
+	'constructor'
+];
+
+const isValidPath = pathSegments => !pathSegments.some(segment => disallowedKeys.includes(segment));
+
+function getPathSegments(path) {
+	const pathArray = path.split('.');
+	const parts = [];
+
+	for (let i = 0; i < pathArray.length; i++) {
+		let p = pathArray[i];
+
+		while (p[p.length - 1] === '\\' && pathArray[i + 1] !== undefined) {
+			p = p.slice(0, -1) + '.';
+			p += pathArray[++i];
+		}
+
+		parts.push(p);
+	}
+
+	if (!isValidPath(parts)) {
+		return [];
+	}
+
+	return parts;
+}
+
+module.exports = {
+	get(object, path, value) {
+		if (!isObj(object) || typeof path !== 'string') {
+			return value === undefined ? object : value;
+		}
+
+		const pathArray = getPathSegments(path);
+		if (pathArray.length === 0) {
+			return;
+		}
+
+		for (let i = 0; i < pathArray.length; i++) {
+			if (!Object.prototype.propertyIsEnumerable.call(object, pathArray[i])) {
+				return value;
+			}
+
+			object = object[pathArray[i]];
+
+			if (object === undefined || object === null) {
+				// `object` is either `undefined` or `null` so we want to stop the loop, and
+				// if this is not the last bit of the path, and
+				// if it did't return `undefined`
+				// it would return `null` if `object` is `null`
+				// but we want `get({foo: null}, 'foo.bar')` to equal `undefined`, or the supplied value, not `null`
+				if (i !== pathArray.length - 1) {
+					return value;
+				}
+
+				break;
+			}
+		}
+
+		return object;
+	},
+
+	set(object, path, value) {
+		if (!isObj(object) || typeof path !== 'string') {
+			return object;
+		}
+
+		const root = object;
+		const pathArray = getPathSegments(path);
+
+		for (let i = 0; i < pathArray.length; i++) {
+			const p = pathArray[i];
+
+			if (!isObj(object[p])) {
+				object[p] = {};
+			}
+
+			if (i === pathArray.length - 1) {
+				object[p] = value;
+			}
+
+			object = object[p];
+		}
+
+		return root;
+	},
+
+	delete(object, path) {
+		if (!isObj(object) || typeof path !== 'string') {
+			return false;
+		}
+
+		const pathArray = getPathSegments(path);
+
+		for (let i = 0; i < pathArray.length; i++) {
+			const p = pathArray[i];
+
+			if (i === pathArray.length - 1) {
+				delete object[p];
+				return true;
+			}
+
+			object = object[p];
+
+			if (!isObj(object)) {
+				return false;
+			}
+		}
+	},
+
+	has(object, path) {
+		if (!isObj(object) || typeof path !== 'string') {
+			return false;
+		}
+
+		const pathArray = getPathSegments(path);
+		if (pathArray.length === 0) {
+			return false;
+		}
+
+		// eslint-disable-next-line unicorn/no-for-loop
+		for (let i = 0; i < pathArray.length; i++) {
+			if (isObj(object)) {
+				if (!(pathArray[i] in object)) {
+					return false;
+				}
+
+				object = object[pathArray[i]];
+			} else {
+				return false;
+			}
+		}
+
+		return true;
+	}
+};
 
 
 /***/ }),
@@ -13503,6 +13948,20 @@ var data = __nccwpck_require__(6151);
 
 module.exports = function isCore(x, nodeVersion) {
 	return hasOwn(data, x) && versionIncluded(nodeVersion, data[x]);
+};
+
+
+/***/ }),
+
+/***/ 6303:
+/***/ ((module) => {
+
+"use strict";
+
+
+module.exports = value => {
+	const type = typeof value;
+	return value !== null && (type === 'object' || type === 'function');
 };
 
 
@@ -22848,8 +23307,9 @@ module.exports = async (releaseType, version) => {
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
 const fs = __nccwpck_require__(7147)
-const { Readable } = __nccwpck_require__(2781);
+const { Readable } = __nccwpck_require__(2781)
 const conventionalChangelog = __nccwpck_require__(5867)
+const { loadPreset } = __nccwpck_require__(5573)
 
 /**
  * Generates a changelog stream with the given arguments
@@ -22863,8 +23323,8 @@ const conventionalChangelog = __nccwpck_require__(5867)
  * @param skipUnstable
  * @returns {*}
  */
-const getChangelogStream = (tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => conventionalChangelog({
-    preset,
+const getChangelogStream = async(tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => conventionalChangelog({
+    preset: await loadPreset(preset),
     releaseCount: parseInt(releaseCount, 10),
     tagPrefix,
     config,
@@ -22872,7 +23332,7 @@ const getChangelogStream = (tagPrefix, preset, version, releaseCount, config, gi
   },
   {
     version,
-    currentTag: `${tagPrefix}${version}`,
+    currentTag: `${tagPrefix}${version}`
   },
   {
     path: gitPath === '' || gitPath === null ? undefined : gitPath
@@ -22895,8 +23355,8 @@ module.exports = getChangelogStream
  * @param skipUnstable
  * @returns {Promise<string>}
  */
-module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => new Promise((resolve, reject) => {
-  const changelogStream = getChangelogStream(tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable)
+module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable) => new Promise(async(resolve) => {
+  const changelogStream = await getChangelogStream(tagPrefix, preset, version, releaseCount, config, gitPath, skipUnstable)
 
   let changelog = ''
 
@@ -22920,8 +23380,9 @@ module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCou
  * @param infile
  * @returns {Promise<>}
  */
-module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, releaseCount, config, gitPath, infile) => new Promise((resolve) => {
-  const changelogStream = getChangelogStream(tagPrefix, preset, version, infile ? 1 : releaseCount, config, gitPath)
+module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, releaseCount, config, gitPath, infile) => new Promise(async(resolve) => {
+  const changelogStream = await getChangelogStream(tagPrefix, preset, version, infile ? 1
+    : releaseCount, config, gitPath)
 
   // The default changelog output to be streamed first
   const readStreams = [changelogStream]
@@ -22929,34 +23390,34 @@ module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, re
   // If an input-file is provided and release count is not 0
   if (infile) {
     // The infile is read synchronously to avoid repeatedly reading newly written content while it is being written
-    const buffer = fs.readFileSync(infile);
-    const readableStream = Readable.from(buffer);
+    const buffer = fs.readFileSync(infile)
+    const readableStream = Readable.from(buffer)
     // We add the stream as the next item for later pipe
     readStreams.push(readableStream)
   }
 
   const writeStream = fs.createWriteStream(fileName)
 
-  let currentIndex = 0;
+  let currentIndex = 0
 
   function pipeNextStream() {
     if (currentIndex < readStreams.length) {
-      const currentStream = readStreams[currentIndex];
+      const currentStream = readStreams[currentIndex]
 
-      currentStream.pipe(writeStream, { end: false });
+      currentStream.pipe(writeStream, { end: false })
 
       currentStream.once('end', () => {
-        currentIndex++;
-        pipeNextStream();
-      });
+        currentIndex++
+        pipeNextStream()
+      })
     } else {
       // All stream pipes have completed
-      writeStream.end();
-      resolve();
+      writeStream.end()
+      resolve()
     }
   }
 
-  pipeNextStream();
+  pipeNextStream()
 
 })
 
@@ -23171,6 +23632,32 @@ module.exports = new (class Git {
   }
 
 })()
+
+
+/***/ }),
+
+/***/ 5573:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+module.exports.loadPreset = async(preset) => {
+  if (preset === 'angular') {
+    return null
+  }
+
+  return preset
+}
+
+module.exports.loadPresetConfig = async(preset, providedConfig = {}) => {
+  if (providedConfig && typeof providedConfig === 'object') {
+    return providedConfig
+  }
+
+  if (preset === 'angular') {
+    return await __nccwpck_require__(6401)()
+  }
+
+  return {}
+}
 
 
 /***/ }),
@@ -33865,6 +34352,7 @@ const getVersioning = __nccwpck_require__(3413)
 const git = __nccwpck_require__(8248)
 const changelog = __nccwpck_require__(5887)
 const requireScript = __nccwpck_require__(403)
+const { loadPreset, loadPresetConfig } = __nccwpck_require__(5573)
 
 async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
   const versioning = getVersioning(ext)
@@ -33950,164 +34438,165 @@ async function run() {
       await git.pull()
     }
 
-    const config = conventionalConfigFile && requireScript(conventionalConfigFile)
+    const config = await loadPresetConfig(preset, conventionalConfigFile && requireScript(conventionalConfigFile))
 
-    conventionalRecommendedBump({ preset, tagPrefix, config, skipUnstable: !prerelease }, async (error, recommendation) => {
-      if (error) {
-        core.setFailed(error.message)
-        return
+    const recommendation = await conventionalRecommendedBump({
+      preset: await loadPreset(preset),
+      tagPrefix,
+      config,
+      skipUnstable: !prerelease
+    })
+
+    core.info(`Recommended release type: ${recommendation.releaseType}`)
+
+    // If we have a reason also log it
+    if (recommendation.reason) {
+      core.info(`Because: ${recommendation.reason}`)
+    }
+
+    let newVersion
+    let oldVersion
+
+    // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
+    // skipVersionFile can mean there is no version file and skipCommit can mean that the user
+    // is only interested in tags
+    if (skipVersionFile || skipCommit) {
+      core.info('Using GIT to determine the new version')
+      const versioning = await handleVersioningByExtension(
+        'git',
+        versionFile,
+        versionPath,
+        recommendation.releaseType
+      )
+
+      newVersion = versioning.newVersion
+      oldVersion = versioning.oldVersion
+
+    } else {
+      const files = versionFile.split(',').map((f) => f.trim())
+      core.info(`Files to bump: ${files.join(', ')}`)
+
+      const versioning = await Promise.all(
+        files.map((file) => {
+          const fileExtension = file.split('.').pop()
+          core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
+
+          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
+        })
+      )
+
+      newVersion = versioning[0].newVersion
+      oldVersion = versioning[0].oldVersion
+    }
+
+    let gitTag = `${tagPrefix}${newVersion}`
+
+    if (preChangelogGenerationFile) {
+      const preChangelogGenerationScript = requireScript(preChangelogGenerationFile)
+
+      // Double check if we want to update / do something with the tag
+      if (preChangelogGenerationScript && preChangelogGenerationScript.preTagGeneration) {
+        const modifiedTag = await preChangelogGenerationScript.preTagGeneration(gitTag)
+
+        if (modifiedTag) {
+          core.info(`Using modified tag "${modifiedTag}"`)
+          gitTag = modifiedTag
+        }
       }
+    }
 
-      core.info(`Recommended release type: ${recommendation.releaseType}`)
+    // Generate the string changelog
+    const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1, config, gitPath, !prerelease)
+    core.info('Changelog generated')
+    core.info(stringChangelog)
 
-      // If we have a reason also log it
-      if (recommendation.reason) {
-        core.info(`Because: ${recommendation.reason}`)
-      }
+    // Removes the version number from the changelog
+    const cleanChangelog = stringChangelog.split('\n').slice(3).join('\n').trim()
 
-      let newVersion
-      let oldVersion
+    if (skipEmptyRelease && cleanChangelog === '') {
+      core.info('Generated changelog is empty and skip-on-empty has been activated so we skip this step')
+      core.setOutput('version', oldVersion)
+      core.setOutput('skipped', 'true')
+      return
+    }
 
-      // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
-      // skipVersionFile can mean there is no version file and skipCommit can mean that the user
-      // is only interested in tags
-      if (skipVersionFile || skipCommit) {
-        core.info('Using GIT to determine the new version')
-        const versioning = await handleVersioningByExtension(
-          'git',
-          versionFile,
-          versionPath,
-          recommendation.releaseType,
-        )
+    core.info(`New version: ${newVersion}`)
 
-        newVersion = versioning.newVersion
-        oldVersion = versioning.oldVersion
+    // If output file === 'false' we don't write it to file
+    if (outputFile !== 'false') {
+      // Generate the changelog
+      await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config, gitPath, infile)
+    }
 
-      } else {
-        const files = versionFile.split(',').map((f) => f.trim())
-        core.info(`Files to bump: ${files.join(', ')}`)
+    if (!skipCommit) {
+      // Add changed files to git
+      if (preCommitFile) {
+        const preCommitScript = requireScript(preCommitFile)
 
-        const versioning = await Promise.all(
-          files.map((file) => {
-            const fileExtension = file.split('.').pop()
-            core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
-
-            return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
-          }),
-        )
-
-        newVersion = versioning[0].newVersion
-        oldVersion = versioning[0].oldVersion
-      }
-
-      let gitTag = `${tagPrefix}${newVersion}`
-
-      if (preChangelogGenerationFile) {
-        const preChangelogGenerationScript = requireScript(preChangelogGenerationFile)
-
-        // Double check if we want to update / do something with the tag
-        if (preChangelogGenerationScript && preChangelogGenerationScript.preTagGeneration) {
-          const modifiedTag = await preChangelogGenerationScript.preTagGeneration(gitTag)
-
-          if (modifiedTag) {
-            core.info(`Using modified tag "${modifiedTag}"`)
-            gitTag = modifiedTag
-          }
+        // Double check if the file exists and the export exists
+        if (preCommitScript && preCommitScript.preCommit) {
+          await preCommitScript.preCommit({
+            tag: gitTag,
+            version: newVersion
+          })
         }
       }
 
-      // Generate the string changelog
-      const stringChangelog = await changelog.generateStringChangelog(tagPrefix, preset, newVersion, 1, config, gitPath, !prerelease)
-      core.info('Changelog generated')
-      core.info(stringChangelog)
+      await git.add('.')
+      await git.commit(gitCommitMessage.replace('{version}', gitTag))
+    }
 
-      // Removes the version number from the changelog
-      const cleanChangelog = stringChangelog.split('\n').slice(3).join('\n').trim()
+    // Create the new tag
+    if (!skipTag) {
+      await git.createTag(gitTag)
+    } else {
+      core.info('We not going to the tag the GIT changes')
+    }
 
-      if (skipEmptyRelease && cleanChangelog === '') {
-        core.info('Generated changelog is empty and skip-on-empty has been activated so we skip this step')
-        core.setOutput('version', oldVersion)
-        core.setOutput('skipped', 'true')
-        return
-      }
-
-      core.info(`New version: ${newVersion}`)
-
-      // If output file === 'false' we don't write it to file
-      if (outputFile !== 'false') {
-        // Generate the changelog
-        await changelog.generateFileChangelog(tagPrefix, preset, newVersion, outputFile, releaseCount, config, gitPath, infile)
-      }
-
-      if (!skipCommit) {
-        // Add changed files to git
-        if (preCommitFile) {
-          const preCommitScript = requireScript(preCommitFile)
-
-          // Double check if the file exists and the export exists
-          if (preCommitScript && preCommitScript.preCommit) {
-            await preCommitScript.preCommit({
-              tag: gitTag,
-              version: newVersion,
-            })
-          }
-        }
-
-        await git.add('.')
-        await git.commit(gitCommitMessage.replace('{version}', gitTag))
-      }
-
-      // Create the new tag
-      if (!skipTag)
-        await git.createTag(gitTag)
-      else
-        core.info('We not going to the tag the GIT changes')
-
-      if (gitPush) {
-        try {
-          core.info('Push all changes')
-          await git.push(gitBranch)
-
-        } catch (error) {
-          console.error(error)
-
-          core.setFailed(error)
-
-          return
-        }
-
-      } else {
-        core.info('We not going to push the GIT changes')
-      }
-
-      // Set outputs so other actions (for example actions/create-release) can use it
-      core.setOutput('changelog', stringChangelog)
-      core.setOutput('clean_changelog', cleanChangelog)
-      core.setOutput('version', newVersion)
-      core.setOutput('tag', gitTag)
-      core.setOutput('skipped', 'false')
-
-      if (createSummary) {
-        try {
-          await core.summary
-            .addHeading(gitTag, 2)
-            .addRaw(cleanChangelog)
-            .write()
-        } catch (err) {
-          core.warning(`Was unable to create summary! Error: "${err}"`,)
-        }
-      }
-
+    if (gitPush) {
       try {
-        // If we are running in test mode we use this to validate everything still runs
-        git.testHistory(gitBranch)
+        core.info('Push all changes')
+        await git.push(gitBranch)
 
       } catch (error) {
         console.error(error)
 
         core.setFailed(error)
+
+        return
       }
-    })
+
+    } else {
+      core.info('We not going to push the GIT changes')
+    }
+
+    // Set outputs so other actions (for example actions/create-release) can use it
+    core.setOutput('changelog', stringChangelog)
+    core.setOutput('clean_changelog', cleanChangelog)
+    core.setOutput('version', newVersion)
+    core.setOutput('tag', gitTag)
+    core.setOutput('skipped', 'false')
+
+    if (createSummary) {
+      try {
+        await core.summary
+          .addHeading(gitTag, 2)
+          .addRaw(cleanChangelog)
+          .write()
+      } catch (err) {
+        core.warning(`Was unable to create summary! Error: "${err}"`)
+      }
+    }
+
+    try {
+      // If we are running in test mode we use this to validate everything still runs
+      git.testHistory(gitBranch)
+
+    } catch (error) {
+      console.error(error)
+
+      core.setFailed(error)
+    }
   } catch (error) {
     core.setFailed(error)
   }
@@ -34117,7 +34606,7 @@ process.on('unhandledRejection', (reason, promise) => {
   let error = `Unhandled Rejection occurred. ${reason.stack}`
   console.error(error)
   core.setFailed(error)
-});
+})
 
 run()
 })();
