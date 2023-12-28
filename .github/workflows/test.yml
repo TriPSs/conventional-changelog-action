@@ -15,6 +15,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -49,6 +50,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -83,6 +85,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -117,6 +120,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -152,6 +156,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -186,6 +191,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -215,6 +221,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -246,6 +253,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -273,6 +281,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -304,6 +313,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -337,6 +347,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -407,6 +418,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -445,6 +457,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -481,6 +494,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -515,6 +529,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -551,6 +566,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -587,6 +603,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -626,6 +643,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -658,6 +676,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -692,6 +711,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -733,6 +753,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -766,6 +787,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -802,6 +824,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -837,6 +860,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -873,6 +897,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -908,6 +933,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
