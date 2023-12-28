@@ -1,3 +1,19 @@
+# [5.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v4.1.1...v5.0.0) (2023-12-28)
+
+
+### Features
+
+* Added `old_version` output ([3ca6919](https://github.com/TriPSs/conventional-changelog-action/commit/3ca6919820fdf15e0dc179c3b992e1587a530e91)), closes [#240](https://github.com/TriPSs/conventional-changelog-action/issues/240)
+* Update action to run on `node20` ([97da0e7](https://github.com/TriPSs/conventional-changelog-action/commit/97da0e72a97bc87383ea2a36c83309d0401ef751))
+* Updated deps ([c1f5d34](https://github.com/TriPSs/conventional-changelog-action/commit/c1f5d3424bf4057d0df64fa2f91d5f83413cfb02)), closes [#166](https://github.com/TriPSs/conventional-changelog-action/issues/166)
+
+
+### BREAKING CHANGES
+
+* Updated major version of packages
+
+
+
 ## [4.1.1](https://github.com/TriPSs/conventional-changelog-action/compare/v4.1.0...v4.1.1) (2023-09-25)
 
 
@@ -37,15 +53,6 @@
 ### Features
 
 * Add 'infile' option ([a858fad](https://github.com/TriPSs/conventional-changelog-action/commit/a858fade68261d33b8c91977bbe3c77f1d39521d))
-
-
-
-## [3.18.1](https://github.com/TriPSs/conventional-changelog-action/compare/v3.18.0...v3.18.1) (2023-05-18)
-
-
-### Bug Fixes
-
-* execute git config commands synchronously ([1607ac7](https://github.com/TriPSs/conventional-changelog-action/commit/1607ac70d5942487fb67e1d412d57868d8decca9))
 
 
 
