@@ -23916,8 +23916,6 @@ module.exports = class Mix extends BaseVersioning {
       throw new Error(`Failed to extract mix project version.`)
     }
 
-    console.log(this.oldVersion)
-
     this.newVersion = await bumpVersion(
       releaseType,
       this.oldVersion

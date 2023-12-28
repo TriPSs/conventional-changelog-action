@@ -491,7 +491,7 @@ jobs:
         uses: ./
         env:
           ENV: "dont-use-git"
-          EXPECTED_TAG: "v0.10.0"
+          EXPECTED_TAG: "v0.2.0"
         with:
           github-token: ${{ secrets.github_token }}
           version-file: "mix.exs"
@@ -504,7 +504,7 @@ jobs:
         run: node ./test-output.js
         env:
           FILES: "mix.exs"
-          EXPECTED_VERSION: "0.10.0"
+          EXPECTED_VERSION: "0.2.0"
 
   test-toml:
     runs-on: ubuntu-latest
