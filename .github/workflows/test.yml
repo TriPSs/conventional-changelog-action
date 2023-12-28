@@ -10,11 +10,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -44,11 +45,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -78,11 +80,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -112,11 +115,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -147,11 +151,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -181,11 +186,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -210,11 +216,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -241,11 +248,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -268,11 +276,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -299,11 +308,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -332,11 +342,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -402,11 +413,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -440,11 +452,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -481,6 +494,7 @@ jobs:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -491,7 +505,7 @@ jobs:
         uses: ./
         env:
           ENV: "dont-use-git"
-          EXPECTED_TAG: "v0.10.0"
+          EXPECTED_TAG: "v0.2.0"
         with:
           github-token: ${{ secrets.github_token }}
           version-file: "mix.exs"
@@ -504,17 +518,18 @@ jobs:
         run: node ./test-output.js
         env:
           FILES: "mix.exs"
-          EXPECTED_VERSION: "0.10.0"
+          EXPECTED_VERSION: "0.2.0"
 
   test-toml:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -546,11 +561,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -582,11 +598,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -621,11 +638,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -653,11 +671,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -687,11 +706,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -728,11 +748,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -761,11 +782,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -797,11 +819,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -832,11 +855,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -868,11 +892,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"
@@ -903,11 +928,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
-        uses: actions/checkout@v2
+        uses: actions/checkout@v4
         with:
           path: "./"
 
       - run: npm ci --prod
+      - run: npm run build
 
       - run: "git config --global user.email 'changelog@github.com'"
       - run: "git config --global user.name 'Awesome Github action'"

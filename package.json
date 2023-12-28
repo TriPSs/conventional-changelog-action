@@ -14,6 +14,9 @@
   "bugs": {
     "url": "https://github.com/TriPSs/conventional-changelog-action/issues"
   },
+  "scripts": {
+    "build": "npx ncc build ./src/index.js --out ./dist"
+  },
   "repository": {
     "type": "git",
     "url": "git+https://github.com/TriPSs/conventional-changelog-action.git"
@@ -23,16 +26,18 @@
     "name": "Tycho Bokdam",
     "email": "github@palmtreecoding.com"
   },
-  "main": "src/index.js",
+  "main": "dist/index.js",
   "dependencies": {
-    "@actions/core": "^1.10.0",
+    "@actions/core": "^1.10.1",
     "@actions/exec": "^1.1.1",
     "@iarna/toml": "^2.2.5",
-    "conventional-changelog": "^4.0.0",
-    "conventional-recommended-bump": "^7.0.1",
-    "git-semver-tags": "5.0.1",
+    "@vercel/ncc": "^0.38.1",
+    "conventional-changelog": "^5.1.0",
+    "conventional-changelog-angular": "^7.0.0",
+    "conventional-recommended-bump": "^9.0.0",
+    "git-semver-tags": "7.0.1",
     "object-path": "^0.11.8",
     "semver": "^7.5.4",
-    "yaml": "^2.3.1"
+    "yaml": "^2.3.4"
   }
 }

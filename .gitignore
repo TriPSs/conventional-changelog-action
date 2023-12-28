@@ -68,3 +68,5 @@ typings/
 
 # build output
 lib
+
+node_modules

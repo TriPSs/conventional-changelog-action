@@ -6,24 +6,18 @@ const bumpVersion = require('../helpers/bumpVersion')
 
 module.exports = class Git extends BaseVersioning {
 
-  bump = (releaseType) => {
-    return new Promise((resolve) => {
-      const tagPrefix = core.getInput('tag-prefix')
-      const prerelease = core.getBooleanInput('pre-release')
+  bump = async(releaseType) => {
+    const tagPrefix = core.getInput('tag-prefix')
+    const prerelease = core.getBooleanInput('pre-release')
 
-      gitSemverTags({ tagPrefix, skipUnstable: !prerelease }, async (err, tags) => {
-        this.oldVersion = tags.length > 0 ? tags.shift().replace(tagPrefix, '') : null
+    const tags = await gitSemverTags({ tagPrefix, skipUnstable: !prerelease })
+    this.oldVersion = tags.length > 0 ? tags.shift().replace(tagPrefix, '') : null
 
-        // Get the new version
-        this.newVersion = await bumpVersion(
-          releaseType,
-          this.oldVersion,
-        )
-
-        // We are done
-        resolve()
-      })
-    })
+    // Get the new version
+    this.newVersion = await bumpVersion(
+      releaseType,
+      this.oldVersion
+    )
   }
 
 }

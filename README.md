@@ -250,15 +250,15 @@ If you'd like to contribute to this project, all you need to do is clone and ins
 > Note: The image used is 18 gb!
 
 ```shell
-$ yarn install
+$ npm install
 
 # To run / test one specific job
-$ act -j <workflow job name> -P ubuntu-latest=catthehacker/ubuntu:full-20.04 --quiet
+$ act -j <workflow job name> -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-22.04 --quiet
 # Example
-$ act -j test-json -P ubuntu-latest=catthehacker/ubuntu:full-20.04 --quiet
+$ act -j test-json -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-22.04 --quiet
 
 # To run all tests
-$ act pull_request -P ubuntu-latest=catthehacker/ubuntu:full-20.04 --quiet
+$ act pull_request -P ubuntu-latest=ghcr.io/catthehacker/ubuntu:act-22.04 --quiet
 ```
 
 ## [License](./LICENSE)
