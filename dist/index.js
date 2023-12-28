@@ -23639,6 +23639,9 @@ module.exports = new (class Git {
 /***/ 5573:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
+/**
+ * Skips loading of the "angular" preset as that one is compiled with this action
+ */
 module.exports.loadPreset = async(preset) => {
   if (preset === 'angular') {
     return null
@@ -23647,6 +23650,10 @@ module.exports.loadPreset = async(preset) => {
   return preset
 }
 
+/**
+ * Loads the "angular" preset, so it works with ncc compiled dist, if user provided own config
+ * that one will be used instead
+ */
 module.exports.loadPresetConfig = async(preset, providedConfig = {}) => {
   if (providedConfig && typeof providedConfig === 'object') {
     return providedConfig
@@ -23888,9 +23895,6 @@ module.exports = class Json extends BaseVersioning {
 /***/ 2254:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
-const exec = __nccwpck_require__(2173)
-const path = __nccwpck_require__(1017)
-
 const BaseVersioning = __nccwpck_require__(4165)
 const bumpVersion = __nccwpck_require__(7365)
 
@@ -23901,34 +23905,24 @@ module.exports = class Mix extends BaseVersioning {
    * @param {!string} releaseType - The type of release
    * @return {*}
    */
-  bump = async (releaseType) => {
-    // elixir is very structured and assumes a specific file name (mix.exs)
-    const mixDirectory = path.dirname(this.fileLocation)
+  bump = async(releaseType) => {
+    // Read the file
+    const fileContent = this.read()
 
-    let execOutput = ''
-    const options = {
-      cwd: mixDirectory,
-      listeners: {
-        stdout: (data) => {
-          execOutput += data.toString()
-        },
-      },
+    const [_, oldVersion] = fileContent.match(/version: "([0-9.]+)"/i)
+    this.oldVersion = oldVersion
+
+    if (!this.oldVersion) {
+      throw new Error(`Failed to extract mix project version.`)
     }
 
-    const exitCode = await exec.exec(`mix run -e "IO.puts Mix.Project.config()[:version]"`, null, options)
-
-    if (exitCode !== 0) {
-      throw new Error(`Failed to extract mix project version exited with code ${exitCode}.`)
-    }
-
-    this.oldVersion = execOutput.trim()
+    console.log(this.oldVersion)
 
     this.newVersion = await bumpVersion(
       releaseType,
-      this.oldVersion,
+      this.oldVersion
     )
 
-    const fileContent = this.read()
     this.update(
       fileContent.replace(`version: "${this.oldVersion}"`, `version: "${this.newVersion}"`)
     )
@@ -34357,7 +34351,7 @@ const { loadPreset, loadPresetConfig } = __nccwpck_require__(5573)
 async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
   const versioning = getVersioning(ext)
 
-  // File type not supported
+  // File type isn't supported
   if (versioning === null) {
     throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
   }

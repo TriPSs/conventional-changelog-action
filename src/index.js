@@ -11,7 +11,7 @@ const { loadPreset, loadPresetConfig } = require('./helpers/load-preset')
 async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
   const versioning = getVersioning(ext)
 
-  // File type not supported
+  // File type isn't supported
   if (versioning === null) {
     throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
   }
