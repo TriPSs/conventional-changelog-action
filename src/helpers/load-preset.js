@@ -2,11 +2,14 @@
  * Skips loading of the "angular" preset as that one is compiled with this action
  */
 module.exports.loadPreset = async(preset) => {
-  if (preset === 'angular') {
-    return null
-  }
+  switch (preset) {
+    case 'angular':
+    case 'conventionalcommits':
+      return null
 
-  return preset
+    default:
+      return preset
+  }
 }
 
 /**
@@ -18,9 +21,14 @@ module.exports.loadPresetConfig = async(preset, providedConfig = {}) => {
     return providedConfig
   }
 
-  if (preset === 'angular') {
-    return await require('conventional-changelog-angular')()
-  }
+  switch (preset) {
+    case 'angular':
+      return await require('conventional-changelog-angular')()
 
-  return {}
+    case 'conventionalcommits':
+      return await require('conventional-changelog-conventionalcommits')()
+
+    default:
+      return {}
+  }
 }

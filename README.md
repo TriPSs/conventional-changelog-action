@@ -34,6 +34,10 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `pre-release`: Marks the release as pre-release. Default `false`.
 - **Optional** `pre-release-identifier`: The identifier to use for the pre-release. Default `rc`.
 
+### Presets
+This action comes pre-compiled with the `angular` (default) and `conventionalcommits`, if you wish to use an other preset
+you need to make sure it's installed with `npm install conventional-changelog-<preset name>`
+
 ### Pre-Commit hook
 
 > Function in a specified file will be run right before the git-add-git-commit phase, when the next
