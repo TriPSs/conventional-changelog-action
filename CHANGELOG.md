@@ -1,3 +1,12 @@
+# [5.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.0.0...v5.1.0) (2024-01-05)
+
+
+### Features
+
+* Include `conventionalcommits` in pre-compiled presets ([f56dffa](https://github.com/TriPSs/conventional-changelog-action/commit/f56dffaed0e9d183ad37733b382170cb3f9457a4)), closes [#246](https://github.com/TriPSs/conventional-changelog-action/issues/246)
+
+
+
 # [5.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v4.1.1...v5.0.0) (2023-12-28)
 
 
@@ -44,15 +53,6 @@
 ### BREAKING CHANGES
 
 * Updated `conventional-changelog` to v4 and `conventional-recommended-bump` to v7
-
-
-
-# [3.19.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.18.1...v3.19.0) (2023-06-22)
-
-
-### Features
-
-* Add 'infile' option ([a858fad](https://github.com/TriPSs/conventional-changelog-action/commit/a858fade68261d33b8c91977bbe3c77f1d39521d))
 
 
 
