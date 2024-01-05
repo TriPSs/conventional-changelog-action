@@ -5626,6 +5626,390 @@ function getWriterOpts () {
 
 /***/ }),
 
+/***/ 5498:
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+
+const DEFAULT_COMMIT_TYPES = Object.freeze([
+  { type: 'feat', section: 'Features' },
+  { type: 'feature', section: 'Features' },
+  { type: 'fix', section: 'Bug Fixes' },
+  { type: 'perf', section: 'Performance Improvements' },
+  { type: 'revert', section: 'Reverts' },
+  { type: 'docs', section: 'Documentation', hidden: true },
+  { type: 'style', section: 'Styles', hidden: true },
+  { type: 'chore', section: 'Miscellaneous Chores', hidden: true },
+  { type: 'refactor', section: 'Code Refactoring', hidden: true },
+  { type: 'test', section: 'Tests', hidden: true },
+  { type: 'build', section: 'Build System', hidden: true },
+  { type: 'ci', section: 'Continuous Integration', hidden: true }
+].map(Object.freeze))
+
+exports.DEFAULT_COMMIT_TYPES = DEFAULT_COMMIT_TYPES
+
+
+/***/ }),
+
+/***/ 8283:
+/***/ ((module) => {
+
+"use strict";
+
+
+function createConventionalChangelogOpts (parserOpts, writerOpts) {
+  return {
+    parserOpts,
+    writerOpts
+  }
+}
+
+module.exports.createConventionalChangelogOpts = createConventionalChangelogOpts
+
+
+/***/ }),
+
+/***/ 2287:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const { addBangNotes } = __nccwpck_require__(4672)
+
+function createConventionalRecommendedBumpOpts (config, parserOpts) {
+  return {
+    parserOpts,
+
+    whatBump (commits) {
+      let level = 2
+      let breakings = 0
+      let features = 0
+
+      commits.forEach(commit => {
+        // adds additional breaking change notes
+        // for the special case, test(system)!: hello world, where there is
+        // a '!' but no 'BREAKING CHANGE' in body:
+        addBangNotes(commit)
+        if (commit.notes.length > 0) {
+          breakings += commit.notes.length
+          level = 0
+        } else if (commit.type === 'feat' || commit.type === 'feature') {
+          features += 1
+          if (level === 2) {
+            level = 1
+          }
+        }
+      })
+
+      if (config?.preMajor && level < 2) {
+        level++
+      }
+
+      return {
+        level,
+        reason: breakings === 1
+          ? `There is ${breakings} BREAKING CHANGE and ${features} features`
+          : `There are ${breakings} BREAKING CHANGES and ${features} features`
+      }
+    }
+  }
+}
+
+module.exports.createConventionalRecommendedBumpOpts = createConventionalRecommendedBumpOpts
+
+
+/***/ }),
+
+/***/ 8761:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const { DEFAULT_COMMIT_TYPES } = __nccwpck_require__(5498)
+const { createParserOpts } = __nccwpck_require__(748)
+const { createWriterOpts } = __nccwpck_require__(4256)
+const { createConventionalChangelogOpts } = __nccwpck_require__(8283)
+const { createConventionalRecommendedBumpOpts } = __nccwpck_require__(2287)
+
+async function createPreset (config) {
+  const parserOpts = createParserOpts(config)
+  const writerOpts = await createWriterOpts(config)
+  const recommendedBumpOpts = createConventionalRecommendedBumpOpts(config, parserOpts)
+  const conventionalChangelog = createConventionalChangelogOpts(parserOpts, writerOpts)
+
+  return {
+    gitRawCommitsOpts: {
+      ignore: config?.ignoreCommits,
+      noMerges: null
+    },
+    parserOpts,
+    writerOpts,
+    recommendedBumpOpts,
+    conventionalChangelog
+  }
+}
+
+module.exports = createPreset
+
+module.exports.DEFAULT_COMMIT_TYPES = DEFAULT_COMMIT_TYPES
+
+
+/***/ }),
+
+/***/ 748:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const { breakingHeaderPattern } = __nccwpck_require__(4672)
+
+function createParserOpts (config) {
+  return {
+    headerPattern: /^(\w*)(?:\((.*)\))?!?: (.*)$/,
+    breakingHeaderPattern,
+    headerCorrespondence: [
+      'type',
+      'scope',
+      'subject'
+    ],
+    noteKeywords: ['BREAKING CHANGE', 'BREAKING-CHANGE'],
+    revertPattern: /^(?:Revert|revert:)\s"?([\s\S]+?)"?\s*This reverts commit (\w*)\./i,
+    revertCorrespondence: ['header', 'hash'],
+    issuePrefixes: config?.issuePrefixes || ['#']
+  }
+}
+
+module.exports.createParserOpts = createParserOpts
+
+
+/***/ }),
+
+/***/ 4672:
+/***/ ((module) => {
+
+const breakingHeaderPattern = /^(\w*)(?:\((.*)\))?!: (.*)$/
+
+module.exports.breakingHeaderPattern = breakingHeaderPattern
+
+function addBangNotes (commit) {
+  const match = commit.header.match(breakingHeaderPattern)
+  if (match && commit.notes.length === 0) {
+    const noteText = match[3] // the description of the change.
+    commit.notes.push({
+      text: noteText
+    })
+  }
+}
+
+module.exports.addBangNotes = addBangNotes
+
+
+/***/ }),
+
+/***/ 4256:
+/***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
+
+"use strict";
+
+
+const compareFunc = __nccwpck_require__(4623)
+const { readFile } = (__nccwpck_require__(7147).promises)
+const { resolve } = __nccwpck_require__(1017)
+const { DEFAULT_COMMIT_TYPES } = __nccwpck_require__(5498)
+const { addBangNotes } = __nccwpck_require__(4672)
+
+const releaseAsRegex = /release-as:\s*\w*@?([0-9]+\.[0-9]+\.[0-9a-z]+(-[0-9a-z.]+)?)\s*/i
+/**
+ * Handlebar partials for various property substitutions based on commit context.
+ */
+const owner = '{{#if this.owner}}{{~this.owner}}{{else}}{{~@root.owner}}{{/if}}'
+const host = '{{~@root.host}}'
+const repository = '{{#if this.repository}}{{~this.repository}}{{else}}{{~@root.repository}}{{/if}}'
+
+async function createWriterOpts (config) {
+  const finalConfig = {
+    types: DEFAULT_COMMIT_TYPES,
+    issueUrlFormat: '{{host}}/{{owner}}/{{repository}}/issues/{{id}}',
+    commitUrlFormat: '{{host}}/{{owner}}/{{repository}}/commit/{{hash}}',
+    compareUrlFormat: '{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}',
+    userUrlFormat: '{{host}}/{{user}}',
+    issuePrefixes: ['#'],
+    ...config
+  }
+  const commitUrlFormat = expandTemplate(finalConfig.commitUrlFormat, {
+    host,
+    owner,
+    repository
+  })
+  const compareUrlFormat = expandTemplate(finalConfig.compareUrlFormat, {
+    host,
+    owner,
+    repository
+  })
+  const issueUrlFormat = expandTemplate(finalConfig.issueUrlFormat, {
+    host,
+    owner,
+    repository,
+    id: '{{this.issue}}',
+    prefix: '{{this.prefix}}'
+  })
+
+  const [
+    template,
+    header,
+    commit,
+    footer
+  ] = await Promise.all([
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
+  ])
+  const writerOpts = getWriterOpts(finalConfig)
+
+  writerOpts.mainTemplate = template
+  writerOpts.headerPartial = header
+    .replace(/{{compareUrlFormat}}/g, compareUrlFormat)
+  writerOpts.commitPartial = commit
+    .replace(/{{commitUrlFormat}}/g, commitUrlFormat)
+    .replace(/{{issueUrlFormat}}/g, issueUrlFormat)
+  writerOpts.footerPartial = footer
+
+  return writerOpts
+}
+
+module.exports.createWriterOpts = createWriterOpts
+
+function getWriterOpts (config) {
+  const commitGroupOrder = config.types.flatMap(t => t.section).filter(t => t)
+
+  return {
+    transform: (commit, context) => {
+      let discard = true
+      const issues = []
+      const entry = findTypeEntry(config.types, commit)
+
+      // adds additional breaking change notes
+      // for the special case, test(system)!: hello world, where there is
+      // a '!' but no 'BREAKING CHANGE' in body:
+      addBangNotes(commit)
+
+      // Add an entry in the CHANGELOG if special Release-As footer
+      // is used:
+      if ((commit.footer && releaseAsRegex.test(commit.footer)) ||
+          (commit.body && releaseAsRegex.test(commit.body))) {
+        discard = false
+      }
+
+      commit.notes.forEach(note => {
+        note.title = 'BREAKING CHANGES'
+        discard = false
+      })
+
+      // breaking changes attached to any type are still displayed.
+      if (discard && (entry === undefined ||
+          entry.hidden)) return
+
+      if (entry) commit.type = entry.section
+
+      if (commit.scope === '*') {
+        commit.scope = ''
+      }
+
+      if (typeof commit.hash === 'string') {
+        commit.shortHash = commit.hash.substring(0, 7)
+      }
+
+      if (typeof commit.subject === 'string') {
+        // Issue URLs.
+        config.issuePrefixes.join('|')
+        const issueRegEx = '(' + config.issuePrefixes.join('|') + ')' + '([a-z0-9]+)'
+        const re = new RegExp(issueRegEx, 'g')
+
+        commit.subject = commit.subject.replace(re, (_, prefix, issue) => {
+          issues.push(prefix + issue)
+          const url = expandTemplate(config.issueUrlFormat, {
+            host: context.host,
+            owner: context.owner,
+            repository: context.repository,
+            id: issue,
+            prefix
+          })
+          return `[${prefix}${issue}](${url})`
+        })
+        // User URLs.
+        commit.subject = commit.subject.replace(/\B@([a-z0-9](?:-?[a-z0-9/]){0,38})/g, (_, user) => {
+          // TODO: investigate why this code exists.
+          if (user.includes('/')) {
+            return `@${user}`
+          }
+
+          const usernameUrl = expandTemplate(config.userUrlFormat, {
+            host: context.host,
+            owner: context.owner,
+            repository: context.repository,
+            user
+          })
+
+          return `[@${user}](${usernameUrl})`
+        })
+      }
+
+      // remove references that already appear in the subject
+      commit.references = commit.references.filter(reference => {
+        if (issues.indexOf(reference.prefix + reference.issue) === -1) {
+          return true
+        }
+
+        return false
+      })
+
+      return commit
+    },
+    groupBy: 'type',
+    // the groupings of commit messages, e.g., Features vs., Bug Fixes, are
+    // sorted based on their probable importance:
+    commitGroupsSort: (a, b) => {
+      const gRankA = commitGroupOrder.indexOf(a.title)
+      const gRankB = commitGroupOrder.indexOf(b.title)
+      return gRankA - gRankB
+    },
+    commitsSort: ['scope', 'subject'],
+    noteGroupsSort: 'title',
+    notesSort: compareFunc
+  }
+}
+
+function findTypeEntry (types, commit) {
+  const typeKey = (commit.revert ? 'revert' : (commit.type || '')).toLowerCase()
+  return types.find((entry) => {
+    if (entry.type !== typeKey) {
+      return false
+    }
+    if (entry.scope && entry.scope !== commit.scope) {
+      return false
+    }
+    return true
+  })
+}
+
+// expand on the simple mustache-style templates supported in
+// configuration (we may eventually want to use handlebars for this).
+function expandTemplate (template, context) {
+  let expanded = template
+  Object.keys(context).forEach(key => {
+    expanded = expanded.replace(new RegExp(`{{${key}}}`, 'g'), context[key])
+  })
+  return expanded
+}
+
+
+/***/ }),
+
 /***/ 3064:
 /***/ ((module, __unused_webpack_exports, __nccwpck_require__) => {
 
@@ -6353,10 +6737,10 @@ async function conventionalChangelogWriterInit (context, options) {
     commitPartial,
     footerPartial
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template2.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header2.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit2.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer2.hbs", 'utf-8')
   ])
 
   options = {
@@ -23643,11 +24027,14 @@ module.exports = new (class Git {
  * Skips loading of the "angular" preset as that one is compiled with this action
  */
 module.exports.loadPreset = async(preset) => {
-  if (preset === 'angular') {
-    return null
-  }
+  switch (preset) {
+    case 'angular':
+    case 'conventionalcommits':
+      return null
 
-  return preset
+    default:
+      return preset
+  }
 }
 
 /**
@@ -23659,11 +24046,16 @@ module.exports.loadPresetConfig = async(preset, providedConfig = {}) => {
     return providedConfig
   }
 
-  if (preset === 'angular') {
-    return await __nccwpck_require__(8143)()
-  }
+  switch (preset) {
+    case 'angular':
+      return await __nccwpck_require__(8143)()
 
-  return {}
+    case 'conventionalcommits':
+      return await __nccwpck_require__(8761)()
+
+    default:
+      return {}
+  }
 }
 
 
