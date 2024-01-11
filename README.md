@@ -123,7 +123,7 @@ permissions:
   contents: write
 
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v3
+  uses: TriPSs/conventional-changelog-action@v5
   with:
     github-token: ${{ secrets.github_token }}
 ```
@@ -136,7 +136,7 @@ Overwrite everything
 
 ```yaml
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v3
+  uses: TriPSs/conventional-changelog-action@v5
   with:
     github-token: ${{ secrets.github_token }}
     git-message: 'chore(release): {version}'
@@ -158,7 +158,7 @@ No file changelog
 
 ```yaml
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v3
+  uses: TriPSs/conventional-changelog-action@v5
   with:
     github-token: ${{ secrets.github_token }}
     output-file: "false"
@@ -168,7 +168,7 @@ Tag only
 
 ```yaml
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v3
+  uses: TriPSs/conventional-changelog-action@v5
   with:
     github-token: ${{ secrets.github_token }}
     skip-commit: "true"
@@ -184,7 +184,7 @@ In CI you might not want to pull extra changes before tagging e.g. if running a 
     fetch-depth: 0
 
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v3
+  uses: TriPSs/conventional-changelog-action@v5
   with:
     github-token: ${{ secrets.github_token }}
     skip-git-pull: "true"
@@ -194,7 +194,7 @@ Use a custom file for versioning
 
 ```yaml
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v3
+  uses: TriPSs/conventional-changelog-action@v5
   with:
     github-token: ${{ secrets.github_token }}
     version-file: "my-custom-file.yaml"
@@ -204,7 +204,7 @@ Use a pre-commit hook
 
 ```yaml
 - name: Conventional Changelog Action
-  uses: TriPSs/conventional-changelog-action@v3
+  uses: TriPSs/conventional-changelog-action@v5
   with:
     github-token: ${{ secrets.github_token }}
     pre-commit: some/path/pre-commit.js
@@ -215,7 +215,7 @@ Github releases
 ```yaml
 - name: Conventional Changelog Action
   id: changelog
-  uses: TriPSs/conventional-changelog-action@v3
+  uses: TriPSs/conventional-changelog-action@v5
   with:
     github-token: ${{ secrets.github_token }}
     output-file: "false"
@@ -243,7 +243,7 @@ To make full use of the Deploy Key, you must set the value of github-token input
     ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
 - name: Conventional Changelog Action
   id: changelog
-  uses: TriPSs/conventional-changelog-action@v4
+  uses: TriPSs/conventional-changelog-action@v5
   with:
     github-token: ""
 ```
