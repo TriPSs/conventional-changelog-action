@@ -179,7 +179,7 @@ In CI you might not want to pull extra changes before tagging e.g. if running a 
 
 ```yaml
 - name: Checkout repository
-  uses: actions/checkout@v2
+  uses: actions/checkout@v4
   with:
     fetch-depth: 0
 
@@ -238,7 +238,7 @@ To make full use of the Deploy Key, you must set the value of github-token input
 
 ```yaml
 - name: Checkout GitHub Action
-  uses: actions/checkout@v3
+  uses: actions/checkout@v4
   with:
     ssh-key: ${{ secrets.SSH_DEPLOY_KEY }}
 - name: Conventional Changelog Action
