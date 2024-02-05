@@ -5520,10 +5520,10 @@ const { resolve } = __nccwpck_require__(1017)
 
 async function createWriterOpts () {
   const [template, header, commit, footer] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
 
@@ -5864,10 +5864,10 @@ async function createWriterOpts (config) {
     commit,
     footer
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts(finalConfig)
 
@@ -24106,13 +24106,14 @@ module.exports = class BaseVersioning {
   newVersion = null
 
   oldVersion = null
+
   /**
    * Set some basic configurations
    *
    * @param {!string} fileLocation - Full location of the file
    * @param {!string} versionPath - Path inside the file where the version is located
    */
-  init = (fileLocation, versionPath) => {
+  constructor(fileLocation, versionPath) {
     this.fileLocation = fileLocation
     this.versionPath = versionPath
   }
@@ -24197,26 +24198,26 @@ const Yaml = __nccwpck_require__(5731)
 const Toml = __nccwpck_require__(3636)
 const Mix = __nccwpck_require__(1731)
 
-module.exports = (fileExtension) => {
+module.exports = (fileExtension, filePath, versionPath) => {
   switch (fileExtension.toLowerCase()) {
     case 'json':
-      return new Json()
+      return new Json(filePath, versionPath)
 
     case 'yaml':
     case 'yml':
-      return new Yaml()
+      return new Yaml(filePath, versionPath)
 
     case 'toml':
-      return new Toml()
+      return new Toml(filePath, versionPath)
 
     case 'git':
-      return new Git()
+      return new Git(filePath, versionPath)
 
     case 'exs':
-      return new Mix()
+      return new Mix(filePath, versionPath)
 
     default:
-      return null
+      throw new Error(`File extension "${fileExtension}" from file "${filePath}" is not supported`)
   }
 }
 
@@ -24234,6 +24235,36 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Json extends BaseVersioning {
 
+  eol = null;
+  jsonContent = {};
+
+  constructor(fileLocation, versionPath) {
+    super(fileLocation, versionPath)
+    this.readJson()
+  }
+
+  /**
+   * Reads and parses the json file
+   */
+  readJson = () => {
+    // Read the file
+    const fileContent = this.read()
+
+    // Parse the file
+    this.eol = fileContent.endsWith('\n') ? '\n' : ''
+    try {
+      this.jsonContent = JSON.parse(fileContent)
+    } catch (error) {
+      core.startGroup(`Error when parsing the file '${this.fileLocation}'`)
+      core.info(`File-Content: ${fileContent}`)
+      core.info(error) // should be 'warning' ?
+      core.endGroup()
+    }
+
+    // Get the old version
+    this.oldVersion = objectPath.get(this.jsonContent, this.versionPath, null)
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -24242,24 +24273,7 @@ module.exports = class Json extends BaseVersioning {
    */
   bump = async (releaseType) => {
     // Read the file
-    const fileContent = this.read()
-
-    // Parse the file
-    let jsonContent
-    let eol = fileContent.endsWith('\n') ? '\n' : ''
-    try {
-      jsonContent = JSON.parse(fileContent)
-    } catch (error) {
-      core.startGroup(`Error when parsing the file '${this.fileLocation}'`)
-      core.info(`File-Content: ${fileContent}`)
-      core.info(error) // should be 'warning' ?
-      core.endGroup()
-
-      jsonContent = {}
-    }
-
-    // Get the old version
-    this.oldVersion = objectPath.get(jsonContent, this.versionPath, null)
+    const jsonContent = this.fileContent
 
     // Get the new version
     this.newVersion = await bumpVersion(
@@ -24274,7 +24288,7 @@ module.exports = class Json extends BaseVersioning {
 
     // Update the file
     this.update(
-      JSON.stringify(jsonContent, null, 2) + eol
+      JSON.stringify(jsonContent, null, 2) + this.eol
     )
   }
 
@@ -24291,6 +24305,31 @@ const BaseVersioning = __nccwpck_require__(3030)
 const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Mix extends BaseVersioning {
+
+  fileLocation = null
+
+  constructor(fileLocation, versionPath) {
+    super(fileLocation, versionPath)
+    this.readMix()
+  }
+
+
+  /**
+   * Reads and parses the mix file
+   */
+  readMix = () => {
+    // Read the file
+    this.fileContent = this.read()
+
+    // Parse the file
+    const [_, oldVersion] = fileContent.match(/version: "([0-9.]+)"/i)
+    this.oldVersion = oldVersion
+
+    if (!this.oldVersion) {
+      throw new Error(`Failed to extract mix project version.`)
+    }
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -24298,16 +24337,6 @@ module.exports = class Mix extends BaseVersioning {
    * @return {*}
    */
   bump = async(releaseType) => {
-    // Read the file
-    const fileContent = this.read()
-
-    const [_, oldVersion] = fileContent.match(/version: "([0-9.]+)"/i)
-    this.oldVersion = oldVersion
-
-    if (!this.oldVersion) {
-      throw new Error(`Failed to extract mix project version.`)
-    }
-
     this.newVersion = await bumpVersion(
       releaseType,
       this.oldVersion
@@ -24334,6 +24363,25 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Toml extends BaseVersioning {
 
+  tomlContent = null
+
+  constructor(fileLocation, versionPath) {
+    super(fileLocation, versionPath)
+    this.readToml()
+  }
+
+  /**
+   * Reads and parses the toml file
+   */
+  readToml = () => {
+    // Read the file
+    const fileContent = this.read()
+
+    // Parse the file
+    this.tomlContent = toml.parse(fileContent)
+    this.oldVersion = objectPath.get(this.fileContent, this.versionPath, null)
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -24341,11 +24389,6 @@ module.exports = class Toml extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
-    // Read the file
-    const fileContent = this.read()
-    const tomlContent = toml.parse(fileContent)
-    this.oldVersion = objectPath.get(tomlContent, this.versionPath, null)
-
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
@@ -24368,8 +24411,8 @@ module.exports = class Toml extends BaseVersioning {
       )
     } else {
       // Update the content with the new version
-      objectPath.set(tomlContent, this.versionPath, this.newVersion)
-      this.update(toml.stringify(tomlContent))
+      objectPath.set(this.tomlContent, this.versionPath, this.newVersion)
+      this.update(toml.stringify(this.fileContent))
     }
   }
 
@@ -24390,6 +24433,25 @@ const BaseVersioning = __nccwpck_require__(3030)
 const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Yaml extends BaseVersioning {
+
+  yamlContent = {}
+
+  constructor(fileLocation, versionPath) {
+    super(fileLocation, versionPath)
+    this.readYaml()
+  }
+
+  /**
+   * Reads and parses the yaml file
+   */
+  readYaml = () => {
+    // Read the file
+    const fileContent = this.read()
+    
+    // Parse the file
+    this.yamlContent = yaml.parse(fileContent)
+    this.oldVersion = objectPath.get(this.yamlContent, this.versionPath, null)
+  }
 
   /**
    * Bumps the version in the package.json
@@ -34739,14 +34801,8 @@ const requireScript = __nccwpck_require__(4492)
 const { loadPreset, loadPresetConfig } = __nccwpck_require__(6921)
 
 async function handleVersioningByExtension(ext, file, versionPath, releaseType, skipBump) {
-  const versioning = getVersioning(ext)
-
-  // File type isn't supported
-  if (versioning === null) {
-    throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
-  }
-
-  versioning.init(path.resolve(process.cwd(), file), versionPath)
+  const fileLocation = path.resolve(process.cwd(), file)
+  const versioning = getVersioning(ext, fileLocation, versionPath)
 
   // Bump the version in the package.json
   if(!skipBump){
