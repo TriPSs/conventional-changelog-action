@@ -8,7 +8,7 @@ const changelog = require('./helpers/generateChangelog')
 const requireScript = require('./helpers/requireScript')
 const { loadPreset, loadPresetConfig } = require('./helpers/load-preset')
 
-async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
+async function handleVersioningByExtension(ext, file, versionPath, releaseType, skipBump) {
   const versioning = getVersioning(ext)
 
   // File type isn't supported
@@ -19,7 +19,9 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType) 
   versioning.init(path.resolve(process.cwd(), file), versionPath)
 
   // Bump the version in the package.json
-  await versioning.bump(releaseType)
+  if(!skipBump){
+    await versioning.bump(releaseType)
+  }
 
   return versioning
 }
@@ -51,6 +53,7 @@ async function run() {
     const skipCi = core.getBooleanInput('skip-ci')
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
+    const skipBump = core.getBooleanInput('skip-bump')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -80,6 +83,10 @@ async function run() {
 
     if (preChangelogGenerationFile) {
       core.info(`Using "${preChangelogGenerationFile}" as pre-changelog-generation script`)
+    }
+
+    if(skipBump) {
+      core.info('Skipping bumping the version')
     }
 
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
@@ -120,7 +127,8 @@ async function run() {
         'git',
         versionFile,
         versionPath,
-        recommendation.releaseType
+        recommendation.releaseType,
+        skipBump
       )
 
       newVersion = versioning.newVersion
@@ -135,7 +143,7 @@ async function run() {
           const fileExtension = file.split('.').pop()
           core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
 
-          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
+          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType, skipBump)
         })
       )
 
