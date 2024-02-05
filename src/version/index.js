@@ -23,6 +23,6 @@ module.exports = (fileExtension, filePath, versionPath) => {
       return new Mix(filePath, versionPath)
 
     default:
-      throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
+      throw new Error(`File extension "${fileExtension}" from file "${filePath}" is not supported`)
   }
 }
