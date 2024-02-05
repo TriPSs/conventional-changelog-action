@@ -152,7 +152,7 @@ inputs:
     required: false
   
   skip-bump:
-    description: "Skips the version bump"
+    description: "Prevents the action from bumping the version"
     default: "false"
     required: false
 
