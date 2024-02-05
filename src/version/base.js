@@ -10,13 +10,14 @@ module.exports = class BaseVersioning {
   newVersion = null
 
   oldVersion = null
+
   /**
    * Set some basic configurations
    *
    * @param {!string} fileLocation - Full location of the file
    * @param {!string} versionPath - Path inside the file where the version is located
    */
-  init = (fileLocation, versionPath) => {
+  constructor(fileLocation, versionPath) {
     this.fileLocation = fileLocation
     this.versionPath = versionPath
   }

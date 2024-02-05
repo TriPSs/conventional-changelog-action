@@ -359,7 +359,7 @@ jobs:
         uses: ./
         env:
           ENV: 'dont-use-git'
-          EXPECTED_TAG: "v1.5.0"
+          EXPECTED_TAG: "v1.4.5"
         with:
           github-token: ${{ secrets.github_token }}
           version-file: "test-file.json"

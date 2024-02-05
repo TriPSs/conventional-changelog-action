@@ -7,6 +7,25 @@ const bumpVersion = require('../helpers/bumpVersion')
 
 module.exports = class Toml extends BaseVersioning {
 
+  tomlContent = null
+
+  constructor(fileLocation, versionPath) {
+    super(fileLocation, versionPath)
+    this.readToml()
+  }
+
+  /**
+   * Reads and parses the toml file
+   */
+  readToml = () => {
+    // Read the file
+    const fileContent = this.read()
+
+    // Parse the file
+    this.tomlContent = toml.parse(fileContent)
+    this.oldVersion = objectPath.get(this.fileContent, this.versionPath, null)
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -14,11 +33,6 @@ module.exports = class Toml extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
-    // Read the file
-    const fileContent = this.read()
-    const tomlContent = toml.parse(fileContent)
-    this.oldVersion = objectPath.get(tomlContent, this.versionPath, null)
-
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
@@ -41,8 +55,8 @@ module.exports = class Toml extends BaseVersioning {
       )
     } else {
       // Update the content with the new version
-      objectPath.set(tomlContent, this.versionPath, this.newVersion)
-      this.update(toml.stringify(tomlContent))
+      objectPath.set(this.tomlContent, this.versionPath, this.newVersion)
+      this.update(toml.stringify(this.fileContent))
     }
   }
 

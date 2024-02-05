@@ -6,6 +6,36 @@ const bumpVersion = require('../helpers/bumpVersion')
 
 module.exports = class Json extends BaseVersioning {
 
+  eol = null;
+  jsonContent = {};
+
+  constructor(fileLocation, versionPath) {
+    super(fileLocation, versionPath)
+    this.readJson()
+  }
+
+  /**
+   * Reads and parses the json file
+   */
+  readJson = () => {
+    // Read the file
+    const fileContent = this.read()
+
+    // Parse the file
+    this.eol = fileContent.endsWith('\n') ? '\n' : ''
+    try {
+      this.jsonContent = JSON.parse(fileContent)
+    } catch (error) {
+      core.startGroup(`Error when parsing the file '${this.fileLocation}'`)
+      core.info(`File-Content: ${fileContent}`)
+      core.info(error) // should be 'warning' ?
+      core.endGroup()
+    }
+
+    // Get the old version
+    this.oldVersion = objectPath.get(this.jsonContent, this.versionPath, null)
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -14,24 +44,7 @@ module.exports = class Json extends BaseVersioning {
    */
   bump = async (releaseType) => {
     // Read the file
-    const fileContent = this.read()
-
-    // Parse the file
-    let jsonContent
-    let eol = fileContent.endsWith('\n') ? '\n' : ''
-    try {
-      jsonContent = JSON.parse(fileContent)
-    } catch (error) {
-      core.startGroup(`Error when parsing the file '${this.fileLocation}'`)
-      core.info(`File-Content: ${fileContent}`)
-      core.info(error) // should be 'warning' ?
-      core.endGroup()
-
-      jsonContent = {}
-    }
-
-    // Get the old version
-    this.oldVersion = objectPath.get(jsonContent, this.versionPath, null)
+    const jsonContent = this.fileContent
 
     // Get the new version
     this.newVersion = await bumpVersion(
@@ -46,7 +59,7 @@ module.exports = class Json extends BaseVersioning {
 
     // Update the file
     this.update(
-      JSON.stringify(jsonContent, null, 2) + eol
+      JSON.stringify(jsonContent, null, 2) + this.eol
     )
   }
 

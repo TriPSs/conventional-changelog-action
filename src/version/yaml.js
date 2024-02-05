@@ -7,6 +7,25 @@ const bumpVersion = require('../helpers/bumpVersion')
 
 module.exports = class Yaml extends BaseVersioning {
 
+  yamlContent = {}
+
+  constructor(fileLocation, versionPath) {
+    super(fileLocation, versionPath)
+    this.readYaml()
+  }
+
+  /**
+   * Reads and parses the yaml file
+   */
+  readYaml = () => {
+    // Read the file
+    const fileContent = this.read()
+    
+    // Parse the file
+    this.yamlContent = yaml.parse(fileContent)
+    this.oldVersion = objectPath.get(this.yamlContent, this.versionPath, null)
+  }
+
   /**
    * Bumps the version in the package.json
    *

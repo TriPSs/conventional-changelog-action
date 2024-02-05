@@ -9,14 +9,8 @@ const requireScript = require('./helpers/requireScript')
 const { loadPreset, loadPresetConfig } = require('./helpers/load-preset')
 
 async function handleVersioningByExtension(ext, file, versionPath, releaseType, skipBump) {
-  const versioning = getVersioning(ext)
-
-  // File type isn't supported
-  if (versioning === null) {
-    throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
-  }
-
-  versioning.init(path.resolve(process.cwd(), file), versionPath)
+  const fileLocation = path.resolve(process.cwd(), file)
+  const versioning = getVersioning(ext, fileLocation, versionPath)
 
   // Bump the version in the package.json
   if(!skipBump){

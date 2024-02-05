@@ -4,25 +4,25 @@ const Yaml = require('./yaml')
 const Toml = require('./toml')
 const Mix = require('./mix')
 
-module.exports = (fileExtension) => {
+module.exports = (fileExtension, filePath, versionPath) => {
   switch (fileExtension.toLowerCase()) {
     case 'json':
-      return new Json()
+      return new Json(filePath, versionPath)
 
     case 'yaml':
     case 'yml':
-      return new Yaml()
+      return new Yaml(filePath, versionPath)
 
     case 'toml':
-      return new Toml()
+      return new Toml(filePath, versionPath)
 
     case 'git':
-      return new Git()
+      return new Git(filePath, versionPath)
 
     case 'exs':
-      return new Mix()
+      return new Mix(filePath, versionPath)
 
     default:
-      return null
+      throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
   }
 }
