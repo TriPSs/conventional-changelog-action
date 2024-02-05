@@ -131,8 +131,8 @@ async function run() {
         skipBump
       )
 
-      newVersion = versioning.newVersion
       oldVersion = versioning.oldVersion
+      newVersion = skipBump ? oldVersion : versioning.newVersion
 
     } else {
       const files = versionFile.split(',').map((f) => f.trim())
@@ -147,8 +147,8 @@ async function run() {
         })
       )
 
-      newVersion = versioning[0].newVersion
       oldVersion = versioning[0].oldVersion
+      newVersion = skipBump ? oldVersion : versioning[0].newVersion
     }
 
     let gitTag = `${tagPrefix}${newVersion}`
