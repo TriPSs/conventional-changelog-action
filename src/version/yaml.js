@@ -33,11 +33,6 @@ module.exports = class Yaml extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
-    // Read the file
-    const fileContent = this.read()
-    const yamlContent = yaml.parse(fileContent) || {}
-    this.oldVersion = objectPath.get(yamlContent, this.versionPath, null)
-
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
