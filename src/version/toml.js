@@ -56,7 +56,7 @@ module.exports = class Toml extends BaseVersioning {
     } else {
       // Update the content with the new version
       objectPath.set(this.tomlContent, this.versionPath, this.newVersion)
-      this.update(toml.stringify(this.fileContent))
+      this.update(toml.stringify(this.tomlContent))
     }
   }
 
