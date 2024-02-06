@@ -10,22 +10,11 @@ module.exports = class Json extends BaseVersioning {
   jsonContent = {};
 
   /**
-   * Set some basic JSON specific configurations
-   *
-   * @param {!string} fileLocation - Full location of the file
-   * @param {!string} versionPath - Path inside the file where the version is located
-   */
-  init = (fileLocation, versionPath) => {
-    this.initBase(fileLocation, versionPath)
-    this.readJson()
-  }
-
-  /**
    * Reads and parses the json file
    */
-  readJson = () => {
+  parseFile = () => {
     // Read the file
-    const fileContent = this.read()
+    const fileContent = this.readFile()
 
     // Parse the file
     this.eol = fileContent.endsWith('\n') ? '\n' : ''

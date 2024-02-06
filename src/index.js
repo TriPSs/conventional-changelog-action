@@ -131,7 +131,9 @@ async function run() {
       oldVersion = versioning.oldVersion
       // If we are skipping the bump, we either use the fallback version or the old version as the new version.
       if(skipBump){
-        newVersion = fallbackVersion ?? oldVersion
+        newVersion = fallbackVersion ? fallbackVersion : oldVersion
+        const newTestVersion = fallbackVersion ?? oldVersion
+        console.log(`fallBackVersion: ${fallbackVersion}, oldVersion: ${oldVersion}, testVersion: ${newTestVersion}`)
       } else {
         newVersion = versioning.newVersion
       }
@@ -151,7 +153,9 @@ async function run() {
       oldVersion = versioning[0].oldVersion
       // If we are skipping the bump, we either use the fallback version or the old version as the new version.
       if(skipBump){
-        newVersion = fallbackVersion ?? oldVersion
+        newVersion = fallbackVersion ? fallbackVersion : oldVersion
+        const newTestVersion = fallbackVersion ?? oldVersion
+        console.log(`fallBackVersion: ${fallbackVersion}, oldVersion: ${oldVersion}, testVersion: ${newTestVersion}`)
       } else {
         newVersion = versioning[0].newVersion
       }

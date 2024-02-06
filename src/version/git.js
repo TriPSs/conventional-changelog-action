@@ -16,6 +16,13 @@ module.exports = class Git extends BaseVersioning {
     this.initBase(fileLocation, versionPath)
   }
 
+  /**
+   * Left empty to override the parent's abstract method, which would throw an error
+   */
+  parseFile = () => {
+
+  }
+
   bump = async(releaseType) => {
     const tagPrefix = core.getInput('tag-prefix')
     const prerelease = core.getBooleanInput('pre-release')

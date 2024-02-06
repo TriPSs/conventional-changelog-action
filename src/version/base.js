@@ -17,9 +17,17 @@ module.exports = class BaseVersioning {
    * @param {!string} fileLocation - Full location of the file
    * @param {!string} versionPath - Path inside the file where the version is located
    */
-  initBase = (fileLocation, versionPath) => {
+  init = (fileLocation, versionPath) => {
     this.fileLocation = fileLocation
     this.versionPath = versionPath
+    this.readFile()
+  }
+
+  /**
+   * Abstract method for parsing the file
+   */
+  parseFile = () => {
+    throw new Error('Implement readFile logic in class!')
   }
 
   /**
@@ -27,7 +35,7 @@ module.exports = class BaseVersioning {
    *
    * @return {string}
    */
-  read = () => {
+  readFile = () => {
     if (fs.existsSync(this.fileLocation)) {
       return fs.readFileSync(this.fileLocation, 'utf8')
     }

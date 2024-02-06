@@ -10,23 +10,12 @@ module.exports = class Yaml extends BaseVersioning {
   fileContent = null
   yamlContent = null
 
-    /**
-   * Set some basic yaml specific configurations
-   *
-   * @param {!string} fileLocation - Full location of the file
-   * @param {!string} versionPath - Path inside the file where the version is located
-   */
-  init = (fileLocation, versionPath) => {
-    this.initBase(fileLocation, versionPath)
-    this.readYaml()
-  }
-
   /**
    * Reads and parses the yaml file
    */
-  readYaml = () => {
+  parseFile = () => {
     // Read the file
-    this.fileContent = this.read()
+    this.fileContent = this.readFile()
     
     // Parse the file
     this.yamlContent = yaml.parse(this.fileContent) || {}
