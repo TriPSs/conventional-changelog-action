@@ -17,7 +17,7 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType, 
   // Bump the version in the package.json
   if(!skipBump){
     await versioning.bump(releaseType)
-  }
+  } 
 
   return versioning
 }
@@ -50,6 +50,7 @@ async function run() {
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
     const skipBump = core.getBooleanInput('skip-bump')
+    const fallbackVersion = core.getInput('fallback-version')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -128,7 +129,10 @@ async function run() {
       )
 
       oldVersion = versioning.oldVersion
-      newVersion = skipBump ? oldVersion : versioning.newVersion
+      // If we are skipping the bump, we either use the fallback version or the old version as the new version.
+      if(skipBump){
+        newVersion = fallbackVersion ?? oldVersion
+      }
 
     } else {
       const files = versionFile.split(',').map((f) => f.trim())
@@ -144,7 +148,10 @@ async function run() {
       )
 
       oldVersion = versioning[0].oldVersion
-      newVersion = skipBump ? oldVersion : versioning[0].newVersion
+      // If we are skipping the bump, we either use the fallback version or the old version as the new version.
+      if(skipBump){
+        newVersion = fallbackVersion ?? oldVersion
+      }
     }
 
     let gitTag = `${tagPrefix}${newVersion}`
