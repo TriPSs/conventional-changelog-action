@@ -24,6 +24,7 @@ module.exports = class Yaml extends BaseVersioning {
     
     // Parse the file
     this.yamlContent = yaml.parse(this.fileContent)
+    console.log(`yamlContent: ${JSON.stringify(this.yamlContent)}`) // added
     this.oldVersion = objectPath.get(this.yamlContent, this.versionPath, null)
   }
 
