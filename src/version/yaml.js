@@ -23,7 +23,7 @@ module.exports = class Yaml extends BaseVersioning {
     this.fileContent = this.read()
     
     // Parse the file
-    this.yamlContent = yaml.parse(fileContent) || {}
+    this.yamlContent = yaml.parse(this.fileContent) || {}
     this.oldVersion = objectPath.get(this.yamlContent, this.versionPath, null)
   }
 
