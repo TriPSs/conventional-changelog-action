@@ -24123,7 +24123,7 @@ module.exports = class BaseVersioning {
    * Abstract method for parsing the file
    */
   parseFile = () => {
-    throw new Error('Implement readFile logic in class!')
+    throw new Error('Implement parseFile logic in class!')
   }
 
   /**
