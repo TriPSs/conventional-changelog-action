@@ -24113,7 +24113,7 @@ module.exports = class BaseVersioning {
    * @param {!string} fileLocation - Full location of the file
    * @param {!string} versionPath - Path inside the file where the version is located
    */
-  constructor(fileLocation, versionPath) {
+  initBase = (fileLocation, versionPath) => {
     this.fileLocation = fileLocation
     this.versionPath = versionPath
   }
@@ -24170,6 +24170,16 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Git extends BaseVersioning {
 
+  /**
+   * Set some basic configurations
+   *
+   * @param {!string} fileLocation - Full location of the file
+   * @param {!string} versionPath - Path inside the file where the version is located
+   */
+  init = (fileLocation, versionPath) => {
+    this.initBase(fileLocation, versionPath)
+  }
+
   bump = async(releaseType) => {
     const tagPrefix = core.getInput('tag-prefix')
     const prerelease = core.getBooleanInput('pre-release')
@@ -24198,23 +24208,23 @@ const Yaml = __nccwpck_require__(5731)
 const Toml = __nccwpck_require__(3636)
 const Mix = __nccwpck_require__(1731)
 
-module.exports = (fileExtension, filePath, versionPath) => {
+module.exports = (fileExtension, filePath) => {
   switch (fileExtension.toLowerCase()) {
     case 'json':
-      return new Json(filePath, versionPath)
+      return new Json()
 
     case 'yaml':
     case 'yml':
-      return new Yaml(filePath, versionPath)
+      return new Yaml()
 
     case 'toml':
-      return new Toml(filePath, versionPath)
+      return new Toml()
 
     case 'git':
-      return new Git(filePath, versionPath)
+      return new Git()
 
     case 'exs':
-      return new Mix(filePath, versionPath)
+      return new Mix()
 
     default:
       throw new Error(`File extension "${fileExtension}" from file "${filePath}" is not supported`)
@@ -24238,8 +24248,14 @@ module.exports = class Json extends BaseVersioning {
   eol = null;
   jsonContent = {};
 
-  constructor(fileLocation, versionPath) {
-    super(fileLocation, versionPath)
+  /**
+   * Set some basic JSON specific configurations
+   *
+   * @param {!string} fileLocation - Full location of the file
+   * @param {!string} versionPath - Path inside the file where the version is located
+   */
+  init = (fileLocation, versionPath) => {
+    this.initBase(fileLocation, versionPath)
     this.readJson()
   }
 
@@ -24272,9 +24288,6 @@ module.exports = class Json extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
-    // Read the file
-    const jsonContent = this.fileContent
-
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
@@ -24284,11 +24297,11 @@ module.exports = class Json extends BaseVersioning {
     core.info(`Bumped file "${this.fileLocation}" from "${this.oldVersion}" to "${this.newVersion}"`)
 
     // Update the content with the new version
-    objectPath.set(jsonContent, this.versionPath, this.newVersion)
+    objectPath.set(this.jsonContent, this.versionPath, this.newVersion)
 
     // Update the file
     this.update(
-      JSON.stringify(jsonContent, null, 2) + this.eol
+      JSON.stringify(this.jsonContent, null, 2) + this.eol
     )
   }
 
@@ -24306,13 +24319,18 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Mix extends BaseVersioning {
 
-  fileLocation = null
+  fileContent = null
 
-  constructor(fileLocation, versionPath) {
-    super(fileLocation, versionPath)
+    /**
+   * Set some basic mix specific configurations
+   *
+   * @param {!string} fileLocation - Full location of the file
+   * @param {!string} versionPath - Path inside the file where the version is located
+   */
+  init = (fileLocation, versionPath) => {
+    this.initBase(fileLocation, versionPath)
     this.readMix()
   }
-
 
   /**
    * Reads and parses the mix file
@@ -24322,7 +24340,7 @@ module.exports = class Mix extends BaseVersioning {
     this.fileContent = this.read()
 
     // Parse the file
-    const [_, oldVersion] = fileContent.match(/version: "([0-9.]+)"/i)
+    const [_, oldVersion] = this.fileContent.match(/version: "([0-9.]+)"/i)
     this.oldVersion = oldVersion
 
     if (!this.oldVersion) {
@@ -24343,7 +24361,7 @@ module.exports = class Mix extends BaseVersioning {
     )
 
     this.update(
-      fileContent.replace(`version: "${this.oldVersion}"`, `version: "${this.newVersion}"`)
+      this.fileContent.replace(`version: "${this.oldVersion}"`, `version: "${this.newVersion}"`)
     )
   }
 }
@@ -24364,9 +24382,16 @@ const bumpVersion = __nccwpck_require__(1581)
 module.exports = class Toml extends BaseVersioning {
 
   tomlContent = null
+  fileContent = null
 
-  constructor(fileLocation, versionPath) {
-    super(fileLocation, versionPath)
+  /**
+   * Set some basic toml specific configurations
+   *
+   * @param {!string} fileLocation - Full location of the file
+   * @param {!string} versionPath - Path inside the file where the version is located
+   */
+  init = (fileLocation, versionPath) => {
+    this.initBase(fileLocation, versionPath)
     this.readToml()
   }
 
@@ -24375,11 +24400,11 @@ module.exports = class Toml extends BaseVersioning {
    */
   readToml = () => {
     // Read the file
-    const fileContent = this.read()
+    this.fileContent = this.read()
 
     // Parse the file
-    this.tomlContent = toml.parse(fileContent)
-    this.oldVersion = objectPath.get(this.fileContent, this.versionPath, null)
+    this.tomlContent = toml.parse(this.fileContent)
+    this.oldVersion = objectPath.get(this.tomlContent, this.versionPath, null)
   }
 
   /**
@@ -24404,7 +24429,7 @@ module.exports = class Toml extends BaseVersioning {
 
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
-        fileContent.replace(
+        this.fileContent.replace(
           `${versionName} = "${this.oldVersion}"`,
           `${versionName} = "${this.newVersion}"`,
         ),
@@ -24412,7 +24437,7 @@ module.exports = class Toml extends BaseVersioning {
     } else {
       // Update the content with the new version
       objectPath.set(this.tomlContent, this.versionPath, this.newVersion)
-      this.update(toml.stringify(this.fileContent))
+      this.update(toml.stringify(this.tomlContent))
     }
   }
 
@@ -24434,10 +24459,17 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Yaml extends BaseVersioning {
 
-  yamlContent = {}
+  fileContent = null
+  yamlContent = null
 
-  constructor(fileLocation, versionPath) {
-    super(fileLocation, versionPath)
+    /**
+   * Set some basic yaml specific configurations
+   *
+   * @param {!string} fileLocation - Full location of the file
+   * @param {!string} versionPath - Path inside the file where the version is located
+   */
+  init = (fileLocation, versionPath) => {
+    this.initBase(fileLocation, versionPath)
     this.readYaml()
   }
 
@@ -24446,10 +24478,10 @@ module.exports = class Yaml extends BaseVersioning {
    */
   readYaml = () => {
     // Read the file
-    const fileContent = this.read()
+    this.fileContent = this.read()
     
     // Parse the file
-    this.yamlContent = yaml.parse(fileContent)
+    this.yamlContent = yaml.parse(this.fileContent) || {}
     this.oldVersion = objectPath.get(this.yamlContent, this.versionPath, null)
   }
 
@@ -24476,7 +24508,7 @@ module.exports = class Yaml extends BaseVersioning {
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
         // Replace if version was used with single quotes
-        fileContent.replace(
+        this.fileContent.replace(
           `${versionName}: '${this.oldVersion}'`,
           `${versionName}: '${this.newVersion}'`,
         ).replace( // Replace if version was used with double quotes
@@ -24489,8 +24521,8 @@ module.exports = class Yaml extends BaseVersioning {
       )
     } else {
       // Update the content with the new version
-      objectPath.set(yamlContent, this.versionPath, this.newVersion)
-      this.update(yaml.stringify(yamlContent))
+      objectPath.set(this.yamlContent, this.versionPath, this.newVersion)
+      this.update(yaml.stringify(this.yamlContent))
     }
   }
 
@@ -34797,7 +34829,9 @@ const { loadPreset, loadPresetConfig } = __nccwpck_require__(6921)
 
 async function handleVersioningByExtension(ext, file, versionPath, releaseType, skipBump) {
   const fileLocation = path.resolve(process.cwd(), file)
-  const versioning = getVersioning(ext, fileLocation, versionPath)
+  const versioning = getVersioning(ext, fileLocation)
+
+  versioning.init(fileLocation, versionPath)
 
   // Bump the version in the package.json
   if(!skipBump){
