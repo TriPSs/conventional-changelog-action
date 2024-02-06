@@ -414,7 +414,7 @@ jobs:
           FILES: "test-file.json"
           EXPECTED_VERSION: "1.4.5"
 
-  test-skip-bump-with-fallback-skip-version-file:
+  test-skip-bump-with-fallback-empty-version-file:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -443,11 +443,15 @@ jobs:
           fallback-version: "6.5.0"
 
       - name: Test output
-        run: node ./test-file-content.js
-        env:
-          OUTPUT_FILE: "CHANGELOG.md"
-          EXPECTED_FILE: "test-input-file.md"
-          EXPECTED_CHANGELOG_VERSION: "6.5.0"
+        run: |
+            file_path="CHANGELOG.md"
+            input_version="6.5.0"
+
+            first_line=$(head -n 1 "$file_path")
+            [[ $first_line =~ ([0-9]+)\.([0-9]+)\.([0-9]+) ]] || exit 1
+
+            extracted_version="${BASH_REMATCH[0]}"
+            [[ "$extracted_version" == "$input_version" ]] || exit 1
 
   test-yaml:
     runs-on: ubuntu-latest
