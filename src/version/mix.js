@@ -19,7 +19,7 @@ module.exports = class Mix extends BaseVersioning {
     this.fileContent = this.read()
 
     // Parse the file
-    const [_, oldVersion] = fileContent.match(/version: "([0-9.]+)"/i)
+    const [_, oldVersion] = this.fileContent.match(/version: "([0-9.]+)"/i)
     this.oldVersion = oldVersion
 
     if (!this.oldVersion) {
@@ -40,7 +40,7 @@ module.exports = class Mix extends BaseVersioning {
     )
 
     this.update(
-      fileContent.replace(`version: "${this.oldVersion}"`, `version: "${this.newVersion}"`)
+      this.fileContent.replace(`version: "${this.oldVersion}"`, `version: "${this.newVersion}"`)
     )
   }
 }

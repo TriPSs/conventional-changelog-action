@@ -48,7 +48,7 @@ module.exports = class Toml extends BaseVersioning {
 
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
-        fileContent.replace(
+        this.fileContent.replace(
           `${versionName} = "${this.oldVersion}"`,
           `${versionName} = "${this.newVersion}"`,
         ),

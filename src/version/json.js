@@ -43,9 +43,6 @@ module.exports = class Json extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
-    // Read the file
-    const jsonContent = this.fileContent
-
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
@@ -55,11 +52,11 @@ module.exports = class Json extends BaseVersioning {
     core.info(`Bumped file "${this.fileLocation}" from "${this.oldVersion}" to "${this.newVersion}"`)
 
     // Update the content with the new version
-    objectPath.set(jsonContent, this.versionPath, this.newVersion)
+    objectPath.set(this.jsonContent, this.versionPath, this.newVersion)
 
     // Update the file
     this.update(
-      JSON.stringify(jsonContent, null, 2) + this.eol
+      JSON.stringify(this.jsonContent, null, 2) + this.eol
     )
   }
 

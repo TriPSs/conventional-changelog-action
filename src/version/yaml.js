@@ -49,7 +49,7 @@ module.exports = class Yaml extends BaseVersioning {
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
         // Replace if version was used with single quotes
-        fileContent.replace(
+        this.fileContent.replace(
           `${versionName}: '${this.oldVersion}'`,
           `${versionName}: '${this.newVersion}'`,
         ).replace( // Replace if version was used with double quotes
@@ -62,8 +62,8 @@ module.exports = class Yaml extends BaseVersioning {
       )
     } else {
       // Update the content with the new version
-      objectPath.set(yamlContent, this.versionPath, this.newVersion)
-      this.update(yaml.stringify(yamlContent))
+      objectPath.set(this.yamlContent, this.versionPath, this.newVersion)
+      this.update(yaml.stringify(this.yamlContent))
     }
   }
 
