@@ -23,7 +23,7 @@ module.exports = class Toml extends BaseVersioning {
     this.fileContent = this.read()
 
     // Parse the file
-    this.tomlContent = toml.parse(fileContent)
+    this.tomlContent = toml.parse(this.fileContent)
     this.oldVersion = objectPath.get(this.fileContent, this.versionPath, null)
   }
 

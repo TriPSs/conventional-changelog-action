@@ -3,7 +3,6 @@ const bumpVersion = require('../helpers/bumpVersion')
 
 module.exports = class Mix extends BaseVersioning {
 
-  fileLocation = null
   fileContent = null
 
   constructor(fileLocation, versionPath) {
