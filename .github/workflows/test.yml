@@ -375,6 +375,45 @@ jobs:
         env:
           FILES: "test-file.json"
           EXPECTED_VERSION: "1.4.5"
+
+  test-skip-bump-with-fallback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+      - run: npm run build
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+
+      - run: "git add . && git commit --allow-empty -m 'fix: Added fake file so version would be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: "v6.5.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "test-file.json"
+          skip-bump: "true"
+          fallback-version: "6.5.0"
+
+      - name: Show file
+        run: |
+          echo "$(<test-file.json)"
+
+      - name: Test version
+        run: node ./test-output.js
+        env:
+          FILES: "test-file.json"
+          EXPECTED_VERSION: "6.5.0"
+
     
 
   test-yaml:
