@@ -445,7 +445,7 @@ jobs:
       - name: Test output
         run: |
             file_path="CHANGELOG.md"
-            input_version="6.5.0"
+            input_version="6.4.0"
 
             first_line=$(head -n 1 "$file_path")
             [[ $first_line =~ ([0-9]+)\.([0-9]+)\.([0-9]+) ]] || exit 1
