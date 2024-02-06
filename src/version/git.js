@@ -6,6 +6,16 @@ const bumpVersion = require('../helpers/bumpVersion')
 
 module.exports = class Git extends BaseVersioning {
 
+  /**
+   * Set some basic configurations
+   *
+   * @param {!string} fileLocation - Full location of the file
+   * @param {!string} versionPath - Path inside the file where the version is located
+   */
+  init = (fileLocation, versionPath) => {
+    this.initBase(fileLocation, versionPath)
+  }
+
   bump = async(releaseType) => {
     const tagPrefix = core.getInput('tag-prefix')
     const prerelease = core.getBooleanInput('pre-release')

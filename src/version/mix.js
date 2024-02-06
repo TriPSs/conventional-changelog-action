@@ -5,11 +5,16 @@ module.exports = class Mix extends BaseVersioning {
 
   fileContent = null
 
-  constructor(fileLocation, versionPath) {
-    super(fileLocation, versionPath)
+    /**
+   * Set some basic mix specific configurations
+   *
+   * @param {!string} fileLocation - Full location of the file
+   * @param {!string} versionPath - Path inside the file where the version is located
+   */
+  init = (fileLocation, versionPath) => {
+    this.initBase(fileLocation, versionPath)
     this.readMix()
   }
-
 
   /**
    * Reads and parses the mix file

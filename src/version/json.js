@@ -9,8 +9,14 @@ module.exports = class Json extends BaseVersioning {
   eol = null;
   jsonContent = {};
 
-  constructor(fileLocation, versionPath) {
-    super(fileLocation, versionPath)
+  /**
+   * Set some basic JSON specific configurations
+   *
+   * @param {!string} fileLocation - Full location of the file
+   * @param {!string} versionPath - Path inside the file where the version is located
+   */
+  init = (fileLocation, versionPath) => {
+    this.initBase(fileLocation, versionPath)
     this.readJson()
   }
 

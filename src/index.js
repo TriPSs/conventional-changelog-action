@@ -10,7 +10,9 @@ const { loadPreset, loadPresetConfig } = require('./helpers/load-preset')
 
 async function handleVersioningByExtension(ext, file, versionPath, releaseType, skipBump) {
   const fileLocation = path.resolve(process.cwd(), file)
-  const versioning = getVersioning(ext, fileLocation, versionPath)
+  const versioning = getVersioning(ext, fileLocation)
+
+  versioning.init(fileLocation, versionPath)
 
   // Bump the version in the package.json
   if(!skipBump){

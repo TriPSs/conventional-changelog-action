@@ -10,8 +10,14 @@ module.exports = class Toml extends BaseVersioning {
   tomlContent = null
   fileContent = null
 
-  constructor(fileLocation, versionPath) {
-    super(fileLocation, versionPath)
+  /**
+   * Set some basic toml specific configurations
+   *
+   * @param {!string} fileLocation - Full location of the file
+   * @param {!string} versionPath - Path inside the file where the version is located
+   */
+  init = (fileLocation, versionPath) => {
+    this.initBase(fileLocation, versionPath)
     this.readToml()
   }
 
