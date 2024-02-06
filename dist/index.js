@@ -5520,10 +5520,10 @@ const { resolve } = __nccwpck_require__(1017)
 
 async function createWriterOpts () {
   const [template, header, commit, footer] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
 
@@ -5864,10 +5864,10 @@ async function createWriterOpts (config) {
     commit,
     footer
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts(finalConfig)
 
@@ -24272,6 +24272,9 @@ module.exports = class Json extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
+    // Read the file
+    const jsonContent = this.fileContent
+
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
@@ -24281,11 +24284,11 @@ module.exports = class Json extends BaseVersioning {
     core.info(`Bumped file "${this.fileLocation}" from "${this.oldVersion}" to "${this.newVersion}"`)
 
     // Update the content with the new version
-    objectPath.set(this.jsonContent, this.versionPath, this.newVersion)
+    objectPath.set(jsonContent, this.versionPath, this.newVersion)
 
     // Update the file
     this.update(
-      JSON.stringify(this.jsonContent, null, 2) + this.eol
+      JSON.stringify(jsonContent, null, 2) + this.eol
     )
   }
 
@@ -24319,7 +24322,7 @@ module.exports = class Mix extends BaseVersioning {
     this.fileContent = this.read()
 
     // Parse the file
-    const [_, oldVersion] = this.fileContent.match(/version: "([0-9.]+)"/i)
+    const [_, oldVersion] = fileContent.match(/version: "([0-9.]+)"/i)
     this.oldVersion = oldVersion
 
     if (!this.oldVersion) {
@@ -24340,7 +24343,7 @@ module.exports = class Mix extends BaseVersioning {
     )
 
     this.update(
-      this.fileContent.replace(`version: "${this.oldVersion}"`, `version: "${this.newVersion}"`)
+      fileContent.replace(`version: "${this.oldVersion}"`, `version: "${this.newVersion}"`)
     )
   }
 }
@@ -24401,7 +24404,7 @@ module.exports = class Toml extends BaseVersioning {
 
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
-        this.fileContent.replace(
+        fileContent.replace(
           `${versionName} = "${this.oldVersion}"`,
           `${versionName} = "${this.newVersion}"`,
         ),
@@ -24473,7 +24476,7 @@ module.exports = class Yaml extends BaseVersioning {
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
         // Replace if version was used with single quotes
-        this.fileContent.replace(
+        fileContent.replace(
           `${versionName}: '${this.oldVersion}'`,
           `${versionName}: '${this.newVersion}'`,
         ).replace( // Replace if version was used with double quotes
@@ -24486,8 +24489,8 @@ module.exports = class Yaml extends BaseVersioning {
       )
     } else {
       // Update the content with the new version
-      objectPath.set(this.yamlContent, this.versionPath, this.newVersion)
-      this.update(yaml.stringify(this.yamlContent))
+      objectPath.set(yamlContent, this.versionPath, this.newVersion)
+      this.update(yaml.stringify(yamlContent))
     }
   }
 
