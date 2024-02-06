@@ -8,6 +8,7 @@ const bumpVersion = require('../helpers/bumpVersion')
 module.exports = class Toml extends BaseVersioning {
 
   tomlContent = null
+  fileContent = null
 
   constructor(fileLocation, versionPath) {
     super(fileLocation, versionPath)
@@ -19,7 +20,7 @@ module.exports = class Toml extends BaseVersioning {
    */
   readToml = () => {
     // Read the file
-    const fileContent = this.read()
+    this.fileContent = this.read()
 
     // Parse the file
     this.tomlContent = toml.parse(fileContent)
