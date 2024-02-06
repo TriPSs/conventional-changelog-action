@@ -5520,10 +5520,10 @@ const { resolve } = __nccwpck_require__(1017)
 
 async function createWriterOpts () {
   const [template, header, commit, footer] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
 
@@ -5864,10 +5864,10 @@ async function createWriterOpts (config) {
     commit,
     footer
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts(finalConfig)
 
@@ -24113,9 +24113,17 @@ module.exports = class BaseVersioning {
    * @param {!string} fileLocation - Full location of the file
    * @param {!string} versionPath - Path inside the file where the version is located
    */
-  initBase = (fileLocation, versionPath) => {
+  init = (fileLocation, versionPath) => {
     this.fileLocation = fileLocation
     this.versionPath = versionPath
+    this.parseFile()
+  }
+
+  /**
+   * Abstract method for parsing the file
+   */
+  parseFile = () => {
+    throw new Error('Implement readFile logic in class!')
   }
 
   /**
@@ -24123,7 +24131,7 @@ module.exports = class BaseVersioning {
    *
    * @return {string}
    */
-  read = () => {
+  readFile = () => {
     if (fs.existsSync(this.fileLocation)) {
       return fs.readFileSync(this.fileLocation, 'utf8')
     }
@@ -24171,13 +24179,10 @@ const bumpVersion = __nccwpck_require__(1581)
 module.exports = class Git extends BaseVersioning {
 
   /**
-   * Set some basic configurations
-   *
-   * @param {!string} fileLocation - Full location of the file
-   * @param {!string} versionPath - Path inside the file where the version is located
+   * Left empty to override the parent's abstract method, which would throw an error
    */
-  init = (fileLocation, versionPath) => {
-    this.initBase(fileLocation, versionPath)
+  parseFile = () => {
+
   }
 
   bump = async(releaseType) => {
@@ -24249,22 +24254,11 @@ module.exports = class Json extends BaseVersioning {
   jsonContent = {};
 
   /**
-   * Set some basic JSON specific configurations
-   *
-   * @param {!string} fileLocation - Full location of the file
-   * @param {!string} versionPath - Path inside the file where the version is located
-   */
-  init = (fileLocation, versionPath) => {
-    this.initBase(fileLocation, versionPath)
-    this.readJson()
-  }
-
-  /**
    * Reads and parses the json file
    */
-  readJson = () => {
+  parseFile = () => {
     // Read the file
-    const fileContent = this.read()
+    const fileContent = this.readFile()
 
     // Parse the file
     this.eol = fileContent.endsWith('\n') ? '\n' : ''
@@ -24321,23 +24315,12 @@ module.exports = class Mix extends BaseVersioning {
 
   fileContent = null
 
-    /**
-   * Set some basic mix specific configurations
-   *
-   * @param {!string} fileLocation - Full location of the file
-   * @param {!string} versionPath - Path inside the file where the version is located
-   */
-  init = (fileLocation, versionPath) => {
-    this.initBase(fileLocation, versionPath)
-    this.readMix()
-  }
-
   /**
    * Reads and parses the mix file
    */
-  readMix = () => {
+  parseFile = () => {
     // Read the file
-    this.fileContent = this.read()
+    this.fileContent = this.readFile()
 
     // Parse the file
     const [_, oldVersion] = this.fileContent.match(/version: "([0-9.]+)"/i)
@@ -24385,22 +24368,11 @@ module.exports = class Toml extends BaseVersioning {
   fileContent = null
 
   /**
-   * Set some basic toml specific configurations
-   *
-   * @param {!string} fileLocation - Full location of the file
-   * @param {!string} versionPath - Path inside the file where the version is located
-   */
-  init = (fileLocation, versionPath) => {
-    this.initBase(fileLocation, versionPath)
-    this.readToml()
-  }
-
-  /**
    * Reads and parses the toml file
    */
-  readToml = () => {
+  parseFile = () => {
     // Read the file
-    this.fileContent = this.read()
+    this.fileContent = this.readFile()
 
     // Parse the file
     this.tomlContent = toml.parse(this.fileContent)
@@ -24462,23 +24434,12 @@ module.exports = class Yaml extends BaseVersioning {
   fileContent = null
   yamlContent = null
 
-    /**
-   * Set some basic yaml specific configurations
-   *
-   * @param {!string} fileLocation - Full location of the file
-   * @param {!string} versionPath - Path inside the file where the version is located
-   */
-  init = (fileLocation, versionPath) => {
-    this.initBase(fileLocation, versionPath)
-    this.readYaml()
-  }
-
   /**
    * Reads and parses the yaml file
    */
-  readYaml = () => {
+  parseFile = () => {
     // Read the file
-    this.fileContent = this.read()
+    this.fileContent = this.readFile()
     
     // Parse the file
     this.yamlContent = yaml.parse(this.fileContent) || {}
@@ -34836,7 +34797,7 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType, 
   // Bump the version in the package.json
   if(!skipBump){
     await versioning.bump(releaseType)
-  }
+  } 
 
   return versioning
 }
@@ -34869,6 +34830,7 @@ async function run() {
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
     const skipBump = core.getBooleanInput('skip-bump')
+    const fallbackVersion = core.getInput('fallback-version')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -34947,7 +34909,12 @@ async function run() {
       )
 
       oldVersion = versioning.oldVersion
-      newVersion = skipBump ? oldVersion : versioning.newVersion
+      // If we are skipping the bump, we either use the fallback version or the old version as the new version.
+      if(skipBump){
+        newVersion = fallbackVersion && !oldVersion ? fallbackVersion : oldVersion
+      } else {
+        newVersion = versioning.newVersion
+      }
 
     } else {
       const files = versionFile.split(',').map((f) => f.trim())
@@ -34961,9 +34928,13 @@ async function run() {
           return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType, skipBump)
         })
       )
-
       oldVersion = versioning[0].oldVersion
-      newVersion = skipBump ? oldVersion : versioning[0].newVersion
+      // If we are skipping the bump, we either use the fallback version or the old version as the new version.
+      if(skipBump){
+        newVersion = fallbackVersion && !oldVersion ? fallbackVersion : oldVersion
+      } else {
+        newVersion = versioning[0].newVersion
+      }
     }
 
     let gitTag = `${tagPrefix}${newVersion}`
