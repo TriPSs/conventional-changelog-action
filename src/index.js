@@ -132,6 +132,8 @@ async function run() {
       // If we are skipping the bump, we either use the fallback version or the old version as the new version.
       if(skipBump){
         newVersion = fallbackVersion ?? oldVersion
+      } else {
+        newVersion = versioning.newVersion
       }
 
     } else {
@@ -146,11 +148,12 @@ async function run() {
           return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType, skipBump)
         })
       )
-
       oldVersion = versioning[0].oldVersion
       // If we are skipping the bump, we either use the fallback version or the old version as the new version.
       if(skipBump){
         newVersion = fallbackVersion ?? oldVersion
+      } else {
+        newVersion = versioning[0].newVersion
       }
     }
 
