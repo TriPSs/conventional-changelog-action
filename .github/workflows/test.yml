@@ -177,7 +177,7 @@ jobs:
 
       - run: echo "$(<./test-file-empty.json)"
 
-      - name: Test output
+      - name: Test changelog output
         run: node ./test-output.js
         env:
           FILES: "test-file-empty.json"
@@ -414,7 +414,7 @@ jobs:
           FILES: "test-file.json"
           EXPECTED_VERSION: "1.4.5"
 
-  test-skip-bump-with-fallback-and-empty-version-file:
+  test-skip-bump-with-fallback-skip-version-file:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -430,8 +430,6 @@ jobs:
 
       - run: "git add . && git commit --allow-empty -m 'fix: Added fake file so version would be bumped'"
 
-      - run: touch ./test-file-empty.json
-
       - name: Generate changelog
         id: changelog
         uses: ./
@@ -444,13 +442,12 @@ jobs:
           skip-bump: "true"
           fallback-version: "6.5.0"
 
-      - run: echo "$(<./test-file-empty.json)"
-
       - name: Test output
-        run: node ./test-output.js
+        run: node ./test-file-content.js
         env:
-          FILES: "test-file-empty.json"
-          EXPECTED_VERSION: "6.5.0"
+          OUTPUT_FILE: "CHANGELOG.md"
+          EXPECTED_FILE: "test-input-file.md"
+          EXPECTED_CHANGELOG_VERSION: "6.5.0"
 
   test-yaml:
     runs-on: ubuntu-latest

@@ -7,6 +7,7 @@ const actionConfig = yaml.parse(fs.readFileSync('./action.yml', 'utf8'))
 const {
   OUTPUT_FILE = 'CHANGELOG.md',
   EXPECTED_FILE = 'test-input-file.md',
+  EXPECTED_CHANGELOG_VERSION
 } = process.env
 
 assert.ok(OUTPUT_FILE, 'Output file is not defined!')
@@ -28,3 +29,11 @@ console.log(`"${EXPECTED_FILE}" has valid content`, expectedFileContent)
 const linesToCompare = 11
 assert.deepStrictEqual(outputFileContent.slice(linesToCompare * -1), expectedFileContent.slice(linesToCompare * -1), 'Output-file does not contain the expected input-file content')
 console.log('The input-file\'s content exists at the end of the generated logs')
+
+/**
+ * Test that the version in the changelog matches the expected verison
+ */
+const versionString = outputFileContent[0]
+if(EXPECTED_CHANGELOG_VERSION) {
+  assert.ok(versionString.includes(EXPECTED_CHANGELOG_VERSION))
+}

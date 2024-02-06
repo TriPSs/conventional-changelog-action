@@ -7,7 +7,7 @@ const bumpVersion = require('../helpers/bumpVersion')
 module.exports = class Json extends BaseVersioning {
 
   eol = null;
-  jsonContent = null;
+  jsonContent = {};
 
   /**
    * Reads and parses the json file
@@ -25,8 +25,6 @@ module.exports = class Json extends BaseVersioning {
       core.info(`File-Content: ${fileContent}`)
       core.info(error) // should be 'warning' ?
       core.endGroup()
-
-      this.jsonContent = {}
     }
 
     // Get the old version
