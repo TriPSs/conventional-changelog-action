@@ -20,7 +20,7 @@ module.exports = class BaseVersioning {
   init = (fileLocation, versionPath) => {
     this.fileLocation = fileLocation
     this.versionPath = versionPath
-    this.readFile()
+    this.parseFile()
   }
 
   /**
