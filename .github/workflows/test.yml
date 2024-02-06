@@ -440,8 +440,8 @@ jobs:
           EXPECTED_TAG: "v6.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          skip-bump: "true"
           version-file: "./test-file-empty.json"
+          skip-bump: "true"
           fallback-version: "6.5.0"
 
       - run: echo "$(<./test-file-empty.json)"
