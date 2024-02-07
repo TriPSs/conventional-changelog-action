@@ -1,3 +1,12 @@
+# [5.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.1.0...v5.2.0) (2024-02-07)
+
+
+### Features
+
+* Add option to skip version bumping. ([#251](https://github.com/TriPSs/conventional-changelog-action/issues/251)) ([17fb98e](https://github.com/TriPSs/conventional-changelog-action/commit/17fb98e8b49153e53d241539ff772b546ff545bc))
+
+
+
 # [5.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.0.0...v5.1.0) (2024-01-05)
 
 
@@ -39,20 +48,6 @@
 ### Features
 
 * elixir support ([e669b12](https://github.com/TriPSs/conventional-changelog-action/commit/e669b12b9395bcb967ca5674c03ed7d6364ce675))
-
-
-
-# [4.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v3.19.0...v4.0.0) (2023-08-02)
-
-
-### chore
-
-* Updated deps ([0c8b645](https://github.com/TriPSs/conventional-changelog-action/commit/0c8b64523693b1868ab3e85385e70d3702849680))
-
-
-### BREAKING CHANGES
-
-* Updated `conventional-changelog` to v4 and `conventional-recommended-bump` to v7
 
 
 

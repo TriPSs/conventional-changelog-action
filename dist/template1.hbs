@@ -1,15 +1,5 @@
 {{> header}}
 
-{{#if noteGroups}}
-{{#each noteGroups}}
-
-### ⚠ {{title}}
-
-{{#each notes}}
-* {{#if commit.scope}}**{{commit.scope}}:** {{/if}}{{text}}
-{{/each}}
-{{/each}}
-{{/if}}
 {{#each commitGroups}}
 
 {{#if title}}
@@ -21,3 +11,6 @@
 {{/each}}
 
 {{/each}}
+{{> footer}}
+
+
