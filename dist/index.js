@@ -24250,8 +24250,8 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Json extends BaseVersioning {
 
-  eol = null;
-  jsonContent = {};
+  eol = null
+  jsonContent = {}
 
   /**
    * Reads and parses the json file
@@ -34795,9 +34795,13 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType, 
   versioning.init(fileLocation, versionPath)
 
   // Bump the version in the package.json
-  if(!skipBump){
+  if(skipBump){
+    // If we are skipping the bump, we either use the fallback version or the old version as the new version.
+    const fallbackVersion = core.getInput('fallback-version')
+    versioning.newVersion = versioning.oldVersion || fallbackVersion
+  } else {
     await versioning.bump(releaseType)
-  } 
+  }
 
   return versioning
 }
@@ -34830,7 +34834,6 @@ async function run() {
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
     const skipBump = core.getBooleanInput('skip-bump')
-    const fallbackVersion = core.getInput('fallback-version')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -34909,13 +34912,7 @@ async function run() {
       )
 
       oldVersion = versioning.oldVersion
-      // If we are skipping the bump, we either use the fallback version or the old version as the new version.
-      if(skipBump){
-        newVersion = fallbackVersion && !oldVersion ? fallbackVersion : oldVersion
-      } else {
-        newVersion = versioning.newVersion
-      }
-
+      newVersion = versioning.newVersion
     } else {
       const files = versionFile.split(',').map((f) => f.trim())
       core.info(`Files to bump: ${files.join(', ')}`)
@@ -34929,12 +34926,7 @@ async function run() {
         })
       )
       oldVersion = versioning[0].oldVersion
-      // If we are skipping the bump, we either use the fallback version or the old version as the new version.
-      if(skipBump){
-        newVersion = fallbackVersion && !oldVersion ? fallbackVersion : oldVersion
-      } else {
-        newVersion = versioning[0].newVersion
-      }
+      newVersion = versioning[0].newVersion
     }
 
     let gitTag = `${tagPrefix}${newVersion}`
