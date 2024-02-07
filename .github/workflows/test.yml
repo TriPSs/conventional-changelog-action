@@ -1,5 +1,6 @@
 name: "Test the action"
 on:
+  workflow_dispatch:
   pull_request:
     branches:
       - master
@@ -176,7 +177,7 @@ jobs:
 
       - run: echo "$(<./test-file-empty.json)"
 
-      - name: Test changelog output
+      - name: Test output
         run: node ./test-output.js
         env:
           FILES: "test-file-empty.json"
