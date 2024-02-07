@@ -16,7 +16,7 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType, 
 
   // Bump the version in the package.json
   if(skipBump){
-    // If we are skipping the bump, we either use the fallback version or the old version as the new version.
+    // If we are skipping the bump, we either use the old version or alternatively the fallback version
     const fallbackVersion = core.getInput('fallback-version')
     versioning.newVersion = versioning.oldVersion || fallbackVersion
   } else {
