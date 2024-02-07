@@ -447,7 +447,7 @@ jobs:
       # First get's the first line which contains the version string
       # Then regEx matches for a semver version
       # Then matches the resulting version string against our expected version
-      - name: Test output
+      - name: Test changelog output
         run: |
             file_path="CHANGELOG.md"
             input_version="6.5.0"
