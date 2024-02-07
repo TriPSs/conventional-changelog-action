@@ -6,6 +6,13 @@ const bumpVersion = require('../helpers/bumpVersion')
 
 module.exports = class Git extends BaseVersioning {
 
+  /**
+   * Left empty to override the parent's abstract method, which would throw an error
+   */
+  parseFile = () => {
+
+  }
+
   bump = async(releaseType) => {
     const tagPrefix = core.getInput('tag-prefix')
     const prerelease = core.getBooleanInput('pre-release')

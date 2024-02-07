@@ -10,6 +10,7 @@ module.exports = class BaseVersioning {
   newVersion = null
 
   oldVersion = null
+
   /**
    * Set some basic configurations
    *
@@ -19,6 +20,14 @@ module.exports = class BaseVersioning {
   init = (fileLocation, versionPath) => {
     this.fileLocation = fileLocation
     this.versionPath = versionPath
+    this.parseFile()
+  }
+
+  /**
+   * Abstract method for parsing the file
+   */
+  parseFile = () => {
+    throw new Error('Implement parseFile logic in class!')
   }
 
   /**
@@ -26,7 +35,7 @@ module.exports = class BaseVersioning {
    *
    * @return {string}
    */
-  read = () => {
+  readFile = () => {
     if (fs.existsSync(this.fileLocation)) {
       return fs.readFileSync(this.fileLocation, 'utf8')
     }

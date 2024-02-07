@@ -8,18 +8,20 @@ const changelog = require('./helpers/generateChangelog')
 const requireScript = require('./helpers/requireScript')
 const { loadPreset, loadPresetConfig } = require('./helpers/load-preset')
 
-async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
-  const versioning = getVersioning(ext)
+async function handleVersioningByExtension(ext, file, versionPath, releaseType, skipBump) {
+  const fileLocation = path.resolve(process.cwd(), file)
+  const versioning = getVersioning(ext, fileLocation)
 
-  // File type isn't supported
-  if (versioning === null) {
-    throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
-  }
-
-  versioning.init(path.resolve(process.cwd(), file), versionPath)
+  versioning.init(fileLocation, versionPath)
 
   // Bump the version in the package.json
-  await versioning.bump(releaseType)
+  if(skipBump){
+    // If we are skipping the bump, we either use the old version or alternatively the fallback version
+    const fallbackVersion = core.getInput('fallback-version')
+    versioning.newVersion = versioning.oldVersion || fallbackVersion
+  } else {
+    await versioning.bump(releaseType)
+  }
 
   return versioning
 }
@@ -51,6 +53,7 @@ async function run() {
     const skipCi = core.getBooleanInput('skip-ci')
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
+    const skipBump = core.getBooleanInput('skip-bump')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -80,6 +83,10 @@ async function run() {
 
     if (preChangelogGenerationFile) {
       core.info(`Using "${preChangelogGenerationFile}" as pre-changelog-generation script`)
+    }
+
+    if(skipBump) {
+      core.info('Skipping bumping the version')
     }
 
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
@@ -120,12 +127,12 @@ async function run() {
         'git',
         versionFile,
         versionPath,
-        recommendation.releaseType
+        recommendation.releaseType,
+        skipBump
       )
 
-      newVersion = versioning.newVersion
       oldVersion = versioning.oldVersion
-
+      newVersion = versioning.newVersion
     } else {
       const files = versionFile.split(',').map((f) => f.trim())
       core.info(`Files to bump: ${files.join(', ')}`)
@@ -135,12 +142,11 @@ async function run() {
           const fileExtension = file.split('.').pop()
           core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
 
-          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
+          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType, skipBump)
         })
       )
-
-      newVersion = versioning[0].newVersion
       oldVersion = versioning[0].oldVersion
+      newVersion = versioning[0].newVersion
     }
 
     let gitTag = `${tagPrefix}${newVersion}`

@@ -4,7 +4,7 @@ const Yaml = require('./yaml')
 const Toml = require('./toml')
 const Mix = require('./mix')
 
-module.exports = (fileExtension) => {
+module.exports = (fileExtension, filePath) => {
   switch (fileExtension.toLowerCase()) {
     case 'json':
       return new Json()
@@ -23,6 +23,6 @@ module.exports = (fileExtension) => {
       return new Mix()
 
     default:
-      return null
+      throw new Error(`File extension "${fileExtension}" from file "${filePath}" is not supported`)
   }
 }

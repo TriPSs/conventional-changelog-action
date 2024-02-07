@@ -7,6 +7,21 @@ const bumpVersion = require('../helpers/bumpVersion')
 
 module.exports = class Yaml extends BaseVersioning {
 
+  fileContent = null
+  yamlContent = null
+
+  /**
+   * Reads and parses the yaml file
+   */
+  parseFile = () => {
+    // Read the file
+    this.fileContent = this.readFile()
+    
+    // Parse the file
+    this.yamlContent = yaml.parse(this.fileContent) || {}
+    this.oldVersion = objectPath.get(this.yamlContent, this.versionPath, null)
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -14,11 +29,6 @@ module.exports = class Yaml extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
-    // Read the file
-    const fileContent = this.read()
-    const yamlContent = yaml.parse(fileContent) || {}
-    this.oldVersion = objectPath.get(yamlContent, this.versionPath, null)
-
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
@@ -35,7 +45,7 @@ module.exports = class Yaml extends BaseVersioning {
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
         // Replace if version was used with single quotes
-        fileContent.replace(
+        this.fileContent.replace(
           `${versionName}: '${this.oldVersion}'`,
           `${versionName}: '${this.newVersion}'`,
         ).replace( // Replace if version was used with double quotes
@@ -48,8 +58,8 @@ module.exports = class Yaml extends BaseVersioning {
       )
     } else {
       // Update the content with the new version
-      objectPath.set(yamlContent, this.versionPath, this.newVersion)
-      this.update(yaml.stringify(yamlContent))
+      objectPath.set(this.yamlContent, this.versionPath, this.newVersion)
+      this.update(yaml.stringify(this.yamlContent))
     }
   }
 

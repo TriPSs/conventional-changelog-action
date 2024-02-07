@@ -338,6 +338,125 @@ jobs:
           skip-tag: 'true'
           git-push: 'false'
 
+  test-skip-bump:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+      - run: npm run build
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+
+      - run: "git add . && git commit --allow-empty -m 'fix: Added fake file so version would be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: "v1.4.5"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "test-file.json"
+          skip-bump: "true"
+
+      - name: Show file
+        run: |
+          echo "$(<test-file.json)"
+
+      - name: Test version
+        run: node ./test-output.js
+        env:
+          FILES: "test-file.json"
+          EXPECTED_VERSION: "1.4.5"
+
+  test-skip-bump-with-fallback:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+      - run: npm run build
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+
+      - run: "git add . && git commit --allow-empty -m 'fix: Added fake file so version would be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: "v1.4.5"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "test-file.json"
+          skip-bump: "true"
+          fallback-version: "6.5.0"
+
+      - name: Show file
+        run: |
+          echo "$(<test-file.json)"
+
+      - name: Test version
+        run: node ./test-output.js
+        env:
+          FILES: "test-file.json"
+          EXPECTED_VERSION: "1.4.5"
+
+  test-skip-bump-with-fallback-empty-version-file:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+      - run: npm run build
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+
+      - run: "git add . && git commit --allow-empty -m 'fix: Added fake file so version would be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: 'dont-use-git'
+          EXPECTED_TAG: "v6.5.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "./test-file-empty.json"
+          skip-bump: "true"
+          fallback-version: "6.5.0"
+
+      # Tests that the fallback version is used in the changelog, when the version file is empty
+      
+      # First get's the first line which contains the version string
+      # Then regEx matches for a semver version
+      # Then matches the resulting version string against our expected version
+      - name: Test changelog output
+        run: |
+            file_path="CHANGELOG.md"
+            input_version="6.5.0"
+
+            first_line=$(head -n 1 "$file_path")
+            [[ $first_line =~ ([0-9]+)\.([0-9]+)\.([0-9]+) ]] || exit 1
+
+            extracted_version="${BASH_REMATCH[0]}"
+            [[ "$extracted_version" == "$input_version" ]] || exit 1
+
   test-yaml:
     runs-on: ubuntu-latest
     steps:

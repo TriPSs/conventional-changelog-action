@@ -150,6 +150,11 @@ inputs:
     description: "The identifier to use for pre-releases"
     default: "rc"
     required: false
+  
+  skip-bump:
+    description: "Prevents the action from bumping the version"
+    default: "false"
+    required: false
 
 outputs:
   changelog:

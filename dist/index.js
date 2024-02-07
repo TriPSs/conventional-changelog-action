@@ -24106,6 +24106,7 @@ module.exports = class BaseVersioning {
   newVersion = null
 
   oldVersion = null
+
   /**
    * Set some basic configurations
    *
@@ -24115,6 +24116,14 @@ module.exports = class BaseVersioning {
   init = (fileLocation, versionPath) => {
     this.fileLocation = fileLocation
     this.versionPath = versionPath
+    this.parseFile()
+  }
+
+  /**
+   * Abstract method for parsing the file
+   */
+  parseFile = () => {
+    throw new Error('Implement parseFile logic in class!')
   }
 
   /**
@@ -24122,7 +24131,7 @@ module.exports = class BaseVersioning {
    *
    * @return {string}
    */
-  read = () => {
+  readFile = () => {
     if (fs.existsSync(this.fileLocation)) {
       return fs.readFileSync(this.fileLocation, 'utf8')
     }
@@ -24169,6 +24178,13 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Git extends BaseVersioning {
 
+  /**
+   * Left empty to override the parent's abstract method, which would throw an error
+   */
+  parseFile = () => {
+
+  }
+
   bump = async(releaseType) => {
     const tagPrefix = core.getInput('tag-prefix')
     const prerelease = core.getBooleanInput('pre-release')
@@ -24197,7 +24213,7 @@ const Yaml = __nccwpck_require__(5731)
 const Toml = __nccwpck_require__(3636)
 const Mix = __nccwpck_require__(1731)
 
-module.exports = (fileExtension) => {
+module.exports = (fileExtension, filePath) => {
   switch (fileExtension.toLowerCase()) {
     case 'json':
       return new Json()
@@ -24216,7 +24232,7 @@ module.exports = (fileExtension) => {
       return new Mix()
 
     default:
-      return null
+      throw new Error(`File extension "${fileExtension}" from file "${filePath}" is not supported`)
   }
 }
 
@@ -24234,6 +24250,31 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Json extends BaseVersioning {
 
+  eol = null
+  jsonContent = {}
+
+  /**
+   * Reads and parses the json file
+   */
+  parseFile = () => {
+    // Read the file
+    const fileContent = this.readFile()
+
+    // Parse the file
+    this.eol = fileContent.endsWith('\n') ? '\n' : ''
+    try {
+      this.jsonContent = JSON.parse(fileContent)
+    } catch (error) {
+      core.startGroup(`Error when parsing the file '${this.fileLocation}'`)
+      core.info(`File-Content: ${fileContent}`)
+      core.info(error) // should be 'warning' ?
+      core.endGroup()
+    }
+
+    // Get the old version
+    this.oldVersion = objectPath.get(this.jsonContent, this.versionPath, null)
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -24241,26 +24282,6 @@ module.exports = class Json extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
-    // Read the file
-    const fileContent = this.read()
-
-    // Parse the file
-    let jsonContent
-    let eol = fileContent.endsWith('\n') ? '\n' : ''
-    try {
-      jsonContent = JSON.parse(fileContent)
-    } catch (error) {
-      core.startGroup(`Error when parsing the file '${this.fileLocation}'`)
-      core.info(`File-Content: ${fileContent}`)
-      core.info(error) // should be 'warning' ?
-      core.endGroup()
-
-      jsonContent = {}
-    }
-
-    // Get the old version
-    this.oldVersion = objectPath.get(jsonContent, this.versionPath, null)
-
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
@@ -24270,11 +24291,11 @@ module.exports = class Json extends BaseVersioning {
     core.info(`Bumped file "${this.fileLocation}" from "${this.oldVersion}" to "${this.newVersion}"`)
 
     // Update the content with the new version
-    objectPath.set(jsonContent, this.versionPath, this.newVersion)
+    objectPath.set(this.jsonContent, this.versionPath, this.newVersion)
 
     // Update the file
     this.update(
-      JSON.stringify(jsonContent, null, 2) + eol
+      JSON.stringify(this.jsonContent, null, 2) + this.eol
     )
   }
 
@@ -24291,6 +24312,25 @@ const BaseVersioning = __nccwpck_require__(3030)
 const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Mix extends BaseVersioning {
+
+  fileContent = null
+
+  /**
+   * Reads and parses the mix file
+   */
+  parseFile = () => {
+    // Read the file
+    this.fileContent = this.readFile()
+
+    // Parse the file
+    const [_, oldVersion] = this.fileContent.match(/version: "([0-9.]+)"/i)
+    this.oldVersion = oldVersion
+
+    if (!this.oldVersion) {
+      throw new Error(`Failed to extract mix project version.`)
+    }
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -24298,23 +24338,13 @@ module.exports = class Mix extends BaseVersioning {
    * @return {*}
    */
   bump = async(releaseType) => {
-    // Read the file
-    const fileContent = this.read()
-
-    const [_, oldVersion] = fileContent.match(/version: "([0-9.]+)"/i)
-    this.oldVersion = oldVersion
-
-    if (!this.oldVersion) {
-      throw new Error(`Failed to extract mix project version.`)
-    }
-
     this.newVersion = await bumpVersion(
       releaseType,
       this.oldVersion
     )
 
     this.update(
-      fileContent.replace(`version: "${this.oldVersion}"`, `version: "${this.newVersion}"`)
+      this.fileContent.replace(`version: "${this.oldVersion}"`, `version: "${this.newVersion}"`)
     )
   }
 }
@@ -24334,6 +24364,21 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Toml extends BaseVersioning {
 
+  tomlContent = null
+  fileContent = null
+
+  /**
+   * Reads and parses the toml file
+   */
+  parseFile = () => {
+    // Read the file
+    this.fileContent = this.readFile()
+
+    // Parse the file
+    this.tomlContent = toml.parse(this.fileContent)
+    this.oldVersion = objectPath.get(this.tomlContent, this.versionPath, null)
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -24341,11 +24386,6 @@ module.exports = class Toml extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
-    // Read the file
-    const fileContent = this.read()
-    const tomlContent = toml.parse(fileContent)
-    this.oldVersion = objectPath.get(tomlContent, this.versionPath, null)
-
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
@@ -24361,15 +24401,15 @@ module.exports = class Toml extends BaseVersioning {
 
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
-        fileContent.replace(
+        this.fileContent.replace(
           `${versionName} = "${this.oldVersion}"`,
           `${versionName} = "${this.newVersion}"`,
         ),
       )
     } else {
       // Update the content with the new version
-      objectPath.set(tomlContent, this.versionPath, this.newVersion)
-      this.update(toml.stringify(tomlContent))
+      objectPath.set(this.tomlContent, this.versionPath, this.newVersion)
+      this.update(toml.stringify(this.tomlContent))
     }
   }
 
@@ -24391,6 +24431,21 @@ const bumpVersion = __nccwpck_require__(1581)
 
 module.exports = class Yaml extends BaseVersioning {
 
+  fileContent = null
+  yamlContent = null
+
+  /**
+   * Reads and parses the yaml file
+   */
+  parseFile = () => {
+    // Read the file
+    this.fileContent = this.readFile()
+    
+    // Parse the file
+    this.yamlContent = yaml.parse(this.fileContent) || {}
+    this.oldVersion = objectPath.get(this.yamlContent, this.versionPath, null)
+  }
+
   /**
    * Bumps the version in the package.json
    *
@@ -24398,11 +24453,6 @@ module.exports = class Yaml extends BaseVersioning {
    * @return {*}
    */
   bump = async (releaseType) => {
-    // Read the file
-    const fileContent = this.read()
-    const yamlContent = yaml.parse(fileContent) || {}
-    this.oldVersion = objectPath.get(yamlContent, this.versionPath, null)
-
     // Get the new version
     this.newVersion = await bumpVersion(
       releaseType,
@@ -24419,7 +24469,7 @@ module.exports = class Yaml extends BaseVersioning {
       this.update(
         // We use replace instead of yaml.stringify so we can preserve white spaces and comments
         // Replace if version was used with single quotes
-        fileContent.replace(
+        this.fileContent.replace(
           `${versionName}: '${this.oldVersion}'`,
           `${versionName}: '${this.newVersion}'`,
         ).replace( // Replace if version was used with double quotes
@@ -24432,8 +24482,8 @@ module.exports = class Yaml extends BaseVersioning {
       )
     } else {
       // Update the content with the new version
-      objectPath.set(yamlContent, this.versionPath, this.newVersion)
-      this.update(yaml.stringify(yamlContent))
+      objectPath.set(this.yamlContent, this.versionPath, this.newVersion)
+      this.update(yaml.stringify(this.yamlContent))
     }
   }
 
@@ -34738,18 +34788,20 @@ const changelog = __nccwpck_require__(1749)
 const requireScript = __nccwpck_require__(4492)
 const { loadPreset, loadPresetConfig } = __nccwpck_require__(6921)
 
-async function handleVersioningByExtension(ext, file, versionPath, releaseType) {
-  const versioning = getVersioning(ext)
+async function handleVersioningByExtension(ext, file, versionPath, releaseType, skipBump) {
+  const fileLocation = path.resolve(process.cwd(), file)
+  const versioning = getVersioning(ext, fileLocation)
 
-  // File type isn't supported
-  if (versioning === null) {
-    throw new Error(`File extension "${ext}" from file "${file}" is not supported`)
-  }
-
-  versioning.init(path.resolve(process.cwd(), file), versionPath)
+  versioning.init(fileLocation, versionPath)
 
   // Bump the version in the package.json
-  await versioning.bump(releaseType)
+  if(skipBump){
+    // If we are skipping the bump, we either use the old version or alternatively the fallback version
+    const fallbackVersion = core.getInput('fallback-version')
+    versioning.newVersion = versioning.oldVersion || fallbackVersion
+  } else {
+    await versioning.bump(releaseType)
+  }
 
   return versioning
 }
@@ -34781,6 +34833,7 @@ async function run() {
     const skipCi = core.getBooleanInput('skip-ci')
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
+    const skipBump = core.getBooleanInput('skip-bump')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -34810,6 +34863,10 @@ async function run() {
 
     if (preChangelogGenerationFile) {
       core.info(`Using "${preChangelogGenerationFile}" as pre-changelog-generation script`)
+    }
+
+    if(skipBump) {
+      core.info('Skipping bumping the version')
     }
 
     core.info(`Skipping empty releases is "${skipEmptyRelease ? 'enabled' : 'disabled'}"`)
@@ -34850,12 +34907,12 @@ async function run() {
         'git',
         versionFile,
         versionPath,
-        recommendation.releaseType
+        recommendation.releaseType,
+        skipBump
       )
 
-      newVersion = versioning.newVersion
       oldVersion = versioning.oldVersion
-
+      newVersion = versioning.newVersion
     } else {
       const files = versionFile.split(',').map((f) => f.trim())
       core.info(`Files to bump: ${files.join(', ')}`)
@@ -34865,12 +34922,11 @@ async function run() {
           const fileExtension = file.split('.').pop()
           core.info(`Bumping version to file "${file}" with extension "${fileExtension}"`)
 
-          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType)
+          return handleVersioningByExtension(fileExtension, file, versionPath, recommendation.releaseType, skipBump)
         })
       )
-
-      newVersion = versioning[0].newVersion
       oldVersion = versioning[0].oldVersion
+      newVersion = versioning[0].newVersion
     }
 
     let gitTag = `${tagPrefix}${newVersion}`
