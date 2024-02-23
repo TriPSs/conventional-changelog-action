@@ -127,7 +127,7 @@ inputs:
     required: false
 
   git-path:
-    description: "Path filter for the logs. If set, only commits that match the path filter will be considered"
+    description: "Path filter for the logs and version. If set, only commits that match the path filter will be considered"
     default: ""
     required: false
 

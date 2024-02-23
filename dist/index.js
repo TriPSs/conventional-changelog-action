@@ -34885,7 +34885,8 @@ async function run() {
       preset: await loadPreset(preset),
       tagPrefix,
       config,
-      skipUnstable: !prerelease
+      skipUnstable: !prerelease,
+      path: gitPath
     })
 
     core.info(`Recommended release type: ${recommendation.releaseType}`)
