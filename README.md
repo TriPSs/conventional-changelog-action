@@ -12,7 +12,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `git-push`: Push all the GIT changes. Default `true`
 - **Optional** `git-branch`: The branch used to push. Default is the current branch (`${{ github.ref }}`)
 - **Optional** `git-url`: Git repository domain. Default is `github.com`
-- **Optional** `git-path`: Path filter for the logs. If set, only commits that match the path filter will be considered. By default, we won't use this feature(empty string).
+- **Optional** `git-path`: Path filter for the logs and version. If set, only commits that match the path filter will be considered. By default, we won't use this feature(empty string).
 - **Optional** `preset`: Preset that is used from conventional commits. Default is `angular` ([learn more about presents here](https://github.com/TriPSs/conventional-changelog-action/issues/223))
 - **Optional** `tag-prefix`: Prefix for the git tags. Default `v`.
 - **Optional** `input-file`: Read the changelog from this file. This will prepend the newly generated changelogs to the file's content.
