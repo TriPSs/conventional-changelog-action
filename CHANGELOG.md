@@ -1,3 +1,12 @@
+## [5.2.1](https://github.com/TriPSs/conventional-changelog-action/compare/v5.2.0...v5.2.1) (2024-02-24)
+
+
+### Bug Fixes
+
+* support git-path config option for version bump ([e3346a2](https://github.com/TriPSs/conventional-changelog-action/commit/e3346a2be870347e11d3186035c42d3095bc0d8f))
+
+
+
 # [5.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.1.0...v5.2.0) (2024-02-07)
 
 
@@ -39,15 +48,6 @@
 
 * **#234:** do not set empty github-token as secret ([16957fa](https://github.com/TriPSs/conventional-changelog-action/commit/16957fa56f7333a3cb494b260c53708481eb5197)), closes [#234](https://github.com/TriPSs/conventional-changelog-action/issues/234)
 * **#234:** extend information how to use Deploy Key to trigger on push tag workflows ([0674827](https://github.com/TriPSs/conventional-changelog-action/commit/0674827a3df59dd5cf698c35ccbb9441865fb504)), closes [#234](https://github.com/TriPSs/conventional-changelog-action/issues/234)
-
-
-
-# [4.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v4.0.0...v4.1.0) (2023-09-21)
-
-
-### Features
-
-* elixir support ([e669b12](https://github.com/TriPSs/conventional-changelog-action/commit/e669b12b9395bcb967ca5674c03ed7d6364ce675))
 
 
 
