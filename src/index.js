@@ -48,7 +48,7 @@ async function run() {
     const conventionalConfigFile = core.getInput('config-file-path')
     const preChangelogGenerationFile = core.getInput('pre-changelog-generation')
     const gitUrl = core.getInput('git-url')
-    const gitPath = core.getInput('git-path')
+    const gitPath = core.getMultilineInput('git-path')
     const infile = core.getInput('input-file')
     const skipCi = core.getBooleanInput('skip-ci')
     const createSummary = core.getBooleanInput('create-summary')
