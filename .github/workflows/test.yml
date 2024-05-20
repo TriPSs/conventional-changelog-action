@@ -4,6 +4,7 @@ on:
     branches:
       - master
       - releases/*
+      - feature/pr259-test
 
 jobs:
   test-github-output:
@@ -1076,3 +1077,39 @@ jobs:
         env:
           OUTPUT_FILE: "CHANGELOG.md"
           EXPECTED_FILE: "test-input-file.md"
+
+  test-multiple-git-path:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: "./"
+          fetch-depth: 0
+
+      - run: npm ci --prod
+      - run: npm run build
+
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: "dont-use-git"
+          EXPECTED_TAG: "v6.5.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          git-path: |
+            src/helpers
+            src/version
+            .github/workflows
+          skip-commit: 'true'
+          skip-tag: 'true'
+          release-count: 0
+          create-summary: 'true'
+
+      - name: Test output
+        run: |
+          change_log='${{ steps.changelog.outputs.changelog }}'
+          change_log2=$(echo "$change_log" | sed "s/\(### \)\(.*\)/*\2*/g")
+          [ "$change_log" != "$change_log2" ] && echo "The changelog has been generated." || echo "The changelog has not been generated."
