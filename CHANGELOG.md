@@ -1,3 +1,12 @@
+# [5.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.2.1...v5.3.0) (2024-05-21)
+
+
+### Features
+
+* Support multiple git-path config option ([c8865b2](https://github.com/TriPSs/conventional-changelog-action/commit/c8865b254ce399e1950f0da982b3ac9e093f732b))
+
+
+
 ## [5.2.1](https://github.com/TriPSs/conventional-changelog-action/compare/v5.2.0...v5.2.1) (2024-02-24)
 
 
@@ -38,16 +47,6 @@
 ### BREAKING CHANGES
 
 * Updated major version of packages
-
-
-
-## [4.1.1](https://github.com/TriPSs/conventional-changelog-action/compare/v4.1.0...v4.1.1) (2023-09-25)
-
-
-### Bug Fixes
-
-* **#234:** do not set empty github-token as secret ([16957fa](https://github.com/TriPSs/conventional-changelog-action/commit/16957fa56f7333a3cb494b260c53708481eb5197)), closes [#234](https://github.com/TriPSs/conventional-changelog-action/issues/234)
-* **#234:** extend information how to use Deploy Key to trigger on push tag workflows ([0674827](https://github.com/TriPSs/conventional-changelog-action/commit/0674827a3df59dd5cf698c35ccbb9441865fb504)), closes [#234](https://github.com/TriPSs/conventional-changelog-action/issues/234)
 
 
 
