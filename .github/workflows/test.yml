@@ -1076,3 +1076,37 @@ jobs:
         env:
           OUTPUT_FILE: "CHANGELOG.md"
           EXPECTED_FILE: "test-input-file.md"
+
+  test-multiple-git-path:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          path: "./"
+          ref: ${{ github.ref == 'github.event.repository.default_branch' && github.head_ref || github.event.pull_request.head.ref }}
+          fetch-depth: 0
+
+      - run: npm ci --prod
+      - run: npm run build
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        with:
+          github-token: ${{ secrets.github_token }}
+          git-branch: ${{ github.ref == github.event.repository.default_branch && github.head_ref || github.event.pull_request.head.ref }}
+          git-path: |
+            src/helpers
+            src/version
+            .github/workflows
+          skip-commit: 'true'
+          skip-tag: 'true'
+          release-count: 0
+          create-summary: 'true'
+
+      - name: Test output
+        run: |
+          echo "${{ steps.changelog.outputs.changelog }}" > change_log
+          sed "s/\(### \)\(.*\)/*\2*/g" change_log > change_log2
+          diff change_log change_log2 > /dev/null && echo "The changelog has not been generated." || echo "The changelog has been generated."
