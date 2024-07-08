@@ -212,7 +212,7 @@ async function run() {
     if (!skipTag) {
       await git.createTag(gitTag)
     } else {
-      core.info('We not going to the tag the GIT changes')
+      core.info('We are not going to the tag the GIT changes')
     }
 
     if (gitPush) {
@@ -229,7 +229,7 @@ async function run() {
       }
 
     } else {
-      core.info('We not going to push the GIT changes')
+      core.info('We are not going to push the GIT changes')
     }
 
     // Set outputs so other actions (for example actions/create-release) can use it
