@@ -1,6 +1,7 @@
 const core = require('@actions/core')
 const conventionalRecommendedBump = require('conventional-recommended-bump')
 const path = require('path')
+const github = require('@actions/github')
 
 const getVersioning = require('./version')
 const git = require('./helpers/git')
@@ -54,6 +55,7 @@ async function run() {
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
     const skipBump = core.getBooleanInput('skip-bump')
+    const isProtectedBranch = core.getBooleanInput('is-protected-branch')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -218,6 +220,12 @@ async function run() {
     if (gitPush) {
       try {
         core.info('Push all changes')
+        
+        if (isProtectedBranch) {
+          core.info('Branch is protected. Waiting for required checks to pass...')
+          await waitForRequiredChecks(gitBranch)
+        }
+        
         await git.push(gitBranch)
 
       } catch (error) {
@@ -262,6 +270,29 @@ async function run() {
     }
   } catch (error) {
     core.setFailed(error)
+  }
+}
+
+async function waitForRequiredChecks(branch) {
+  const octokit = github.getOctokit(core.getInput('github-token'))
+  const { owner, repo } = github.context.repo
+
+  while (true) {
+    const { data: checks } = await octokit.rest.checks.listForRef({
+      owner,
+      repo,
+      ref: branch,
+    })
+
+    const pendingChecks = checks.check_runs.filter(check => check.status !== 'completed')
+
+    if (pendingChecks.length === 0) {
+      core.info('All required checks have passed')
+      break
+    }
+
+    core.info(`Waiting for ${pendingChecks.length} checks to complete...`)
+    await new Promise(resolve => setTimeout(resolve, 30000)) // Wait for 30 seconds before checking again
   }
 }
 
