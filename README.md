@@ -37,7 +37,6 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `is-protected-branch`: If set to `true`, the action will wait for required checks to pass before proceeding. Default `false`.
 
 ### Presets
-
 This action comes pre-compiled with the `angular` (default) and `conventionalcommits`, if you wish to use an other preset
 you need to make sure it's installed with `npm install conventional-changelog-<preset name>`
 
@@ -100,7 +99,7 @@ const config = require('conventional-changelog-conventionalcommits');
 
 module.exports = config({
     "issuePrefixes": ["TN-"],
-    "issueUrlFormat": "https://jira.example.com/browse/{{prefix}}{{id}}",
+    "issueUrlFormat": "https://jira.example.com/browse/{{prefix}}{{id}}"
 })
 ```
 
