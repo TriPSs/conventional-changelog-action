@@ -95,13 +95,13 @@ A config file to define the conventional commit settings. Use it if you need to 
 example:
 
 ```javascript
-"use strict";
-const config = require("conventional-changelog-conventionalcommits");
+'use strict';
+const config = require('conventional-changelog-conventionalcommits');
 
 module.exports = config({
-  issuePrefixes: ["TN-"],
-  issueUrlFormat: "https://jira.example.com/browse/{{prefix}}{{id}}",
-});
+  "issuePrefixes": ["TN-"],
+  "issueUrlFormat": "https://jira.example.com/browse/{{prefix}}{{id}}",
+})
 ```
 
 The specified path can be relative or absolute. If it is relative, then it will be based on the `GITHUB_WORKSPACE` path.
