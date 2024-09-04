@@ -34,8 +34,10 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `pre-release`: Marks the release as pre-release. Default `false`.
 - **Optional** `pre-release-identifier`: The identifier to use for the pre-release. Default `rc`.
 - **Optional** `skip-bump`: Prevents the action from bumping the version.
+- **Optional** `is-protected-branch`: If set to `true`, the action will wait for required checks to pass before proceeding. Default `false`.
 
 ### Presets
+
 This action comes pre-compiled with the `angular` (default) and `conventionalcommits`, if you wish to use an other preset
 you need to make sure it's installed with `npm install conventional-changelog-<preset name>`
 
@@ -93,13 +95,13 @@ A config file to define the conventional commit settings. Use it if you need to 
 example:
 
 ```javascript
-'use strict'
-const config = require('conventional-changelog-conventionalcommits');
+"use strict";
+const config = require("conventional-changelog-conventionalcommits");
 
 module.exports = config({
-    "issuePrefixes": ["TN-"],
-    "issueUrlFormat": "https://jira.example.com/browse/{{prefix}}{{id}}"
-})
+  issuePrefixes: ["TN-"],
+  issueUrlFormat: "https://jira.example.com/browse/{{prefix}}{{id}}",
+});
 ```
 
 The specified path can be relative or absolute. If it is relative, then it will be based on the `GITHUB_WORKSPACE` path.
