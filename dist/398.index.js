@@ -1,9 +1,9 @@
 "use strict";
-exports.id = 941;
-exports.ids = [941];
+exports.id = 398;
+exports.ids = [398];
 exports.modules = {
 
-/***/ 7941:
+/***/ 6398:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
 // ESM COMPAT FLAG
@@ -11,18 +11,18 @@ __webpack_require__.r(__webpack_exports__);
 
 // EXPORTS
 __webpack_require__.d(__webpack_exports__, {
-  "readPackageUp": () => (/* binding */ readPackageUp),
-  "readPackageUpSync": () => (/* binding */ readPackageUpSync)
+  readPackageUp: () => (/* binding */ readPackageUp),
+  readPackageUpSync: () => (/* binding */ readPackageUpSync)
 });
 
 // EXTERNAL MODULE: external "node:path"
-var external_node_path_ = __webpack_require__(9411);
+var external_node_path_ = __webpack_require__(6760);
 // EXTERNAL MODULE: external "node:url"
-var external_node_url_ = __webpack_require__(1041);
+var external_node_url_ = __webpack_require__(3136);
 // EXTERNAL MODULE: external "node:process"
-var external_node_process_ = __webpack_require__(7742);
+var external_node_process_ = __webpack_require__(1708);
 // EXTERNAL MODULE: external "node:fs"
-var external_node_fs_ = __webpack_require__(7561);
+var external_node_fs_ = __webpack_require__(3024);
 ;// CONCATENATED MODULE: ./node_modules/yocto-queue/index.js
 /*
 How it works:
@@ -70,6 +70,17 @@ class Queue {
 		this.#head = this.#head.next;
 		this.#size--;
 		return current.value;
+	}
+
+	peek() {
+		if (!this.#head) {
+			return;
+		}
+
+		return this.#head.value;
+
+		// TODO: Node.js 18.
+		// return this.#head?.value;
 	}
 
 	clear() {
@@ -421,7 +432,7 @@ function findUpSync(name, options = {}) {
 
 
 // EXTERNAL MODULE: ./node_modules/read-pkg/index.js + 2 modules
-var read_pkg = __webpack_require__(581);
+var read_pkg = __webpack_require__(4282);
 ;// CONCATENATED MODULE: ./node_modules/read-pkg-up/index.js
 
 

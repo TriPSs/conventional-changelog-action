@@ -35,6 +35,7 @@
     "conventional-changelog": "^5.1.0",
     "conventional-changelog-angular": "^7.0.0",
     "conventional-changelog-conventionalcommits": "^7.0.2",
+    "conventional-changelog-eslint": "^5.0.0",
     "conventional-recommended-bump": "^9.0.0",
     "git-semver-tags": "7.0.1",
     "object-path": "^0.11.8",

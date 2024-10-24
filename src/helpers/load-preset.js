@@ -5,6 +5,7 @@ module.exports.loadPreset = async(preset) => {
   switch (preset) {
     case 'angular':
     case 'conventionalcommits':
+    case 'eslint':
       return null
 
     default:
@@ -27,6 +28,9 @@ module.exports.loadPresetConfig = async(preset, providedConfig = {}) => {
 
     case 'conventionalcommits':
       return await require('conventional-changelog-conventionalcommits')()
+
+    case 'eslint':
+      return await require('conventional-changelog-eslint')()
 
     default:
       return {}

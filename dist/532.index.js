@@ -1,12 +1,11 @@
 "use strict";
-exports.id = 24;
-exports.ids = [24];
+exports.id = 532;
+exports.ids = [532];
 exports.modules = {
 
-/***/ 9024:
+/***/ 1532:
 /***/ ((__unused_webpack___webpack_module__, __webpack_exports__, __webpack_require__) => {
 
-__webpack_require__.r(__webpack_exports__);
 /* harmony export */ __webpack_require__.d(__webpack_exports__, {
 /* harmony export */   "default": () => (/* binding */ dargs)
 /* harmony export */ });
