@@ -1,3 +1,12 @@
+# [5.4.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.3.0...v5.4.0) (2024-10-24)
+
+
+### Features
+
+* Added `eslint` preset ([3c6b18c](https://github.com/TriPSs/conventional-changelog-action/commit/3c6b18c07653e130ab492400d8360d0dea35c651)), closes [#265](https://github.com/TriPSs/conventional-changelog-action/issues/265)
+
+
+
 # [5.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.2.1...v5.3.0) (2024-05-21)
 
 
@@ -31,22 +40,6 @@
 ### Features
 
 * Include `conventionalcommits` in pre-compiled presets ([f56dffa](https://github.com/TriPSs/conventional-changelog-action/commit/f56dffaed0e9d183ad37733b382170cb3f9457a4)), closes [#246](https://github.com/TriPSs/conventional-changelog-action/issues/246)
-
-
-
-# [5.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v4.1.1...v5.0.0) (2023-12-28)
-
-
-### Features
-
-* Added `old_version` output ([3ca6919](https://github.com/TriPSs/conventional-changelog-action/commit/3ca6919820fdf15e0dc179c3b992e1587a530e91)), closes [#240](https://github.com/TriPSs/conventional-changelog-action/issues/240)
-* Update action to run on `node20` ([97da0e7](https://github.com/TriPSs/conventional-changelog-action/commit/97da0e72a97bc87383ea2a36c83309d0401ef751))
-* Updated deps ([c1f5d34](https://github.com/TriPSs/conventional-changelog-action/commit/c1f5d3424bf4057d0df64fa2f91d5f83413cfb02)), closes [#166](https://github.com/TriPSs/conventional-changelog-action/issues/166)
-
-
-### BREAKING CHANGES
-
-* Updated major version of packages
 
 
 
