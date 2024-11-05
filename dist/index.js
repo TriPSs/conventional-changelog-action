@@ -5641,9 +5641,9 @@ const { resolve } = __nccwpck_require__(6928)
 
 async function createWriterOpts () {
   const [template, header, commit, footer] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
     readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
@@ -5985,9 +5985,9 @@ async function createWriterOpts (config) {
     commit,
     footer
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "template2.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header2.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit2.hbs", 'utf-8'),
     readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts(finalConfig)
@@ -6803,9 +6803,9 @@ const { resolve } = __nccwpck_require__(6928)
 
 async function createWriterOpts () {
   const [template, header, commit] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template2.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header2.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit2.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
 
@@ -22656,8 +22656,8 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  push = (branch) => (
-    this.exec(`push origin ${branch} --follow-tags`)
+  push = (branch, args = []) => (
+    this.exec(`push origin ${branch} ${args.join(' ')}`)
   )
 
   /**
@@ -33861,9 +33861,8 @@ async function run() {
     let oldVersion
 
     // If skipVersionFile or skipCommit is true we use GIT to determine the new version because
-    // skipVersionFile can mean there is no version file and skipCommit can mean that the user
-    // is only interested in tags
-    if (skipVersionFile || skipCommit) {
+    // skipVersionFile can mean there is no version file 
+    if (skipVersionFile) {
       core.info('Using GIT to determine the new version')
       const versioning = await handleVersioningByExtension(
         'git',
@@ -33943,10 +33942,15 @@ async function run() {
             version: newVersion
           })
         }
-      }
+      } 
 
       await git.add('.')
       await git.commit(gitCommitMessage.replace('{version}', gitTag))
+    } else if (!skipVersionFile) {
+
+      await git.add('.')
+      await git.commit(gitCommitMessage.replace('{version}', `${gitTag}`))
+      await git.push(gitBranch)
     }
 
     // Create the new tag
@@ -33959,7 +33963,7 @@ async function run() {
     if (gitPush) {
       try {
         core.info('Push all changes')
-        await git.push(gitBranch)
+        await git.push(gitBranch, ['--follow-tags'])
 
       } catch (error) {
         console.error(error)
