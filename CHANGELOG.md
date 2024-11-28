@@ -1,3 +1,17 @@
+# [6.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.4.0...v6.0.0) (2024-11-28)
+
+
+### Features
+
+* set corresponding prerelease type derived from releaseType ([792a7f7](https://github.com/TriPSs/conventional-changelog-action/commit/792a7f7645a5dd206d9af4cd9e985e9aa02506c8))
+
+
+### BREAKING CHANGES
+
+* prerelease option generates pre[major|minor|patch] release
+
+
+
 # [5.4.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.3.0...v5.4.0) (2024-10-24)
 
 
@@ -31,15 +45,6 @@
 ### Features
 
 * Add option to skip version bumping. ([#251](https://github.com/TriPSs/conventional-changelog-action/issues/251)) ([17fb98e](https://github.com/TriPSs/conventional-changelog-action/commit/17fb98e8b49153e53d241539ff772b546ff545bc))
-
-
-
-# [5.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.0.0...v5.1.0) (2024-01-05)
-
-
-### Features
-
-* Include `conventionalcommits` in pre-compiled presets ([f56dffa](https://github.com/TriPSs/conventional-changelog-action/commit/f56dffaed0e9d183ad37733b382170cb3f9457a4)), closes [#246](https://github.com/TriPSs/conventional-changelog-action/issues/246)
 
 
 
