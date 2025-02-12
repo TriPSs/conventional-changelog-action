@@ -1,5 +1,4 @@
 const core = require('@actions/core')
-const conventionalRecommendedBump = require('conventional-recommended-bump')
 const path = require('path')
 
 const getVersioning = require('./version')
@@ -15,7 +14,7 @@ async function handleVersioningByExtension(ext, file, versionPath, releaseType, 
   versioning.init(fileLocation, versionPath)
 
   // Bump the version in the package.json
-  if(skipBump){
+  if (skipBump) {
     // If we are skipping the bump, we either use the old version or alternatively the fallback version
     const fallbackVersion = core.getInput('fallback-version')
     versioning.newVersion = versioning.oldVersion || fallbackVersion
@@ -85,7 +84,7 @@ async function run() {
       core.info(`Using "${preChangelogGenerationFile}" as pre-changelog-generation script`)
     }
 
-    if(skipBump) {
+    if (skipBump) {
       core.info('Skipping bumping the version')
     }
 
@@ -101,13 +100,15 @@ async function run() {
 
     const config = await loadPresetConfig(preset, conventionalConfigFile && requireScript(conventionalConfigFile))
 
-    const recommendation = await conventionalRecommendedBump({
-      preset: await loadPreset(preset),
-      tagPrefix,
-      config,
-      skipUnstable: !prerelease,
-      path: gitPath
-    })
+    const { Bumper } = await import('conventional-recommended-bump')
+    const bumper = new Bumper(gitPath || process.cwd())
+      .loadPreset(config || await loadPreset(preset))
+      .tag({
+        prefix: tagPrefix,
+        skipUnstable: !prerelease
+      })
+
+    const recommendation = await bumper.bump()
 
     core.info(`Recommended release type: ${recommendation.releaseType}`)
 
