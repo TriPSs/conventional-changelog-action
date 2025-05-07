@@ -27,6 +27,7 @@ jobs:
         with:
           github-token: ${{ secrets.github_token }}
           create-summary: true
+          pre-changelog-generation: "PRE_CHANGELOG.md"
 
       - name: Create Release
         uses: actions/create-release@v1
