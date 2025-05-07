@@ -1,3 +1,12 @@
+# [7.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v7.1.0...v7.2.0) (2025-05-07)
+
+
+### Features
+
+* test message1 ([8b45987](https://github.com/TriPSs/conventional-changelog-action/commit/8b459879be6ea6edbf99c4952bcfc5471c5ec2f7))
+
+
+
 # [7.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v7.0.0...v7.1.0) (2025-05-07)
 
 

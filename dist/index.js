@@ -5641,10 +5641,10 @@ const { resolve } = __nccwpck_require__(6928)
 
 async function createWriterOpts () {
   const [template, header, commit, footer] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
 
@@ -5985,10 +5985,10 @@ async function createWriterOpts (config) {
     commit,
     footer
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts(finalConfig)
 
@@ -33851,7 +33851,7 @@ async function run() {
     })
 
     core.info(`Recommended release type: ${recommendation.releaseType}`)
-    core.info(`Recommended1`, recommendation)
+    core.info(`Recommended1`, JSON.stringify(recommendation))
 
     // If we have a reason also log it
     if (recommendation.reason) {
