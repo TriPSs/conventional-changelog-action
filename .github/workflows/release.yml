@@ -3,6 +3,8 @@ on:
   push:
     branches:
       - 'releases/*'
+      - 'rc/*'
+      - 'beta/*'
 
 jobs:
   release:
