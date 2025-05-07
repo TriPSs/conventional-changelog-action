@@ -1,3 +1,14 @@
+# [7.4.0-beta.0](https://github.com/TriPSs/conventional-changelog-action/compare/v7.3.0...v7.4.0-beta.0) (2025-05-07)
+
+
+### Features
+
+* test prerelease1 ([d254ca4](https://github.com/TriPSs/conventional-changelog-action/commit/d254ca425485087327e0cf1912a7d244308cef1a))
+* test prerelease2 ([30a7777](https://github.com/TriPSs/conventional-changelog-action/commit/30a7777f53e097c73a9c75d35f7c3cbbb93b0440))
+* test prerelease3 ([bc10dae](https://github.com/TriPSs/conventional-changelog-action/commit/bc10daea75916dc5fee39e910e19a1b2e019d1ff))
+
+
+
 # [7.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v7.2.0...v7.3.0) (2025-05-07)
 
 
