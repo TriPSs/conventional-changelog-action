@@ -33851,7 +33851,8 @@ async function run() {
     })
 
     core.info(`Recommended release type: ${recommendation.releaseType}`)
-    core.info(`Recommended1`, JSON.stringify(recommendation))
+    core.info(`Recommended1 ${JSON.stringify(recommendation)}`)
+    console.log('recommendation', recommendation);
 
     // If we have a reason also log it
     if (recommendation.reason) {
