@@ -3,6 +3,7 @@ const assert = require('assert')
 const objectPath = require('object-path')
 const yaml = require('yaml')
 const toml = require('@iarna/toml')
+const properties = require('properties')
 
 const actionConfig = yaml.parse(fs.readFileSync('./action.yml', 'utf8'))
 
@@ -46,7 +47,7 @@ FILES.split(',').map((file, index) => {
       break
 
     case 'properties':
-      parsedContent = fileContent
+      parsedContent = properties.parse(fileContent)
       break
 
     default:
@@ -65,12 +66,6 @@ FILES.split(',').map((file, index) => {
     : expectedVersions
 
   if (fileExtension.toLowerCase() === 'exs') {
-    assert.strictEqual(parsedContent.includes(expectedVersion), true, 'Version does not match what is expected')
-    return
-  }
-
-  if (fileExtension.toLowerCase() === 'properties') {
-    console.log(`"${file}" check if version matches what is expected "${expectedVersion}"`)
     assert.strictEqual(parsedContent.includes(expectedVersion), true, 'Version does not match what is expected')
     return
   }

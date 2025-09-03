@@ -789,6 +789,17 @@ jobs:
           version-file: "test-file.properties"
           version-path: "colon_version"
 
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: "dont-use-git"
+          EXPECTED_TAG: "v0.1.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "test-file.properties"
+          version-path: "foobar_version"
+
       - name: Show file
         run: |
           echo "$(<test-file.properties)"
@@ -797,7 +808,7 @@ jobs:
         run: node ./test-output.js
         env:
           FILES: "test-file.properties"
-          EXPECTED_VERSION: "2.1.0,3.1.0,#version = 0.4.2,!version = 0.4.3,# colon_version:0.4.4,! colon_version:0.4.5"
+          EXPECTED_VERSION: "2.1.0,3.1.0"
 
   test-properties-new:
     runs-on: ubuntu-latest
