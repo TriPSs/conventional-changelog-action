@@ -789,7 +789,6 @@ jobs:
           version-path: "colon_version"
 
       - name: Generate changelog
-        id: changelog
         uses: ./
         env:
           ENV: "dont-use-git"
