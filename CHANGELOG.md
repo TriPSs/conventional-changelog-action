@@ -1,3 +1,12 @@
+# [6.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v6.0.0...v6.1.0) (2025-09-04)
+
+
+### Features
+
+* add version file support for java .properties file format ([5e05ac7](https://github.com/TriPSs/conventional-changelog-action/commit/5e05ac72a623fb401c96bc8fa36d2aa7b2134aac))
+
+
+
 # [6.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.4.0...v6.0.0) (2024-11-28)
 
 
@@ -36,15 +45,6 @@
 ### Bug Fixes
 
 * support git-path config option for version bump ([e3346a2](https://github.com/TriPSs/conventional-changelog-action/commit/e3346a2be870347e11d3186035c42d3095bc0d8f))
-
-
-
-# [5.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.1.0...v5.2.0) (2024-02-07)
-
-
-### Features
-
-* Add option to skip version bumping. ([#251](https://github.com/TriPSs/conventional-changelog-action/issues/251)) ([17fb98e](https://github.com/TriPSs/conventional-changelog-action/commit/17fb98e8b49153e53d241539ff772b546ff545bc))
 
 
 
