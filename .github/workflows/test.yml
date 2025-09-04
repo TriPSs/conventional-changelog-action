@@ -769,7 +769,6 @@ jobs:
       - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
       - name: Generate changelog
-        id: changelog
         uses: ./
         env:
           ENV: "dont-use-git"
