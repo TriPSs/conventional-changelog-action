@@ -3,6 +3,7 @@ const Git = require('./git')
 const Yaml = require('./yaml')
 const Toml = require('./toml')
 const Mix = require('./mix')
+const Properties = require('./properties')
 
 module.exports = (fileExtension, filePath) => {
   switch (fileExtension.toLowerCase()) {
@@ -21,6 +22,9 @@ module.exports = (fileExtension, filePath) => {
 
     case 'exs':
       return new Mix()
+
+    case 'properties':
+      return new Properties()
 
     default:
       throw new Error(`File extension "${fileExtension}" from file "${filePath}" is not supported`)

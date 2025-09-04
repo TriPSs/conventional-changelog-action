@@ -753,6 +753,133 @@ jobs:
           EXPECTED_VERSION: "6.5.0"
           EXPECTED_VERSION_PATH: "package.version"
 
+  test-properties:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+      - run: npm run build
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        uses: ./
+        env:
+          ENV: "dont-use-git"
+          EXPECTED_TAG: "v2.1.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "test-file.properties"
+
+      - name: Generate changelog
+        uses: ./
+        env:
+          ENV: "dont-use-git"
+          EXPECTED_TAG: "v3.1.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "test-file.properties"
+          version-path: "colon_version"
+
+      - name: Generate changelog
+        uses: ./
+        env:
+          ENV: "dont-use-git"
+          EXPECTED_TAG: "v0.1.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "test-file.properties"
+          version-path: "foobar_version"
+
+      - name: Show file
+        run: |
+          echo "$(<test-file.properties)"
+
+      - name: Test output
+        run: node ./test-output.js
+        env:
+          FILES: "test-file.properties"
+          EXPECTED_VERSION: "2.1.0,3.1.0"
+
+  test-properties-new:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+      - run: npm run build
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: "dont-use-git"
+          EXPECTED_TAG: "v0.1.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "test-file-new.properties"
+
+      - name: Show file
+        run: |
+          echo "$(<test-file-new.properties)"
+
+      - name: Test output
+        run: node ./test-output.js
+        env:
+          FILES: "test-file-new.properties"
+          EXPECTED_VERSION: "0.1.0"
+
+  test-properties-empty:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v5
+        with:
+          path: "./"
+
+      - run: npm ci --prod
+      - run: npm run build
+
+      - run: "git config --global user.email 'changelog@github.com'"
+      - run: "git config --global user.name 'Awesome Github action'"
+      - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
+
+      - run: touch ./test-file-empty.properties
+
+      - name: Generate changelog
+        id: changelog
+        uses: ./
+        env:
+          ENV: "dont-use-git"
+          EXPECTED_TAG: "v6.5.0"
+        with:
+          github-token: ${{ secrets.github_token }}
+          version-file: "test-file-empty.properties"
+          fallback-version: "6.5.0"
+
+      - name: Show file
+        run: |
+          echo "$(<test-file-empty.properties)"
+
+      - name: Test output
+        run: node ./test-output.js
+        env:
+          FILES: "test-file-empty.properties"
+          EXPECTED_VERSION: "6.5.0"
+
   test-pre-commit:
     runs-on: ubuntu-latest
     steps:
@@ -844,7 +971,7 @@ jobs:
           EXPECTED_TAG: "v1.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.json, test-file-2.json, test-file.toml, test-file.yaml"
+          version-file: "test-file.json, test-file-2.json, test-file.toml, test-file.yaml, test-file.properties"
 
       - name: Show files
         run: |
@@ -856,12 +983,14 @@ jobs:
           echo "$(<test-file.toml)\n\n"
           echo "Test yaml file"
           echo "$(<test-file.yaml)\n\n"
+          echo "Test properties file"
+          echo "$(<test-file.properties)\n\n"
 
       - name: Test output
         run: node ./test-output.js
         env:
-          FILES: "test-file.json, test-file-2.json, test-file.toml, test-file.yaml"
-          EXPECTED_VERSION: "1.5.0, 1.5.0, 1.5.0, 1.11.0"
+          FILES: "test-file.json, test-file-2.json, test-file.toml, test-file.yaml, test-file.properties"
+          EXPECTED_VERSION: "1.5.0, 1.5.0, 1.5.0, 1.11.0, 2.1.0"
 
   test-config-file-path:
     runs-on: ubuntu-latest

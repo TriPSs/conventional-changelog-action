@@ -3,6 +3,7 @@ const assert = require('assert')
 const objectPath = require('object-path')
 const yaml = require('yaml')
 const toml = require('@iarna/toml')
+const properties = require('properties')
 
 const actionConfig = yaml.parse(fs.readFileSync('./action.yml', 'utf8'))
 
@@ -45,6 +46,10 @@ FILES.split(',').map((file, index) => {
       parsedContent = fileContent
       break
 
+    case 'properties':
+      parsedContent = properties.parse(fileContent)
+      break
+
     default:
       assert.fail(`File extension "${fileExtension}" is not supported!`)
   }
@@ -57,7 +62,7 @@ FILES.split(',').map((file, index) => {
 
   const expectedVersions = EXPECTED_VERSION.split(',')
   const expectedVersion = expectedVersions.length > 0
-    ? expectedVersions[index]
+    ? expectedVersions[index].trim()
     : expectedVersions
 
   if (fileExtension.toLowerCase() === 'exs') {
@@ -67,8 +72,8 @@ FILES.split(',').map((file, index) => {
 
   const newVersionInFile = objectPath.get(parsedContent, EXPECTED_VERSION_PATH, null)
 
-  console.log(`"${file}" check if "${newVersionInFile}" matches what is expected "${expectedVersion.trim()}"`)
+  console.log(`"${file}" check if "${newVersionInFile}" matches what is expected "${expectedVersion}"`)
 
-  assert.strictEqual(newVersionInFile, expectedVersion.trim(), 'Version does not match what is expected')
+  assert.strictEqual(newVersionInFile, expectedVersion, 'Version does not match what is expected')
 })
 
