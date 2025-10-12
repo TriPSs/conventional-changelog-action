@@ -98,9 +98,10 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  commit = (message) => (
-    this.exec(`commit -m "${message}"`)
-  )
+  commit = (message, options = {}) => {
+    const {noVerify} = options
+    return this.exec(`commit -m "${message}" ${noVerify ? "--no-verify" : ""}`)
+  }
 
   /**
    * Pull the full history
