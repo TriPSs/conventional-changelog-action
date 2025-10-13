@@ -54,6 +54,7 @@ async function run() {
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
     const skipBump = core.getBooleanInput('skip-bump')
+    const noVerify = core.getBooleanInput('no-verify')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -205,7 +206,7 @@ async function run() {
       }
 
       await git.add('.')
-      await git.commit(gitCommitMessage.replace('{version}', gitTag))
+      await git.commit(gitCommitMessage.replace('{version}', gitTag), {noVerify})
     }
 
     // Create the new tag

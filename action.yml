@@ -156,6 +156,12 @@ inputs:
     default: "false"
     required: false
 
+  no-verify:
+    description: "Run git commit with `no-verify` option."
+    default: "false"
+    required: false
+
+
 outputs:
   changelog:
     description: "The generated changelog for the new version"
