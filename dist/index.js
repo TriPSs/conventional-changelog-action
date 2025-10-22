@@ -5641,10 +5641,10 @@ const { resolve } = __nccwpck_require__(6928)
 
 async function createWriterOpts () {
   const [template, header, commit, footer] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
 
@@ -5985,10 +5985,10 @@ async function createWriterOpts (config) {
     commit,
     footer
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts(finalConfig)
 
@@ -23785,9 +23785,10 @@ module.exports = new (class Git {
    *
    * @return {Promise<>}
    */
-  commit = (message) => (
-    this.exec(`commit -m "${message}"`)
-  )
+  commit = (message, options = {}) => {
+    const {noVerify} = options
+    return this.exec(`commit -m "${message}" ${noVerify ? "--no-verify" : ""}`)
+  }
 
   /**
    * Pull the full history
@@ -35021,6 +35022,7 @@ async function run() {
     const createSummary = core.getBooleanInput('create-summary')
     const prerelease = core.getBooleanInput('pre-release')
     const skipBump = core.getBooleanInput('skip-bump')
+    const noVerify = core.getBooleanInput('no-verify')
 
     if (skipCi) {
       gitCommitMessage += ' [skip ci]'
@@ -35172,7 +35174,7 @@ async function run() {
       }
 
       await git.add('.')
-      await git.commit(gitCommitMessage.replace('{version}', gitTag))
+      await git.commit(gitCommitMessage.replace('{version}', gitTag), {noVerify})
     }
 
     // Create the new tag
