@@ -23787,7 +23787,11 @@ module.exports = new (class Git {
    */
   commit = (message, options = {}) => {
     const {noVerify} = options
-    return this.exec(`commit -m "${message}" ${noVerify ? "--no-verify" : ""}`)
+    const args = [`commit -m "${message}"`]
+    if (noVerify) {
+      args.push("--no-verify")
+    }
+    return this.exec(args.join(" "))
   }
 
   /**

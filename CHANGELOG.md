@@ -1,3 +1,13 @@
+# [6.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v6.1.0...v6.2.0) (2025-10-22)
+
+
+### Features
+
+* add no-verify option to pass  to git commit ([ad190ee](https://github.com/TriPSs/conventional-changelog-action/commit/ad190ee6f0f7d9548d735e058f3b83a34c65538d))
+* remove extra space from commit command ([4d9c8c2](https://github.com/TriPSs/conventional-changelog-action/commit/4d9c8c291a1659f3eb513c814c8b82777bee666e))
+
+
+
 # [6.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v6.0.0...v6.1.0) (2025-09-04)
 
 
@@ -36,15 +46,6 @@
 ### Features
 
 * Support multiple git-path config option ([c8865b2](https://github.com/TriPSs/conventional-changelog-action/commit/c8865b254ce399e1950f0da982b3ac9e093f732b))
-
-
-
-## [5.2.1](https://github.com/TriPSs/conventional-changelog-action/compare/v5.2.0...v5.2.1) (2024-02-24)
-
-
-### Bug Fixes
-
-* support git-path config option for version bump ([e3346a2](https://github.com/TriPSs/conventional-changelog-action/commit/e3346a2be870347e11d3186035c42d3095bc0d8f))
 
 
 
