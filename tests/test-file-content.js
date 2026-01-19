@@ -6,7 +6,7 @@ const actionConfig = yaml.parse(fs.readFileSync('./action.yml', 'utf8'))
 
 const {
   OUTPUT_FILE = 'CHANGELOG.md',
-  EXPECTED_FILE = 'test-input-file.md',
+  EXPECTED_FILE = 'tests/data/test-input-file.md',
 } = process.env
 
 assert.ok(OUTPUT_FILE, 'Output file is not defined!')

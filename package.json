@@ -6,9 +6,9 @@
     "actions",
     "changelog",
     "commits",
+    "conventional commits",
     "conventional",
-    "github",
-    "conventional commits"
+    "github"
   ],
   "homepage": "https://github.com/TriPSs/conventional-changelog-action#readme",
   "bugs": {
