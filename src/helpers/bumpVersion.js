@@ -22,15 +22,30 @@ module.exports = async (releaseType, version) => {
 
       // Check if the current version is already a pre-release with the same identifier
       if (parsedVersion.prerelease && parsedVersion.prerelease.length > 0 && parsedVersion.prerelease[0] === identifier) {
-        // For prereleases, only bump the base version for minor or major changes
-        // Patch changes just increment the prerelease counter
-        if (releaseType === 'minor' || releaseType === 'major') {
-          // Bump to new base version with .0 prerelease
-          // (e.g., 1.5.1-dev.3 with minor bump -> 1.6.0-dev.0)
-          newVersion = semver.inc(version, `pre${releaseType}`, identifier)
+        // Determine what type of release the current prerelease is targeting
+        // If patch is 0, we're targeting a minor/major release
+        // If patch > 0, we're targeting a patch release
+        const isTargetingMinorOrMajor = parsedVersion.patch === 0
+
+        // If the required release type is already satisfied by the current target, just increment counter
+        // Otherwise, bump to the new target version
+        if (releaseType === 'major') {
+          // Major changes always require a new major version
+          newVersion = semver.inc(version, 'premajor', identifier)
+        } else if (releaseType === 'minor') {
+          if (isTargetingMinorOrMajor) {
+            // Already targeting a minor/major release, just increment counter
+            // (e.g., 1.8.0-dev.2 with minor -> 1.8.0-dev.3)
+            newVersion = semver.inc(version, 'prerelease', identifier)
+          } else {
+            // Currently targeting a patch, need to bump to minor
+            // (e.g., 1.7.1-dev.0 with minor -> 1.8.0-dev.0)
+            newVersion = semver.inc(version, 'preminor', identifier)
+          }
         } else {
-          // For patch changes, just increment the prerelease counter
-          // (e.g., 1.5.1-dev.0 with patch -> 1.5.1-dev.1)
+          // Patch changes always just increment the prerelease counter
+          // (e.g., 1.7.1-dev.0 with patch -> 1.7.1-dev.1)
+          // (e.g., 1.8.0-dev.2 with patch -> 1.8.0-dev.3)
           newVersion = semver.inc(version, 'prerelease', identifier)
         }
       } else {
