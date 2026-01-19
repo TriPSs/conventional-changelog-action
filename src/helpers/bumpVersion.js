@@ -23,18 +23,23 @@ module.exports = async (releaseType, version) => {
       // Check if the current version is already a pre-release with the same identifier
       if (parsedVersion.prerelease && parsedVersion.prerelease.length > 0 && parsedVersion.prerelease[0] === identifier) {
         // Determine what type of release the current prerelease is targeting
-        // If patch is 0, we're targeting a minor/major release
-        // If patch > 0, we're targeting a patch release
-        const isTargetingMinorOrMajor = parsedVersion.patch === 0
+        // x.0.0-dev.y = targeting a major release
+        // x.y.0-dev.z (where y > 0) = targeting a minor release
+        // x.y.z-dev.n (where z > 0) = targeting a patch release
+        const isTargetingMajor = parsedVersion.minor === 0 && parsedVersion.patch === 0
+        const isTargetingMinor = parsedVersion.minor > 0 && parsedVersion.patch === 0
 
-        // If the required release type is already satisfied by the current target, just increment counter
-        // Otherwise, bump to the new target version
-        if (releaseType === 'major') {
-          // Major changes always require a new major version
+        if (isTargetingMajor) {
+          // Already targeting a major release, always just increment counter
+          // (e.g., 3.0.0-dev.2 with any change -> 3.0.0-dev.3)
+          newVersion = semver.inc(version, 'prerelease', identifier)
+        } else if (releaseType === 'major') {
+          // Need to bump to a new major version
+          // (e.g., 1.8.0-dev.2 with major -> 2.0.0-dev.0)
           newVersion = semver.inc(version, 'premajor', identifier)
         } else if (releaseType === 'minor') {
-          if (isTargetingMinorOrMajor) {
-            // Already targeting a minor/major release, just increment counter
+          if (isTargetingMinor) {
+            // Already targeting a minor release, just increment counter
             // (e.g., 1.8.0-dev.2 with minor -> 1.8.0-dev.3)
             newVersion = semver.inc(version, 'prerelease', identifier)
           } else {
