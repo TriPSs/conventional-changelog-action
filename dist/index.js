@@ -5641,10 +5641,10 @@ const { resolve } = __nccwpck_require__(6928)
 
 async function createWriterOpts () {
   const [template, header, commit, footer] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template2.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header2.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit2.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
 
@@ -5985,10 +5985,10 @@ async function createWriterOpts (config) {
     commit,
     footer
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "footer.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts(finalConfig)
 
@@ -6803,9 +6803,9 @@ const { resolve } = __nccwpck_require__(6928)
 
 async function createWriterOpts () {
   const [template, header, commit] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template2.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header2.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit2.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
 
@@ -23527,22 +23527,16 @@ module.exports = async (releaseType, version) => {
 
       // Check if the current version is already a pre-release with the same identifier
       if (parsedVersion.prerelease && parsedVersion.prerelease.length > 0 && parsedVersion.prerelease[0] === identifier) {
-        // Calculate what the new base version would be with the recommended release type
-        const potentialNewVersion = semver.inc(version, `pre${releaseType}`, identifier)
-        const potentialParsed = semver.parse(potentialNewVersion)
-
-        // Compare base versions (major.minor.patch only)
-        const currentBase = `${parsedVersion.major}.${parsedVersion.minor}.${parsedVersion.patch}`
-        const newBase = `${potentialParsed.major}.${potentialParsed.minor}.${potentialParsed.patch}`
-
-        if (currentBase === newBase) {
-          // Base version unchanged, just increment pre-release counter
-          // (e.g., 1.5.1-dev.3 with no significant changes -> 1.5.1-dev.4)
-          newVersion = semver.inc(version, 'prerelease', identifier)
-        } else {
-          // Base version changed due to release type, bump to new base with .0
+        // For prereleases, only bump the base version for minor or major changes
+        // Patch changes just increment the prerelease counter
+        if (releaseType === 'minor' || releaseType === 'major') {
+          // Bump to new base version with .0 prerelease
           // (e.g., 1.5.1-dev.3 with minor bump -> 1.6.0-dev.0)
-          newVersion = potentialNewVersion
+          newVersion = semver.inc(version, `pre${releaseType}`, identifier)
+        } else {
+          // For patch changes, just increment the prerelease counter
+          // (e.g., 1.5.1-dev.0 with patch -> 1.5.1-dev.1)
+          newVersion = semver.inc(version, 'prerelease', identifier)
         }
       } else {
         // First pre-release for this version or different identifier, bump base version
