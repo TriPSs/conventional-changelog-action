@@ -150,7 +150,12 @@ inputs:
     description: "The identifier to use for pre-releases"
     default: "rc"
     required: false
-  
+
+  pre-release-smart-bump:
+    description: "If a pre-release is already targeting the same release type, only the pre-release counter is incremented."
+    default: "false"
+    required: false
+
   skip-bump:
     description: "Prevents the action from bumping the version"
     default: "false"

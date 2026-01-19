@@ -5985,9 +5985,9 @@ async function createWriterOpts (config) {
     commit,
     footer
   ] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "template2.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header2.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit2.hbs", 'utf-8'),
     readFile(__nccwpck_require__.ab + "footer1.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts(finalConfig)
@@ -6803,9 +6803,9 @@ const { resolve } = __nccwpck_require__(6928)
 
 async function createWriterOpts () {
   const [template, header, commit] = await Promise.all([
-    readFile(__nccwpck_require__.ab + "template2.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "header2.hbs", 'utf-8'),
-    readFile(__nccwpck_require__.ab + "commit2.hbs", 'utf-8')
+    readFile(__nccwpck_require__.ab + "template1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "header1.hbs", 'utf-8'),
+    readFile(__nccwpck_require__.ab + "commit1.hbs", 'utf-8')
   ])
   const writerOpts = getWriterOpts()
 
@@ -23520,14 +23520,15 @@ module.exports = async (releaseType, version) => {
 
   const prerelease = core.getBooleanInput('pre-release')
   const identifier = core.getInput('pre-release-identifier')
+  const smartBump = core.getBooleanInput('pre-release-smart-bump')
 
   if (version) {
     if (prerelease) {
       const parsedVersion = semver.parse(version)
 
       // Check if the current version is already a pre-release with the same identifier
-      if (parsedVersion.prerelease && parsedVersion.prerelease.length > 0 && parsedVersion.prerelease[0] === identifier) {
-        // Determine what type of release the current prerelease is targeting
+      if (smartBump && parsedVersion.prerelease && parsedVersion.prerelease.length > 0 && parsedVersion.prerelease[0] === identifier) {
+        // Smart bump mode: Determine what type of release the current prerelease is targeting
         // x.0.0-dev.y = targeting a major release
         // x.y.0-dev.z (where y > 0) = targeting a minor release
         // x.y.z-dev.n (where z > 0) = targeting a patch release
@@ -23559,6 +23560,7 @@ module.exports = async (releaseType, version) => {
           newVersion = semver.inc(version, 'prerelease', identifier)
         }
       } else {
+        // Standard semver behavior: always bump based on release type
         // First pre-release for this version or different identifier, bump base version
         // (e.g., 1.5.0 -> 1.5.1-dev.0 or 1.5.0-beta.0 -> 1.5.1-dev.0)
         newVersion = semver.inc(version, `pre${releaseType}`, identifier)
