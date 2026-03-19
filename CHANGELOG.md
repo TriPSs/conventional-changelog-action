@@ -1,3 +1,12 @@
+# [6.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v6.2.0...v6.3.0) (2026-03-19)
+
+
+### Features
+
+* Update Node version from 20 to 24 in action.yml ([c6d4281](https://github.com/TriPSs/conventional-changelog-action/commit/c6d4281850b5f692a97ff3ef643c1cced2ff5c01))
+
+
+
 # [6.2.0](https://github.com/TriPSs/conventional-changelog-action/compare/v6.1.0...v6.2.0) (2025-10-22)
 
 
@@ -37,15 +46,6 @@
 ### Features
 
 * Added `eslint` preset ([3c6b18c](https://github.com/TriPSs/conventional-changelog-action/commit/3c6b18c07653e130ab492400d8360d0dea35c651)), closes [#265](https://github.com/TriPSs/conventional-changelog-action/issues/265)
-
-
-
-# [5.3.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.2.1...v5.3.0) (2024-05-21)
-
-
-### Features
-
-* Support multiple git-path config option ([c8865b2](https://github.com/TriPSs/conventional-changelog-action/commit/c8865b254ce399e1950f0da982b3ac9e093f732b))
 
 
 
