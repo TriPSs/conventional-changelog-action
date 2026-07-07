@@ -69,12 +69,13 @@ module.exports.generateStringChangelog = (tagPrefix, preset, version, releaseCou
  * @param releaseCount
  * @param config
  * @param gitPath
+ * @param skipUnstable
  * @param infile
  * @returns {Promise<>}
  */
-module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, releaseCount, config, gitPath, infile) => new Promise(async(resolve) => {
+module.exports.generateFileChangelog = (tagPrefix, preset, version, fileName, releaseCount, config, gitPath, skipUnstable, infile) => new Promise(async(resolve) => {
   const changelogStream = await getChangelogStream(tagPrefix, preset, version, infile ? 1
-    : releaseCount, config, gitPath)
+    : releaseCount, config, gitPath, skipUnstable)
 
   // The default changelog output to be streamed first
   const readStreams = [changelogStream]
