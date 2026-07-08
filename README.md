@@ -33,6 +33,7 @@ This action will bump version, tag commit and generate a changelog with conventi
 - **Optional** `create-summary`: Adds the generated changelog as Action Summary. Default `false`.
 - **Optional** `pre-release`: Marks the release as pre-release. Default `false`.
 - **Optional** `pre-release-identifier`: The identifier to use for the pre-release. Default `rc`.
+- **Optional** `pre-release-smart-bump`: Enable smart pre-release version bumping that considers what version the pre-release is targeting (major, minor, or patch). When enabled, if a pre-release is already targeting the same release type, only the pre-release counter is incremented.
 - **Optional** `skip-bump`: Prevents the action from bumping the version.
 - **Optional** `no-verify`: Run commit with `--no-verify` git option. Default `'false'`.
 
