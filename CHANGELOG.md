@@ -1,3 +1,20 @@
+# [6.4.0](https://github.com/TriPSs/conventional-changelog-action/compare/v6.3.1...v6.4.0) (2026-07-08)
+
+
+### Bug Fixes
+
+* refactor template and header/footer handling for improved version bumping logic ([b9d2369](https://github.com/TriPSs/conventional-changelog-action/commit/b9d236976c151a23eb0fcf9cc98d5c9605191716))
+* update template and header/footer handling for improved version bumping logic ([f3f10ee](https://github.com/TriPSs/conventional-changelog-action/commit/f3f10ee2356fb9a38d41c3ad76323efc0ad73ddd))
+* update templates and bump version logic for prerelease handling ([c8f0be0](https://github.com/TriPSs/conventional-changelog-action/commit/c8f0be0826912786b8944d64963176da9e99a176))
+
+
+### Features
+
+* add pre-release-smart-bump option for intelligent pre-release version bumping ([3af15c8](https://github.com/TriPSs/conventional-changelog-action/commit/3af15c8f011c471bb67510dabba0c310727d9fc0))
+* improve version bumping logic ([193d21b](https://github.com/TriPSs/conventional-changelog-action/commit/193d21bcddd22178a0d093cf5cd09cbe7b3c4f7e))
+
+
+
 ## [6.3.1](https://github.com/TriPSs/conventional-changelog-action/compare/v6.3.0...v6.3.1) (2026-04-23)
 
 
@@ -32,20 +49,6 @@
 ### Features
 
 * add version file support for java .properties file format ([5e05ac7](https://github.com/TriPSs/conventional-changelog-action/commit/5e05ac72a623fb401c96bc8fa36d2aa7b2134aac))
-
-
-
-# [6.0.0](https://github.com/TriPSs/conventional-changelog-action/compare/v5.4.0...v6.0.0) (2024-11-28)
-
-
-### Features
-
-* set corresponding prerelease type derived from releaseType ([792a7f7](https://github.com/TriPSs/conventional-changelog-action/commit/792a7f7645a5dd206d9af4cd9e985e9aa02506c8))
-
-
-### BREAKING CHANGES
-
-* prerelease option generates pre[major|minor|patch] release
 
 
 
