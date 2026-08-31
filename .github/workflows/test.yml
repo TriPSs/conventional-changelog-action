@@ -29,14 +29,14 @@ jobs:
           EXPECTED_TAG: "v1.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.json"
+          version-file: "tests/data/test-file.json"
 
       - name: Show file
         run: |
-          echo "$(<test-file.json)"
+          echo "$(<tests/data/test-file.json)"
 
       - name: Test output
-        run: node ./test-github-output.js
+        run: node ./tests/test-github-output.js
         env:
           TAG: ${{ steps.changelog.outputs.tag }}
           EXPECTED_TAG: "v1.5.0"
@@ -64,16 +64,16 @@ jobs:
           EXPECTED_TAG: "v1.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.json"
+          version-file: "tests/data/test-file.json"
 
       - name: Show file
         run: |
-          echo "$(<test-file.json)"
+          echo "$(<tests/data/test-file.json)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.json"
+          FILES: "tests/data/test-file.json"
           EXPECTED_VERSION: "1.5.0"
 
   test-json-new:
@@ -99,16 +99,16 @@ jobs:
           EXPECTED_TAG: "v0.1.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file-new.json"
+          version-file: "tests/data/test-file-new.json"
 
       - name: Show file
         run: |
-          echo "$(<test-file-new.json)"
+          echo "$(<tests/data/test-file-new.json)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-new.json"
+          FILES: "tests/data/test-file-new.json"
           EXPECTED_VERSION: "0.1.0"
 
   test-json-new-prerelease:
@@ -134,17 +134,17 @@ jobs:
           EXPECTED_TAG: "v0.1.0-rc.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file-new-prerelease.json"
+          version-file: "tests/data/test-file-new-prerelease.json"
           pre-release: true
 
       - name: Show file
         run: |
-          echo "$(<test-file-new-prerelease.json)"
+          echo "$(<tests/data/test-file-new-prerelease.json)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-new-prerelease.json"
+          FILES: "tests/data/test-file-new-prerelease.json"
           EXPECTED_VERSION: "0.1.0-rc.0"
 
   test-json-empty:
@@ -162,7 +162,7 @@ jobs:
       - run: "git config --global user.name 'Awesome Github action'"
       - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
-      - run: touch ./test-file-empty.json
+      - run: touch ./tests/data/test-file-empty.json
 
       - name: Generate changelog
         id: changelog
@@ -172,14 +172,14 @@ jobs:
           EXPECTED_TAG: "v0.1.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "./test-file-empty.json"
+          version-file: "./tests/data/test-file-empty.json"
 
-      - run: echo "$(<./test-file-empty.json)"
+      - run: echo "$(<./tests/data/test-file-empty.json)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-empty.json"
+          FILES: "tests/data/test-file-empty.json"
           EXPECTED_VERSION: "0.1.0"
 
   test-git:
@@ -362,17 +362,17 @@ jobs:
           EXPECTED_TAG: "v1.4.5"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.json"
+          version-file: "tests/data/test-file.json"
           skip-bump: "true"
 
       - name: Show file
         run: |
-          echo "$(<test-file.json)"
+          echo "$(<tests/data/test-file.json)"
 
       - name: Test version
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.json"
+          FILES: "tests/data/test-file.json"
           EXPECTED_VERSION: "1.4.5"
 
   test-skip-bump-with-fallback:
@@ -399,18 +399,18 @@ jobs:
           EXPECTED_TAG: "v1.4.5"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.json"
+          version-file: "tests/data/test-file.json"
           skip-bump: "true"
           fallback-version: "6.5.0"
 
       - name: Show file
         run: |
-          echo "$(<test-file.json)"
+          echo "$(<tests/data/test-file.json)"
 
       - name: Test version
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.json"
+          FILES: "tests/data/test-file.json"
           EXPECTED_VERSION: "1.4.5"
 
   test-skip-bump-with-fallback-empty-version-file:
@@ -437,7 +437,7 @@ jobs:
           EXPECTED_TAG: "v6.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "./test-file-empty.json"
+          version-file: "./tests/data/test-file-empty.json"
           skip-bump: "true"
           fallback-version: "6.5.0"
 
@@ -480,7 +480,7 @@ jobs:
           EXPECTED_TAG: "v9.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.yaml"
+          version-file: "tests/data/test-file.yaml"
           version-path: "package.version"
 
       - name: Generate changelog
@@ -490,7 +490,7 @@ jobs:
           EXPECTED_TAG: "v9.6.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.yaml"
+          version-file: "tests/data/test-file.yaml"
           version-path: "package.no-quotes-version"
 
       - name: Generate changelog
@@ -500,31 +500,31 @@ jobs:
           EXPECTED_TAG: "v9.7.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.yaml"
+          version-file: "tests/data/test-file.yaml"
           version-path: "package.double-quotes-version"
 
       - name: Show file
         run: |
-          echo "$(<test-file.yaml)"
+          echo "$(<tests/data/test-file.yaml)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.yaml"
+          FILES: "tests/data/test-file.yaml"
           EXPECTED_VERSION: "9.5.0"
           EXPECTED_VERSION_PATH: "package.version"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.yaml"
+          FILES: "tests/data/test-file.yaml"
           EXPECTED_VERSION: "9.6.0"
           EXPECTED_VERSION_PATH: "package.no-quotes-version"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.yaml"
+          FILES: "tests/data/test-file.yaml"
           EXPECTED_VERSION: "9.7.0"
           EXPECTED_VERSION_PATH: "package.double-quotes-version"
 
@@ -543,7 +543,7 @@ jobs:
       - run: "git config --global user.name 'Awesome Github action'"
       - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
-      - run: touch ./test-file-empty.yaml
+      - run: touch ./tests/data/test-file-empty.yaml
 
       - name: Generate changelog
         id: changelog
@@ -553,17 +553,17 @@ jobs:
           EXPECTED_TAG: "v0.1.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file-new.yaml"
+          version-file: "tests/data/test-file-new.yaml"
           version-path: "package.version"
 
       - name: Show file
         run: |
-          echo "$(<test-file-new.yaml)"
+          echo "$(<tests/data/test-file-new.yaml)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-new.yaml"
+          FILES: "tests/data/test-file-new.yaml"
           EXPECTED_VERSION: "0.1.0"
           EXPECTED_VERSION_PATH: "package.version"
 
@@ -590,17 +590,17 @@ jobs:
           EXPECTED_TAG: "v0.1.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "./test-file-empty.yaml"
+          version-file: "./tests/data/test-file-empty.yaml"
           version-path: "package.version"
 
       - name: Show file
         run: |
-          echo "$(<test-file-empty.yaml)"
+          echo "$(<tests/data/test-file-empty.yaml)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-empty.yaml"
+          FILES: "tests/data/test-file-empty.yaml"
           EXPECTED_VERSION: "0.1.0"
           EXPECTED_VERSION_PATH: "package.version"
 
@@ -634,7 +634,7 @@ jobs:
           echo "$(<mix.exs)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
           FILES: "mix.exs"
           EXPECTED_VERSION: "0.2.0"
@@ -662,17 +662,17 @@ jobs:
           EXPECTED_TAG: "v0.10.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.toml"
+          version-file: "tests/data/test-file.toml"
           version-path: "package.version"
 
       - name: Show file
         run: |
-          echo "$(<test-file.toml)"
+          echo "$(<tests/data/test-file.toml)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.toml"
+          FILES: "tests/data/test-file.toml"
           EXPECTED_VERSION: "0.10.0"
           EXPECTED_VERSION_PATH: "package.version"
 
@@ -699,17 +699,17 @@ jobs:
           EXPECTED_TAG: "v0.1.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file-new.toml"
+          version-file: "tests/data/test-file-new.toml"
           version-path: "package.version"
 
       - name: Show file
         run: |
-          echo "$(<test-file-new.toml)"
+          echo "$(<tests/data/test-file-new.toml)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-new.toml"
+          FILES: "tests/data/test-file-new.toml"
           EXPECTED_VERSION: "0.1.0"
           EXPECTED_VERSION_PATH: "package.version"
 
@@ -728,7 +728,7 @@ jobs:
       - run: "git config --global user.name 'Awesome Github action'"
       - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
-      - run: touch ./test-file-empty.toml
+      - run: touch ./tests/data/test-file-empty.toml
 
       - name: Generate changelog
         id: changelog
@@ -738,18 +738,18 @@ jobs:
           EXPECTED_TAG: "v6.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "./test-file-empty.toml"
+          version-file: "./tests/data/test-file-empty.toml"
           version-path: "package.version"
           fallback-version: "6.5.0"
 
       - name: Show file
         run: |
-          echo "$(<test-file-empty.toml)"
+          echo "$(<tests/data/test-file-empty.toml)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-empty.toml"
+          FILES: "tests/data/test-file-empty.toml"
           EXPECTED_VERSION: "6.5.0"
           EXPECTED_VERSION_PATH: "package.version"
 
@@ -775,7 +775,7 @@ jobs:
           EXPECTED_TAG: "v2.1.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.properties"
+          version-file: "tests/data/test-file.properties"
 
       - name: Generate changelog
         uses: ./
@@ -784,7 +784,7 @@ jobs:
           EXPECTED_TAG: "v3.1.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.properties"
+          version-file: "tests/data/test-file.properties"
           version-path: "colon_version"
 
       - name: Generate changelog
@@ -794,17 +794,17 @@ jobs:
           EXPECTED_TAG: "v0.1.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.properties"
+          version-file: "tests/data/test-file.properties"
           version-path: "foobar_version"
 
       - name: Show file
         run: |
-          echo "$(<test-file.properties)"
+          echo "$(<tests/data/test-file.properties)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.properties"
+          FILES: "tests/data/test-file.properties"
           EXPECTED_VERSION: "2.1.0,3.1.0"
 
   test-properties-new:
@@ -830,16 +830,16 @@ jobs:
           EXPECTED_TAG: "v0.1.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file-new.properties"
+          version-file: "tests/data/test-file-new.properties"
 
       - name: Show file
         run: |
-          echo "$(<test-file-new.properties)"
+          echo "$(<tests/data/test-file-new.properties)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-new.properties"
+          FILES: "tests/data/test-file-new.properties"
           EXPECTED_VERSION: "0.1.0"
 
   test-properties-empty:
@@ -857,7 +857,7 @@ jobs:
       - run: "git config --global user.name 'Awesome Github action'"
       - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
-      - run: touch ./test-file-empty.properties
+      - run: touch ./tests/data/test-file-empty.properties
 
       - name: Generate changelog
         id: changelog
@@ -867,17 +867,17 @@ jobs:
           EXPECTED_TAG: "v6.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file-empty.properties"
+          version-file: "tests/data/test-file-empty.properties"
           fallback-version: "6.5.0"
 
       - name: Show file
         run: |
-          echo "$(<test-file-empty.properties)"
+          echo "$(<tests/data/test-file-empty.properties)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-empty.properties"
+          FILES: "tests/data/test-file-empty.properties"
           EXPECTED_VERSION: "6.5.0"
 
   test-pre-commit:
@@ -905,9 +905,9 @@ jobs:
           EXPECTED_TAG: "v1.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          pre-commit: "./test-pre-commit.js"
+          pre-commit: "./tests/test-pre-commit.js"
           skip-on-empty: "false"
-          version-file: "./test-file.json"
+          version-file: "./tests/data/test-file.json"
 
       - run: test -f pre-commit.test.json || (echo should be here && exit 1)
       - run: cat pre-commit.test.json && echo ""
@@ -928,7 +928,7 @@ jobs:
       - run: "git config --global user.name 'Awesome Github action'"
       - run: "git add . && git commit --allow-empty -m 'feat: Added fake file so version will be bumped'"
 
-      - run: test -f pre-changelog-generation.test.json && (echo should not be here yet && exit 1) || exit 0
+      - run: test -f tests/pre-changelog-generation.test.json && (echo should not be here yet && exit 1) || exit 0
 
       - name: Generate changelog
         id: changelog
@@ -938,15 +938,14 @@ jobs:
           EXPECTED_TAG: "v1.0.100-alpha"
         with:
           github-token: ${{ secrets.github_token }}
-          pre-changelog-generation: "./test-pre-changelog-generation.js"
-          version-file: "./test-file.toml"
+          pre-changelog-generation: "./tests/test-pre-changelog-generation.js"
+          version-file: "./tests/data/test-file.toml"
           version-path: "package.version"
-
       - run: test -f pre-changelog-generation.version.test.json || (echo should be here && exit 1)
       - run: test -f pre-changelog-generation.tag.test.json || (echo should be here && exit 1)
       - run: cat pre-changelog-generation.version.test.json && echo ""
       - run: cat pre-changelog-generation.tag.test.json && echo ""
-      - run: cat ./test-file.toml
+      - run: cat ./tests/data/test-file.toml
 
   test-multiple-files:
     runs-on: ubuntu-latest
@@ -971,25 +970,25 @@ jobs:
           EXPECTED_TAG: "v1.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.json, test-file-2.json, test-file.toml, test-file.yaml, test-file.properties"
+          version-file: "tests/data/test-file.json, tests/data/test-file-2.json, tests/data/test-file.toml, tests/data/test-file.yaml, tests/data/test-file.properties"
 
       - name: Show files
         run: |
           echo "Test json file"
-          echo "$(<test-file.json)\n\n"
+          echo "$(<tests/data/test-file.json)\n\n"
           echo "Test json 2 file"
-          echo "$(<test-file-2.json)\n\n"
+          echo "$(<tests/data/test-file-2.json)\n\n"
           echo "Test toml file"
-          echo "$(<test-file.toml)\n\n"
+          echo "$(<tests/data/test-file.toml)\n\n"
           echo "Test yaml file"
-          echo "$(<test-file.yaml)\n\n"
+          echo "$(<tests/data/test-file.yaml)\n\n"
           echo "Test properties file"
-          echo "$(<test-file.properties)\n\n"
+          echo "$(<tests/data/test-file.properties)\n\n"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.json, test-file-2.json, test-file.toml, test-file.yaml, test-file.properties"
+          FILES: "tests/data/test-file.json, tests/data/test-file-2.json, tests/data/test-file.toml, tests/data/test-file.yaml, tests/data/test-file.properties"
           EXPECTED_VERSION: "1.5.0, 1.5.0, 1.5.0, 1.11.0, 2.1.0"
 
   test-config-file-path:
@@ -1016,7 +1015,7 @@ jobs:
         with:
           github-token: ${{ secrets.github_token }}
           skip-version-file: "true"
-          config-file-path: "./test-changelog.config.js"
+          config-file-path: "./tests/test-changelog.config.js"
 
       - name: Test output
         run: |
@@ -1050,17 +1049,17 @@ jobs:
           SKIP_CI: "false"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.json"
+          version-file: "tests/data/test-file.json"
           skip-ci: "false"
 
       - name: Show file
         run: |
-          echo "$(<test-file.json)"
+          echo "$(<tests/data/test-file.json)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.json"
+          FILES: "tests/data/test-file.json"
           EXPECTED_VERSION: "1.5.0"
 
   test-pre-release:
@@ -1086,17 +1085,17 @@ jobs:
           EXPECTED_TAG: "v1.5.0-rc.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.json"
+          version-file: "tests/data/test-file.json"
           pre-release: true
 
       - name: Show file
         run: |
-          echo "$(<test-file.json)"
+          echo "$(<tests/data/test-file.json)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.json"
+          FILES: "tests/data/test-file.json"
           EXPECTED_VERSION: "1.5.0-rc.0"
 
   test-pre-release-identifier:
@@ -1122,18 +1121,18 @@ jobs:
           EXPECTED_TAG: "v1.5.0-alpha.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file.json"
+          version-file: "tests/data/test-file.json"
           pre-release: true
           pre-release-identifier: "alpha"
 
       - name: Show file
         run: |
-          echo "$(<test-file.json)"
+          echo "$(<tests/data/test-file.json)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file.json"
+          FILES: "tests/data/test-file.json"
           EXPECTED_VERSION: "1.5.0-alpha.0"
 
   test-pre-release-to-stable:
@@ -1159,17 +1158,17 @@ jobs:
           EXPECTED_TAG: "v1.5.0"
         with:
           github-token: ${{ secrets.github_token }}
-          version-file: "test-file-pre-release.json"
+          version-file: "tests/data/test-file-pre-release.json"
           pre-release: false # This is the default value, but we want to be explicit
 
       - name: Show file
         run: |
-          echo "$(<test-file-pre-release.json)"
+          echo "$(<tests/data/test-file-pre-release.json)"
 
       - name: Test output
-        run: node ./test-output.js
+        run: node ./tests/test-output.js
         env:
-          FILES: "test-file-pre-release.json"
+          FILES: "tests/data/test-file-pre-release.json"
           EXPECTED_VERSION: "1.5.0"
 
   test-input-file:
@@ -1194,17 +1193,17 @@ jobs:
           ENV: "dont-use-git"
           EXPECTED_TAG: "v6.5.0"
         with:
-          input-file: "./test-input-file.md"
+          input-file: "./tests/data/test-input-file.md"
           github-token: ${{ secrets.github_token }}
-          version-file: "./test-file-empty.toml"
+          version-file: "./tests/data/test-file-empty.toml"
           version-path: "package.version"
           fallback-version: "6.5.0"
 
       - name: Test output
-        run: node ./test-file-content.js
+        run: node ./tests/test-file-content.js
         env:
           OUTPUT_FILE: "CHANGELOG.md"
-          EXPECTED_FILE: "test-input-file.md"
+          EXPECTED_FILE: "tests/data/test-input-file.md"
 
   test-multiple-git-path:
     runs-on: ubuntu-latest
