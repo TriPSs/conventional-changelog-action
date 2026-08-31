@@ -1,3 +1,12 @@
+# [6.5.0](https://github.com/TriPSs/conventional-changelog-action/compare/v6.4.0...v6.5.0) (2026-08-31)
+
+
+### Features
+
+* reorganize test files and update actions ([3717631](https://github.com/TriPSs/conventional-changelog-action/commit/3717631a2b8d307a886c7eb1541f40ee559db3d3))
+
+
+
 # [6.4.0](https://github.com/TriPSs/conventional-changelog-action/compare/v6.3.1...v6.4.0) (2026-07-08)
 
 
@@ -40,15 +49,6 @@
 
 * add no-verify option to pass  to git commit ([ad190ee](https://github.com/TriPSs/conventional-changelog-action/commit/ad190ee6f0f7d9548d735e058f3b83a34c65538d))
 * remove extra space from commit command ([4d9c8c2](https://github.com/TriPSs/conventional-changelog-action/commit/4d9c8c291a1659f3eb513c814c8b82777bee666e))
-
-
-
-# [6.1.0](https://github.com/TriPSs/conventional-changelog-action/compare/v6.0.0...v6.1.0) (2025-09-04)
-
-
-### Features
-
-* add version file support for java .properties file format ([5e05ac7](https://github.com/TriPSs/conventional-changelog-action/commit/5e05ac72a623fb401c96bc8fa36d2aa7b2134aac))
 
 
 

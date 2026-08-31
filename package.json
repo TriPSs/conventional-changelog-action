@@ -1,6 +1,6 @@
 {
   "name": "conventional-changelog-action",
-  "version": "6.4.0",
+  "version": "6.5.0",
   "description": "Github Action that generates a changelog with the Conventional Changelog CLI",
   "keywords": [
     "actions",
